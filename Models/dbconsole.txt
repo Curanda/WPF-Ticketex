@@ -1,0 +1,561 @@
+
+# CREATE DATABASE ticketex_;
+
+
+# USE ticketex_;
+
+
+CREATE TABLE all_tickets (
+                              TicketId INT PRIMARY KEY AUTO_INCREMENT, -- Primary key, auto-incrementing
+                              Status NVARCHAR(255),                   -- Ticket status
+                              Severity NVARCHAR(255),                 -- Ticket severity
+                              AuthorId NVARCHAR(255),                 -- ID of the ticket author
+                              OriginId NVARCHAR(255),                 -- Origin ID of the ticket
+                              CurrentLocId NVARCHAR(255),             -- Current location ID
+                              LastLocId NVARCHAR(255),                -- Last location ID
+                              ReporterId NVARCHAR(255),               -- Reporter ID
+                              Description LONGTEXT,                   -- Detailed description
+                              NumUpdates INT,                         -- Number of updates
+                              UpVotes INT,                            -- Number of upvotes
+                              DownVotes INT,                          -- Number of downvotes
+                              VotesRatio DOUBLE,                      -- Ratio of upvotes to total votes
+                              Attachments NVARCHAR(255)              -- Attachments
+ );
+
+CREATE TABLE helpdesk_tickets (
+                                  TicketId NVARCHAR(255) PRIMARY KEY, 
+                                   Status ENUM('Open', 'Pending', 'Closed'),                   
+                                   Severity ENUM('Low', 'Medium', 'High', 'Critical'),                 
+                                   AuthorId CHAR(30),                 
+                                   Origin ENUM('Helpdesk',
+                                       'Windowssupport',
+                                       'Networksupport',
+                                       'Hr',
+                                       'Lager',
+                                       'Dbsupport',
+                                       'Technician',
+                                       'Janitor'),                 
+                                   CurrentLocation ENUM('Helpdesk',
+                                       'Windowssupport',
+                                       'Networksupport',
+                                       'Hr',
+                                       'Lager',
+                                       'Dbsupport',
+                                       'Technician',
+                                       'Janitor'),             
+                                   PrevLocation ENUM('Helpdesk',
+                                       'Windowssupport',
+                                       'Networksupport',
+                                       'Hr',
+                                       'Lager',
+                                       'Dbsupport',
+                                       'Technician',
+                                       'Janitor'),                
+                                   ReporterId NVARCHAR(255),
+                                    DateTimeCreated DATETIME DEFAULT NOW(),
+                                    DateTimeLastUpdated DATETIME DEFAULT NOW(),
+                                   Description LONGTEXT,
+                                   NumOfUpdates INT,                         
+                                   NumOfUpVotes INT,                            
+                                   NumOfDownVotes INT,                          
+                                   VotesRatio DOUBLE,                      
+                                   Attachments INT
+);
+
+CREATE TABLE windowssupport_tickets (
+                                        TicketId NVARCHAR(255) PRIMARY KEY,
+                                  Status ENUM('Open', 'Pending', 'Closed'),
+                                  Severity ENUM('Low', 'Medium', 'High', 'Critical'),
+                                  AuthorId CHAR(30),
+                                  Origin ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  CurrentLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  PrevLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  ReporterId NVARCHAR(255),
+                                  DateTimeCreated DATETIME DEFAULT NOW(),
+                                  DateTimeLastUpdated DATETIME DEFAULT NOW(),
+                                  Description LONGTEXT,
+                                  NumOfUpdates INT,
+                                  NumOfUpVotes INT,
+                                  NumOfDownVotes INT,
+                                  VotesRatio DOUBLE,
+                                  Attachments INT
+);
+
+CREATE TABLE networksupport_tickets (
+                                        TicketId NVARCHAR(255) PRIMARY KEY,
+                                  Status ENUM('Open', 'Pending', 'Closed'),
+                                  Severity ENUM('Low', 'Medium', 'High', 'Critical'),
+                                  AuthorId CHAR(30),
+                                  Origin ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  CurrentLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  PrevLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  ReporterId NVARCHAR(255),
+                                  DateTimeCreated DATETIME DEFAULT NOW(),
+                                  DateTimeLastUpdated DATETIME DEFAULT NOW(),
+                                  Description LONGTEXT,
+                                  NumOfUpdates INT,
+                                  NumOfUpVotes INT,
+                                  NumOfDownVotes INT,
+                                  VotesRatio DOUBLE,
+                                  Attachments INT
+);
+
+CREATE TABLE hr_tickets (
+                            TicketId NVARCHAR(255) PRIMARY KEY,
+                                  Status ENUM('Open', 'Pending', 'Closed'),
+                                  Severity ENUM('Low', 'Medium', 'High', 'Critical'),
+                                  AuthorId CHAR(30),
+                                  Origin ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  CurrentLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  PrevLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  ReporterId NVARCHAR(255),
+                                  DateTimeCreated DATETIME DEFAULT NOW(),
+                                  DateTimeLastUpdated DATETIME DEFAULT NOW(),
+                                  Description LONGTEXT,
+                                  NumOfUpdates INT,
+                                  NumOfUpVotes INT,
+                                  NumOfDownVotes INT,
+                                  VotesRatio DOUBLE,
+                                  Attachments INT
+);
+
+CREATE TABLE lager_tickets (
+                               TicketId NVARCHAR(255) PRIMARY KEY,
+                                  Status ENUM('Open', 'Pending', 'Closed'),
+                                  Severity ENUM('Low', 'Medium', 'High', 'Critical'),
+                                  AuthorId CHAR(30),
+                                  Origin ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  CurrentLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  PrevLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  ReporterId NVARCHAR(255),
+                                  DateTimeCreated DATETIME DEFAULT NOW(),
+                                  DateTimeLastUpdated DATETIME DEFAULT NOW(),
+                                  Description LONGTEXT,
+                                  NumOfUpdates INT,
+                                  NumOfUpVotes INT,
+                                  NumOfDownVotes INT,
+                                  VotesRatio DOUBLE,
+                                  Attachments INT
+);
+
+CREATE TABLE dbsupport_tickets (
+                                   TicketId NVARCHAR(255) PRIMARY KEY,
+                                  Status ENUM('Open', 'Pending', 'Closed'),
+                                  Severity ENUM('Low', 'Medium', 'High', 'Critical'),
+                                  AuthorId CHAR(30),
+                                  Origin ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  CurrentLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  PrevLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  ReporterId NVARCHAR(255),
+                                  DateTimeCreated DATETIME DEFAULT NOW(),
+                                  DateTimeLastUpdated DATETIME DEFAULT NOW(),
+                                  Description LONGTEXT,
+                                  NumOfUpdates INT,
+                                  NumOfUpVotes INT,
+                                  NumOfDownVotes INT,
+                                  VotesRatio DOUBLE,
+                                  Attachments INT
+);
+
+CREATE TABLE technician_tickets (
+                                TicketId NVARCHAR(255) PRIMARY KEY,
+                                  Status ENUM('Open', 'Pending', 'Closed'),
+                                  Severity ENUM('Low', 'Medium', 'High', 'Critical'),
+                                  AuthorId CHAR(30),
+                                  Origin ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  CurrentLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  PrevLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  ReporterId NVARCHAR(255),
+                                  DateTimeCreated DATETIME DEFAULT NOW(),
+                                  DateTimeLastUpdated DATETIME DEFAULT NOW(),
+                                  Description LONGTEXT,
+                                  NumOfUpdates INT,
+                                  NumOfUpVotes INT,
+                                  NumOfDownVotes INT,
+                                  VotesRatio DOUBLE,
+                                  Attachments INT
+);
+
+CREATE TABLE janitor_tickets (
+                                  TicketId NVARCHAR(255) PRIMARY KEY,
+                                  Status ENUM('Open', 'Pending', 'Closed'),
+                                  Severity ENUM('Low', 'Medium', 'High', 'Critical'),
+                                  AuthorId CHAR(30),
+                                  Origin ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  CurrentLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  PrevLocation ENUM('Helpdesk',
+                                      'Windowssupport',
+                                      'Networksupport',
+                                      'Hr',
+                                      'Lager',
+                                      'Dbsupport',
+                                      'Technician',
+                                      'Janitor'),
+                                  ReporterId NVARCHAR(255),
+                                  DateTimeCreated DATETIME DEFAULT NOW(),
+                                  DateTimeLastUpdated DATETIME DEFAULT NOW(),
+                                  Description LONGTEXT,
+                                  NumOfUpdates INT,
+                                  NumOfUpVotes INT,
+                                  NumOfDownVotes INT,
+                                  VotesRatio DOUBLE,
+                                  Attachments INT
+);
+
+CREATE TABLE ticket_counter (
+  Department ENUM('Helpdesk', 'Windowssupport', 'Networksupport', 'Hr', 'Lager', 'Dbsupport', 'Technician', 'Janitor') PRIMARY KEY,
+    TotalTickets INT
+);
+
+DROP TABLE all_users;
+
+CREATE TABLE all_users (
+                           UserId NVARCHAR(255) PRIMARY KEY,
+                            Password NVARCHAR(255),
+                            FirstName NVARCHAR(255),
+                            LastName NVARCHAR(255),
+                            Email NVARCHAR(255),
+                            Phone NVARCHAR(255),
+                           DepartmentId NVARCHAR(255),          
+                           NumTicketsOpened INT                 
+);
+
+
+CREATE TABLE closed_tickets (
+                                TicketId NVARCHAR(255) PRIMARY KEY,
+                                Status ENUM('Closed'),
+                                Severity ENUM('Low', 'Medium', 'High', 'Critical'),
+                                AuthorId CHAR(30),
+                                Origin ENUM('Helpdesk',
+                                    'Windowssupport',
+                                    'Networksupport',
+                                    'Hr',
+                                    'Lager',
+                                    'Dbsupport',
+                                    'Technician',
+                                    'Janitor'),
+                                CurrentLocation ENUM('Helpdesk',
+                                    'Windowssupport',
+                                    'Networksupport',
+                                    'Hr',
+                                    'Lager',
+                                    'Dbsupport',
+                                    'Technician',
+                                    'Janitor'),
+                                PrevLocation ENUM('Helpdesk',
+                                    'Windowssupport',
+                                    'Networksupport',
+                                    'Hr',
+                                    'Lager',
+                                    'Dbsupport',
+                                    'Technician',
+                                    'Janitor'),
+                                ReporterId NVARCHAR(255),
+                                DateTimeCreated DATETIME DEFAULT NOW(),
+                                DateTimeLastUpdated DATETIME DEFAULT NOW(),
+                                Description LONGTEXT,
+                                NumOfUpdates INT,
+                                NumOfUpVotes INT,
+                                NumOfDownVotes INT,
+                                VotesRatio DOUBLE,
+                                Attachments INT
+);
+
+
+
+ INSERT INTO all_tickets (Status, Severity, AuthorId, OriginId, CurrentLocId, LastLocId, ReporterId, Description)
+ VALUES
+     ('Open', 'High', 'helpdesk_gm52', 'helpdesk', 'networksup', 'helpdesk', 'Ben from sys_ops', 'Network outage in the main office. Immediate assistance required.'),
+     ('Pending', 'Critical', 'hr_ma38', 'helpdesk', 'windowssup', 'lager', 'Sarah from HR', 'HR system is down; unable to process payroll.'),
+     ('Closed', 'Low', 'networksup_tp21', 'helpdesk', 'lager', 'helpdesk', 'Alice from Admin', 'Replaced printer toner in the admin office.'),
+     ('Open', 'Medium', 'hr_ma38', 'helpdesk', 'lager', 'windowssup', 'Tom from Maintenance', 'Air conditioning unit malfunction in the main hall.'),
+     ('Pending', 'High', 'helpdesk_gm52', 'helpdesk', 'networksup', 'lager', 'Emily from Finance', 'Financial reports server is unreachable.'),
+     ('Closed', 'Critical', 'networksup_tp21', 'helpdesk', 'helpdesk', 'windowssup', 'John from IT', 'Data breach detected; security measures applied.');
+
+
+
+
+INSERT INTO all_users (UserId, DepartmentId, NumTicketsOpened)
+VALUES
+    ('helpdesk_gm52', 'helpdesk', 45),
+    ('hr_ma38', 'hr', 20),
+    ('networksup_tp21', 'networksup', 50),
+    ('lager_am12', 'lager', 15),
+    ('windowssup_tb33', 'windowsup', 30),
+    ('helpdesk_jo67', 'helpdesk', 25),
+    ('hr_ks19', 'hr', 12),
+    ('networksup_sa88', 'networksup', 60),
+    ('lager_bb42', 'lager', 10),
+    ('windowssup_zp56', 'windowsup', 18);
+
+
+CREATE VIEW helpdesk_ticket_queue AS
+SELECT
+    TicketId,
+    Status,
+    Severity,
+    AuthorId,
+    OriginId,
+    Description,
+    UpVotes,
+    DownVotes,
+    VotesRatio
+FROM all_tickets
+WHERE CurrentLocId = 'helpdesk'
+ORDER BY
+    CASE Status
+        WHEN 'Open' THEN 1
+        WHEN 'Pending' THEN 2
+        WHEN 'Closed' THEN 3
+        ELSE 4
+        END;
+
+
+CREATE VIEW wsup_ticket_queue AS
+SELECT
+    TicketId,
+    Status,
+    Severity,
+    AuthorId,
+    OriginId,
+    Description,
+    UpVotes,
+    DownVotes,
+    VotesRatio
+FROM all_tickets
+WHERE CurrentLocId = 'windowssup'
+ORDER BY
+    CASE Status
+        WHEN 'Open' THEN 1
+        WHEN 'Pending' THEN 2
+        WHEN 'Closed' THEN 3
+        ELSE 4
+        END;
+
+CREATE VIEW lager_ticket_queue AS
+SELECT
+    TicketId,
+    Status,
+    Severity,
+    AuthorId,
+    OriginId,
+    Description,
+    UpVotes,
+    DownVotes,
+    VotesRatio
+FROM all_tickets
+WHERE CurrentLocId = 'lager'
+ORDER BY
+    CASE Status
+        WHEN 'Open' THEN 1
+        WHEN 'Pending' THEN 2
+        WHEN 'Closed' THEN 3
+        ELSE 4
+        END;
+
+CREATE VIEW networksup_ticket_queue AS
+SELECT
+    TicketId,
+    Status,
+    Severity,
+    AuthorId,
+    OriginId,
+    Description,
+    UpVotes,
+    DownVotes,
+    VotesRatio
+FROM all_tickets
+WHERE CurrentLocId = 'networksup'
+ORDER BY
+    CASE Status
+        WHEN 'Open' THEN 1
+        WHEN 'Pending' THEN 2
+        WHEN 'Closed' THEN 3
+        ELSE 4
+        END;
+
+CREATE VIEW hr_ticket_queue AS
+SELECT
+    TicketId,
+    Status,
+    Severity,
+    AuthorId,
+    OriginId,
+    Description,
+    UpVotes,
+    DownVotes,
+    VotesRatio
+FROM all_tickets
+WHERE CurrentLocId = 'hr'
+ORDER BY
+    CASE Status
+        WHEN 'Open' THEN 1
+        WHEN 'Pending' THEN 2
+        WHEN 'Closed' THEN 3
+        ELSE 4
+        END;
+
+
+INSERT INTO all_tickets
+(Status, Severity, AuthorId, OriginId, CurrentLocId, LastLocId, ReporterId, Description, NumUpdates, UpVotes, DownVotes, VotesRatio, Attachments)
+VALUES
+    
+    ('Open', 'Low', 'helpdesk_gm52', 'helpdesk', 'helpdesk', 'lager', 'Alice from IT', 'Issue with printer in warehouse.', NULL, NULL, NULL, NULL, NULL),
+    ('Open', 'Medium', 'hr_ma38', 'helpdesk', 'helpdesk', 'helpdesk', 'Bob from HR', 'Cannot access HR portal.', NULL, NULL, NULL, NULL, NULL),
+    ('Open', 'High', 'networksup_tp21', 'helpdesk', 'helpdesk', 'windowssup', 'Charlie from Networking', 'Network outage in east wing.', NULL, NULL, NULL, NULL, NULL),
+    ('Open', 'Critical', 'helpdesk_gm52', 'helpdesk', 'helpdesk', 'lager', 'Diane from Logistics', 'Critical: Unable to process orders.', NULL, NULL, NULL, NULL, NULL),
+    ('Open', 'Low', 'hr_ma38', 'helpdesk', 'helpdesk', 'helpdesk', 'Eve from HR', 'Keyboard malfunction in HR.', NULL, NULL, NULL, NULL, NULL),
+    ('Open', 'Medium', 'helpdesk_gm52', 'helpdesk', 'helpdesk', 'lager', 'Frank from Logistics', 'Monitor flickering in warehouse.', NULL, NULL, NULL, NULL, NULL),
+    ('Open', 'High', 'networksup_tp21', 'helpdesk', 'helpdesk', 'windowssup', 'Grace from IT', 'Wi-Fi issues in main office.', NULL, NULL, NULL, NULL, NULL),
+    ('Open', 'Critical', 'hr_ma38', 'helpdesk', 'helpdesk', 'helpdesk', 'Hank from HR', 'Critical: Payroll system not responding.', NULL, NULL, NULL, NULL, NULL),
+    ('Open', 'Medium', 'helpdesk_gm52', 'helpdesk', 'helpdesk', 'lager', 'Ivy from IT', 'VPN connectivity issues.', NULL, NULL, NULL, NULL, NULL),
+    ('Open', 'Low', 'networksup_tp21', 'helpdesk', 'helpdesk', 'windowssup', 'Jack from Networking', 'Request for additional switch ports.', NULL, NULL, NULL, NULL, NULL),
+
+    
+    ('Closed', 'High', 'hr_ma38', 'helpdesk', 'helpdesk', 'helpdesk', 'Karen from HR', 'Resolved: Issue with HR portal login.', NULL, NULL, NULL, NULL, NULL),
+    ('Closed', 'Critical', 'helpdesk_gm52', 'helpdesk', 'helpdesk', 'lager', 'Leo from Logistics', 'Resolved: Order processing issue.', NULL, NULL, NULL, NULL, NULL),
+    ('Closed', 'Medium', 'networksup_tp21', 'helpdesk', 'helpdesk', 'windowssup', 'Mia from Networking', 'Resolved: Firewall configuration issue.', NULL, NULL, NULL, NULL, NULL),
+    ('Closed', 'Low', 'helpdesk_gm52', 'helpdesk', 'helpdesk', 'lager', 'Nina from IT', 'Resolved: Minor printer connectivity issue.', NULL, NULL, NULL, NULL, NULL);
+
+
+SELECT * FROM all_tickets

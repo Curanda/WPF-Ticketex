@@ -1,0 +1,58 @@
+<UserControl x:Class="TicketeX_.Views.CreateTicketView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:TicketeX_.Views"
+             xmlns:protobuf="clr-namespace:Google.Protobuf;assembly=Google.Protobuf"
+             xmlns:utilities="clr-namespace:TicketeX_.Utilities"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="500"
+             Background="Transparent">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Arial"/>
+            <Setter Property="Foreground" Value="Azure"/>
+            <Setter Property="FontWeight" Value="Regular"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label>Severity:</Label>
+        <ComboBox x:Name="SeverityDropdown" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" HorizontalAlignment="Left" Width="150" Height="20" SelectedItem="{Binding SelectedSeverity, UpdateSourceTrigger=PropertyChanged}">
+            <ComboBoxItem Content="Low"></ComboBoxItem>
+            <ComboBoxItem Content="Medium"></ComboBoxItem>
+            <ComboBoxItem Content="High"></ComboBoxItem>
+            <ComboBoxItem Content="Critical"></ComboBoxItem>
+        </ComboBox>
+        <Label Grid.Row="1" Grid.Column="0">Author:</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,10"  x:Name="AuthorTextBox" PreviewTextInput="ValidationAtoZ_OnPreviewTextInput" Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}"/>
+        <Label Grid.Row="2" Grid.Column="0">Reported by:</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" x:Name="ReportedByTextBox" PreviewTextInput="ValidationAtoZ_OnPreviewTextInput" Text="{Binding ReportedBy, UpdateSourceTrigger=PropertyChanged}"/>
+        
+        <Label Grid.Row="3" Grid.Column="0">Destination:</Label>
+        <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" Name="DestinationDropdown" HorizontalAlignment="Left" Width="150" Height="20" SelectedItem="{Binding SelectedDestination, UpdateSourceTrigger=PropertyChanged}">
+            <ComboBoxItem Content="Helpdesk"></ComboBoxItem>
+            <ComboBoxItem Content="HR"></ComboBoxItem>
+            <ComboBoxItem Content="Lager"></ComboBoxItem>
+            <ComboBoxItem Content="Windows Support"></ComboBoxItem>
+            <ComboBoxItem Content="Networks Support"></ComboBoxItem>
+        </ComboBox>
+        
+        <Label Grid.Row="4" Grid.Column="0">Description:</Label>
+        <TextBox Grid.Row="4" Grid.Column="1" AcceptsReturn="True" x:Name="DescriptionTextBox" Margin="0,0,0,10" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="5" Grid.Column="1" Content="Submit Ticket" HorizontalAlignment="Right" Width="100" Margin="0,20,20,0" Command="{Binding CreateTicketCommand}"/>
+    </Grid>
+</UserControl>

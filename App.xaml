@@ -1,0 +1,66 @@
+﻿<Application x:Class="Example.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewModel="clr-namespace:TicketeX_.ViewModels"
+             xmlns:views="clr-namespace:TicketeX_.Views"
+             StartupUri="/Views/LoginView.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="MainButtonTheme" Source="Components/MenuButtonTheme.xaml"/>
+                <ResourceDictionary x:Name="TextBoxTheme" Source="Components/TextBoxTheme.xaml"/>
+                <ResourceDictionary x:Name="FormInputField" Source="Components/FormInputField.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
+                <views:HomeView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:TicketQueueViewModel}">
+                <views:TicketQueueView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:CreateTicketViewModel}">
+                <views:CreateTicketView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:LoginViewModel}">
+                <views:LoginView/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
+
+<!--
+
+All_tickets:
+-TicketId
+-Status (Open, Pending, Closed)
+-Severity (Low, Medium, High, Critical)
+-AuthorId
+-OriginId
+-CurrentLocId
+-LastLocId
+-ReporterId
+-Description
+-NumUpdates
+-UpVotes
+-DownVotes
+-VotesRatio
+-Attachments
+
+All_Users:
+-UserId
+-DepartmentId
+-NumTicketsOpened
+
+Team_tickets_View:
+-TicketId
+-Status
+-Severity
+-From
+-Origin
+-UpVotes
+-DownVotes
+-VotesRatio
+
+
+
+-->
