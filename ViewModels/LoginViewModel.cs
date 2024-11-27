@@ -44,7 +44,7 @@ public class LoginViewModel: ObservableObject
     
     private void CloseWindow()
     {
-        CloseAction?.Invoke();
+        CloseAction.Invoke();
     }
 
     private async void LoginUser(string _username, object parameter)
@@ -60,7 +60,7 @@ public class LoginViewModel: ObservableObject
             var res = await connection.QueryFirstOrDefaultAsync<LoggedUser>(query, new 
             { 
                 UserId = _username, 
-                Password = passwordBox.Password
+                Password = passwordBox?.Password
             });
             
             // TODO znajdz jak wyczyscic passwordbox i parameter z pamieci.
@@ -81,8 +81,10 @@ public class LoginViewModel: ObservableObject
                 Console.WriteLine(loggedUser.UserId);
 
                 MainViewModel MainVm = new MainViewModel(loggedUser);
-                MainWindow mainView = new MainWindow();
-                mainView.DataContext = MainVm;
+                MainWindow mainView = new MainWindow
+                {
+                    DataContext = MainVm
+                };
                 mainView.Show();
 
                 CloseWindow();

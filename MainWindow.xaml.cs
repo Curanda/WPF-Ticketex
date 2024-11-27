@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TicketeX_.ViewModels;
+using TicketeX_.Views;
 
 namespace TicketeX_;
 
@@ -19,6 +21,15 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        if (DataContext is MainViewModel MainVm)
+        {
+            MainVm.CloseWindow();
+        }
+    }
+    
+    private void closeButton_Click(object sender, RoutedEventArgs e) {
+
+        Close();
     }
     
 }

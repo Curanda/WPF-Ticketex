@@ -51,6 +51,7 @@
                                 <MenuItem Header="{Binding DbsupportAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding DbsupportAccount}"/>
                                 <MenuItem Header="{Binding TechnicianAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding TechnicianAccount}"/>
                                 <MenuItem Header="{Binding JanitorAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding JanitorAccount}"/>
+                                <MenuItem Header="Log out" Command="{Binding LogoutCommand}" Click="closeButton_Click"/>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
