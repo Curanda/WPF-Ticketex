@@ -13,7 +13,7 @@ public class TicketQueueViewModel: ObservableObject
     public TicketQueueViewModel(ObservableCollection<TicketQueueTicket>? helpdeskTickets)
     {
         HelpdeskTickets = helpdeskTickets;
-        SelectedTicket = helpdeskTickets?.FirstOrDefault();
+        SelectedTicket = HelpdeskTickets?.FirstOrDefault();
         wyswietlSelected();
     }
 

@@ -13,11 +13,11 @@
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         AllowsTransparency="True"
-        >
+        DataContext="{Binding Source={x:Static viewModels:ViewModels.loginViewModel}}">
     
-    <Window.DataContext>
-        <viewModels:LoginViewModel/>
-    </Window.DataContext>
+    <!-- <Window.DataContext> -->
+    <!--     <viewModels:LoginViewModel/> -->
+    <!-- </Window.DataContext> -->
     <utilities:DashedBorder UseDashedBorder="True"
                             DashedBorderBrush="#1C2630"
                             StrokeDashArray="5 1 5 1"

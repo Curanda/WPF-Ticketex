@@ -9,4 +9,5 @@ namespace TicketeX_;
 /// </summary>
 public partial class App : Application
 {
+    public ViewModels.ViewModels ViewModels { get; } = new ViewModels.ViewModels();
 }

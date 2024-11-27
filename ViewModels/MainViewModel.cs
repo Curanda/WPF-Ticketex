@@ -19,6 +19,18 @@ public class MainViewModel: ObservableObject
     public RelayCommand LogoutCommand { get; set; }
     private ObservableCollection<TicketQueueTicket> TicketQueueTickets { get; set; } = new();
     private HomeViewModel HomeVm { get; set; }
+
+    public LoggedUser loggedUser
+    {
+        get => loggedUser;
+        set
+        {
+            loggedUser.UserId = value.UserId;
+            loggedUser.FirstName = value.FirstName;
+            loggedUser.LastName = value.LastName;
+            loggedUser.Department = value.Department;
+        }
+    }
     private TicketQueueViewModel TicketQueueVm { get; set; }
     public CreateTicketViewModel CreateTicketVm { get; set; }
     private object _currentView;
@@ -46,7 +58,7 @@ public class MainViewModel: ObservableObject
         set {_currentView = value; OnPropertyChanged();}
     }
 
-    public MainViewModel(LoggedUser loggedUser)
+    public MainViewModel()
     {
         Console.WriteLine(loggedUser.Department);
         CurrentAccount = loggedUser.Department;
@@ -89,7 +101,6 @@ public class MainViewModel: ObservableObject
                 DataContext = loginVm
             };
             loginView.Show();
-            Application.Current.MainWindow.Close();
             CloseWindow();
         });
     }

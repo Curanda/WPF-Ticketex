@@ -21,15 +21,16 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        if (DataContext is MainViewModel MainVm)
-        {
-            MainVm.CloseWindow();
-        }
+
     }
     
     private void closeButton_Click(object sender, RoutedEventArgs e) {
 
         Close();
+        if (DataContext is MainViewModel MainVm)
+        {
+            MainVm.CloseWindow();
+        }
     }
     
 }

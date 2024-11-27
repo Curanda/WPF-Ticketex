@@ -79,12 +79,9 @@ public class LoginViewModel: ObservableObject
                 };
                 
                 Console.WriteLine(loggedUser.UserId);
-
-                MainViewModel MainVm = new MainViewModel(loggedUser);
-                MainWindow mainView = new MainWindow
-                {
-                    DataContext = MainVm
-                };
+                
+                ViewModels.loggedUser = loggedUser;
+                MainWindow mainView = new MainWindow();
                 mainView.Show();
 
                 CloseWindow();
