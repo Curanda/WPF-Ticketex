@@ -11,7 +11,7 @@ namespace TicketeX_.ViewModels;
 
 public class CreateTicketViewModel: ObservableObject
 {
-    public RelayCommand CreateTicketCommand { get; }
+    public RelayCommand_ CreateTicketCommand { get; }
     private string _selectedSeverity;
     private string _selectedDestination;
     private string _author;
@@ -67,7 +67,7 @@ public class CreateTicketViewModel: ObservableObject
     }
     public CreateTicketViewModel()
     {
-      CreateTicketCommand = new RelayCommand(CreateTicket);
+      CreateTicketCommand = new RelayCommand_(CreateTicket);
     }
 
     private void CreateTicket(object parameter)

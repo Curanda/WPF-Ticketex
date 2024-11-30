@@ -1,20 +1,17 @@
-using System.Security;
 using System.Windows.Controls;
 using System.Windows;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
 using TicketeX_.Views;
-
 
 namespace TicketeX_.ViewModels;
 
 public class LoginViewModel: ObservableObject
 {
     private string _username;
-    public RelayCommand LoginCommand { get; set; }
+    public RelayCommand_ LoginCommand { get; set; }
 
     public string Username
     {
@@ -28,7 +25,7 @@ public class LoginViewModel: ObservableObject
 
     public LoginViewModel()
     {
-        LoginCommand = new RelayCommand(parameter =>
+        LoginCommand = new RelayCommand_(parameter =>
         {
             
             LoginUser(_username, parameter);
@@ -39,15 +36,8 @@ public class LoginViewModel: ObservableObject
         });
         
     }
-    
-    public Action CloseAction { get; set; }
-    
-    private void CloseWindow()
-    {
-        CloseAction.Invoke();
-    }
 
-    private async void LoginUser(string _username, object parameter)
+    private async Task LoginUser(string _username, object parameter)
     {
         Console.WriteLine(_username);
         var passwordBox = parameter as PasswordBox;
@@ -86,9 +76,14 @@ public class LoginViewModel: ObservableObject
                     DataContext = MainVm
                 };
                 mainView.Show();
-
-                CloseWindow();
                 
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window is not MainWindow)
+                    {
+                        window.Close();
+                    }
+                }
             }
             
             passwordBox.Clear();

@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
@@ -12,11 +14,12 @@ namespace TicketeX_.ViewModels;
 
 public class MainViewModel: ObservableObject
 {
-    public RelayCommand HomeViewCommand { get; set; }
-    public RelayCommand TicketQueueViewCommand { get; set; }
-    public RelayCommand CreateTicketViewCommand { get; set; }
-    public RelayCommand SwitchAccountCommand { get; set; }
-    public RelayCommand LogoutCommand { get; set; }
+    public RelayCommand_ HomeViewCommand { get; set; }
+    public RelayCommand_ TicketQueueViewCommand { get; set; }
+    public RelayCommand_ CreateTicketViewCommand { get; set; }
+    public RelayCommand_ SwitchAccountCommand { get; set; }
+    public RelayCommand_ LogoutCommand { get; set; }
+    public ICommand CloseWindowCommand { get; private set; }
     private ObservableCollection<TicketQueueTicket> TicketQueueTickets { get; set; } = new();
     private HomeViewModel HomeVm { get; set; }
     private TicketQueueViewModel TicketQueueVm { get; set; }
@@ -31,14 +34,7 @@ public class MainViewModel: ObservableObject
     public string DbsupportAccount { get; set; } = "DB support";
     public string TechnicianAccount { get; set; } = "Technician";
     public string JanitorAccount { get; set; } = "Janitor";
-    
     private string CurrentAccount { get; set; }
-    
-    public Action CloseAction { get; set; }
-    public void CloseWindow()
-    {
-        CloseAction?.Invoke();
-    }
     
     public object CurrentView
     {
@@ -54,44 +50,63 @@ public class MainViewModel: ObservableObject
         TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets);
         
         
-        HomeViewCommand = new RelayCommand(o =>
+        HomeViewCommand = new RelayCommand_(o =>
         {
             CurrentView = HomeVm;
-            // LoginVm = new LoginViewModel();
-            // LoginView loginView = new LoginView();
-            // loginView.DataContext = LoginVm;
-            // loginView.Show();
         });
 
-        TicketQueueViewCommand = new RelayCommand(o =>
+        TicketQueueViewCommand = new RelayCommand_(o =>
         {
             CurrentView = TicketQueueVm;
             LoadTicketQueue(CurrentAccount);
         });
 
-        CreateTicketViewCommand = new RelayCommand(o =>
+        CreateTicketViewCommand = new RelayCommand_(o =>
         {
             CurrentView = CreateTicketVm = new CreateTicketViewModel();
         });
 
-        SwitchAccountCommand = new RelayCommand( account =>
+        SwitchAccountCommand = new RelayCommand_( account =>
         {
             string newCurrentAccount = account.ToString();
             ClearTicketQueue();
             LoadTicketQueue(newCurrentAccount);
         });
 
-        LogoutCommand = new RelayCommand(o =>
+        LogoutCommand = new RelayCommand_(o =>
         {
             LoginViewModel loginVm = new LoginViewModel();
             LoginView loginView = new LoginView
             {
                 DataContext = loginVm
             };
-            loginView.Show();
-            Application.Current.MainWindow.Close();
-            CloseWindow();
+            loginView.Show(); 
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window is not LoginView)
+                {
+                    window.Close();
+                }
+            }
         });
+
+        CloseWindowCommand = new RelayCommand_(o =>
+        {
+            LoginViewModel loginVm = new LoginViewModel();
+            LoginView loginView = new LoginView
+            {
+                DataContext = loginVm
+            };
+            loginView.Show(); 
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window is not LoginView)
+                {
+                    window.Close();
+                }
+            }
+        });
+
     }
 
 
@@ -102,7 +117,6 @@ public class MainViewModel: ObservableObject
     {
 
         string query;
-        // 'Helpdesk', 'Windowssupport', 'Networksupport', 'Hr', 'Lager', 'Dbsupport', 'Technician', 'Janitor'
         switch (account)
         {
             case "Windows Support":

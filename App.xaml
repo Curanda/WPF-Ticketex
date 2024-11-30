@@ -4,6 +4,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewModel="clr-namespace:TicketeX_.ViewModels"
              xmlns:views="clr-namespace:TicketeX_.Views"
+             xmlns:ticketeX="clr-namespace:TicketeX_"
              StartupUri="/Views/LoginView.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -12,6 +13,9 @@
                 <ResourceDictionary x:Name="TextBoxTheme" Source="Components/TextBoxTheme.xaml"/>
                 <ResourceDictionary x:Name="FormInputField" Source="Components/FormInputField.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type viewModel:MainViewModel}">
+                <views:MainWindow/>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
                 <views:HomeView/>
             </DataTemplate>

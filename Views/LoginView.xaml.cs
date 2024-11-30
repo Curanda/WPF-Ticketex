@@ -8,9 +8,5 @@ public partial class LoginView : Window
     public LoginView()
     {
         InitializeComponent();
-        if (DataContext is LoginViewModel loginVm)
-        {
-            loginVm.CloseAction = Close;
-        }
     }
 }

@@ -1,18 +1,13 @@
-﻿<Window x:Class="TicketeX_.MainWindow"
+﻿<Window x:Class="TicketeX_.Views.MainWindow"
+        x:Name="MainW"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TicketeX_"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:viewModels="clr-namespace:TicketeX_.ViewModels"
         xmlns:utilities="clr-namespace:TicketeX_.Utilities"
         mc:Ignorable="d"
         Title="TicketeX - Best way to share tickets" Height="600" Width="1000" Background="#22202f">
-    
-    <!-- <Window.DataContext> -->
-    <!--     <viewModels:MainViewModel/> -->
-    <!-- </Window.DataContext> -->
 
     <Border CornerRadius="30">
     <DockPanel LastChildFill="True">
@@ -51,7 +46,7 @@
                                 <MenuItem Header="{Binding DbsupportAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding DbsupportAccount}"/>
                                 <MenuItem Header="{Binding TechnicianAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding TechnicianAccount}"/>
                                 <MenuItem Header="{Binding JanitorAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding JanitorAccount}"/>
-                                <MenuItem Header="Log out" Command="{Binding LogoutCommand}" Click="closeButton_Click"/>
+                                <MenuItem Header="Log out" Command="{Binding LogoutCommand, Mode=OneWay}"/>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>

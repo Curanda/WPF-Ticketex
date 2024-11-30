@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
       <PackageReference Include="Dapper" Version="2.1.35" />
       <PackageReference Include="Expression.Blend.Sdk.WPF" Version="1.0.1" />
       <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
@@ -26,6 +27,14 @@
 
     <ItemGroup>
       <Folder Include="Icons\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Views\MainWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
     </ItemGroup>
 
 </Project>

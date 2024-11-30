@@ -2,7 +2,7 @@ using System.Windows.Input;
 
 namespace TicketeX_.Utilities;
 
-public class RelayCommand: ICommand
+public class RelayCommand_: ICommand
 {
     private Action<object> _execute;
     private Func<object, bool> _canExecute;
@@ -13,7 +13,7 @@ public class RelayCommand: ICommand
         remove { CommandManager.RequerySuggested -= value; }
     }
 
-    public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+    public RelayCommand_(Action<object> execute, Func<object, bool> canExecute = null)
     {
         _execute = execute;
         _canExecute = canExecute;
