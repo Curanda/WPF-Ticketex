@@ -6,7 +6,10 @@
              xmlns:local="clr-namespace:TicketeX_.Views"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300" Background="#22202f">
-    <Border Width="300" Height="300">
-        <TextBlock FontSize="20" Foreground="Azure" Text="{Binding Username}"/>
+    <Border Width="500" Height="300">
+        <StackPanel Orientation="Vertical">
+        <TextBlock FontSize="20" Margin="0,0,10,10" Foreground="Azure" Text="{Binding Username}"/>
+        <TextBlock FontSize="20" Foreground="Azure" Text="{Binding Department}"/>
+        </StackPanel>
     </Border>
 </UserControl>

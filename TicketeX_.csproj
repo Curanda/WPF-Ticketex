@@ -23,6 +23,7 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="MySql.Data" Version="9.1.0" />
+      <PackageReference Include="Npgsql" Version="9.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -35,6 +36,13 @@
         <XamlRuntime>Wpf</XamlRuntime>
         <SubType>Designer</SubType>
       </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Images\ticketex_logo2.png" />
+      <Resource Include="Images\ticketex_logo2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
 </Project>

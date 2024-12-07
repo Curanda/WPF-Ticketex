@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Windows;
 using System.Windows.Input;
-using CommunityToolkit.Mvvm.Input;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
@@ -17,24 +17,15 @@ public class MainViewModel: ObservableObject
     public RelayCommand_ HomeViewCommand { get; set; }
     public RelayCommand_ TicketQueueViewCommand { get; set; }
     public RelayCommand_ CreateTicketViewCommand { get; set; }
-    public RelayCommand_ SwitchAccountCommand { get; set; }
+    public RelayCommand_ RefreshQueueCommand { get; set; }
     public RelayCommand_ LogoutCommand { get; set; }
-    public ICommand CloseWindowCommand { get; private set; }
-    private ObservableCollection<TicketQueueTicket> TicketQueueTickets { get; set; } = new();
+    private LoggedUser _loggedUser { get; set; }
+    private ObservableCollection<TicketQueueTicket_> TicketQueueTickets { get; set; } = new();
     private HomeViewModel HomeVm { get; set; }
     private TicketQueueViewModel TicketQueueVm { get; set; }
     public CreateTicketViewModel CreateTicketVm { get; set; }
     private object _currentView;
-
-    public string HelpdeskAccount { get; set; } = "Helpdesk";
-    public string WsupAccount { get; set; } = "Windows Support";
-    public string NetsupAccount { get; set; } = "Network Support";
-    public string HrAccount { get; set; } = "Hr";
-    public string LagerAccount { get; set; } = "Lager";
-    public string DbsupportAccount { get; set; } = "DB support";
-    public string TechnicianAccount { get; set; } = "Technician";
-    public string JanitorAccount { get; set; } = "Janitor";
-    private string CurrentAccount { get; set; }
+    public string CurrentAccount { get; set; }
     
     public object CurrentView
     {
@@ -45,10 +36,11 @@ public class MainViewModel: ObservableObject
     public MainViewModel(LoggedUser loggedUser)
     {
         Console.WriteLine(loggedUser.Department);
-        CurrentAccount = loggedUser.Department;
-        _currentView = HomeVm = new HomeViewModel(loggedUser.FirstName);
+        _loggedUser = loggedUser;
+        CurrentAccount = loggedUser.Department.ToString();
+        _currentView = HomeVm = new HomeViewModel(loggedUser.FirstName, loggedUser.Department.ToString());
         TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets);
-        
+        LoadTicketQueue(CurrentAccount);
         
         HomeViewCommand = new RelayCommand_(o =>
         {
@@ -58,19 +50,17 @@ public class MainViewModel: ObservableObject
         TicketQueueViewCommand = new RelayCommand_(o =>
         {
             CurrentView = TicketQueueVm;
-            LoadTicketQueue(CurrentAccount);
         });
 
         CreateTicketViewCommand = new RelayCommand_(o =>
         {
-            CurrentView = CreateTicketVm = new CreateTicketViewModel();
+            CurrentView = CreateTicketVm = new CreateTicketViewModel(_loggedUser);
         });
 
-        SwitchAccountCommand = new RelayCommand_( account =>
+        RefreshQueueCommand = new RelayCommand_( o =>
         {
-            string newCurrentAccount = account.ToString();
             ClearTicketQueue();
-            LoadTicketQueue(newCurrentAccount);
+            LoadTicketQueue(CurrentAccount);
         });
 
         LogoutCommand = new RelayCommand_(o =>
@@ -90,74 +80,53 @@ public class MainViewModel: ObservableObject
             }
         });
 
-        CloseWindowCommand = new RelayCommand_(o =>
-        {
-            LoginViewModel loginVm = new LoginViewModel();
-            LoginView loginView = new LoginView
-            {
-                DataContext = loginVm
-            };
-            loginView.Show(); 
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window is not LoginView)
-                {
-                    window.Close();
-                }
-            }
-        });
-
     }
-
-
     
-    
-
-    private async Task LoadTicketQueue(string account)
+    private async Task LoadTicketQueue(string CurrentAccount)
     {
 
         string query;
-        switch (account)
+        switch (CurrentAccount)
         {
-            case "Windows Support":
-                query = "SELECT * FROM wsup_ticket_queue";
+            case "Windowssupport":
+                query = "SELECT * FROM windowssupport_tickets";
                 break;
-            case "Network Support":
-                query = "SELECT * FROM networksup_ticket_queue";
+            case "Networksupport":
+                query = "SELECT * FROM networksupport_tickets";
                 break;
             case "Hr":
-                query = "SELECT * FROM hr_ticket_queue";
+                query = "SELECT * FROM hr_tickets";
                 break;
             case "Lager":
-                query = "SELECT * FROM lager_ticket_queue";
+                query = "SELECT * FROM lager_tickets";
                 break;
-            case "DB support":
-                query = "SELECT * FROM helpdesk_ticket_queue";
+            case "Dbsupport":
+                query = "SELECT * FROM dbsupport_tickets";
                 break;
             case "Technician":
-                query = "SELECT * FROM helpdesk_ticket_queue";
+                query = "SELECT * FROM technician_tickets";
                 break;
             case "Janitor":
-                query = "SELECT * FROM helpdesk_ticket_queue";
+                query = "SELECT * FROM janitor_tickets";
                 break;
             default:
-                query = "SELECT * FROM helpdesk_ticket_queue";
+                query = "SELECT * FROM helpdesk_tickets";
                 break;
         }
         
         try
         {
-
-            await using var connection = new MySqlConnection("Server=localhost;Database=ticketex_;User=root;Password=root;");
+            await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
             
-            var tickets = await connection.QueryAsync<TicketQueueTicket>(query);
+            var tickets = await connection.QueryAsync<TicketQueueTicket_>(query);
             foreach (var ticket in tickets)
             {
                 TicketQueueTickets.Add(ticket);
+                Console.WriteLine(ticket.TicketId);
             }
-            
+            Console.WriteLine("Ticket Queue Loaded");
         }
-        catch (SqlException ex)
+        catch (MySqlException ex)
         {
             Console.WriteLine(ex.Message);
         }

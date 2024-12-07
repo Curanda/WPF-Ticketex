@@ -38,14 +38,7 @@
                         <materialDesign:PackIcon Kind="AccountOutline" Foreground="Azure"/>
                         <Button.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="{Binding HelpdeskAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding HelpdeskAccount}"/>
-                                <MenuItem Header="{Binding WsupAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding WsupAccount}"/>
-                                <MenuItem Header="{Binding NetsupAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding NetsupAccount}"/>
-                                <MenuItem Header="{Binding HrAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding HrAccount}"/>
-                                <MenuItem Header="{Binding LagerAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding LagerAccount}"/>
-                                <MenuItem Header="{Binding DbsupportAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding DbsupportAccount}"/>
-                                <MenuItem Header="{Binding TechnicianAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding TechnicianAccount}"/>
-                                <MenuItem Header="{Binding JanitorAccount}" Command="{Binding SwitchAccountCommand}" CommandParameter="{Binding JanitorAccount}"/>
+                                <MenuItem Header="Profile"/>
                                 <MenuItem Header="Log out" Command="{Binding LogoutCommand, Mode=OneWay}"/>
                             </ContextMenu>
                         </Button.ContextMenu>

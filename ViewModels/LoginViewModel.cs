@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Windows.Controls;
 using System.Windows;
 using Dapper;
@@ -40,26 +41,25 @@ public class LoginViewModel: ObservableObject
     private async Task LoginUser(string _username, object parameter)
     {
         Console.WriteLine(_username);
+        await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+        await connection.OpenAsync();
         var passwordBox = parameter as PasswordBox;
         string query = "SELECT UserId, FirstName, LastName, Department FROM all_users WHERE UserId = @UserId AND Password = @Password";
     
         try
         {
-            using var connection = new MySqlConnection("Server=localhost;Database=ticketex_;User=root;Password=root;");
-            await connection.OpenAsync();
-            var res = await connection.QueryFirstOrDefaultAsync<LoggedUser>(query, new 
+            Console.WriteLine("trying connection to db");
+            var res = connection.Query<LoggedUser>(query, new 
             { 
                 UserId = _username, 
                 Password = passwordBox?.Password
-            });
+            }).FirstOrDefault();
             
-            // TODO znajdz jak wyczyscic passwordbox i parameter z pamieci.
 
             if (res == null)
                 MessageBox.Show("Invalid username or password");
             else
             {
-                Console.WriteLine(res.FirstName);
                 LoggedUser loggedUser = new LoggedUser
                 {
                     FirstName = res.FirstName,
@@ -67,13 +67,11 @@ public class LoginViewModel: ObservableObject
                     Department = res.Department,
                     UserId = res.UserId
                 };
-                
-                Console.WriteLine(loggedUser.UserId);
 
-                MainViewModel MainVm = new MainViewModel(loggedUser);
+                MainViewModel mainViewModel = new MainViewModel(loggedUser);
                 MainWindow mainView = new MainWindow
                 {
-                    DataContext = MainVm
+                    DataContext = mainViewModel
                 };
                 mainView.Show();
                 
@@ -86,7 +84,7 @@ public class LoginViewModel: ObservableObject
                 }
             }
             
-            passwordBox.Clear();
+            passwordBox?.Clear();
             
         }
         catch (MySqlException ex)

@@ -7,11 +7,23 @@
              xmlns:local="clr-namespace:TicketeX_.Views"
              xmlns:viewModels="clr-namespace:TicketeX_.ViewModels"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="600"
              Background="#22202f">
+    <StackPanel>
+        <Grid Margin="20,10,20,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock  Width="100" HorizontalAlignment="Left" Background="Transparent" Foreground="Azure" Text="{Binding DataContext.CurrentAccount, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button Grid.Column="1" Width="20" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Command="{Binding DataContext.RefreshQueueCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+                <materialDesign:PackIcon Kind="Refresh" Background="Transparent" Foreground="Azure"/>
+            </Button>
+        </Grid>
     <Grid>
-        <DataGrid ItemsSource="{Binding HelpdeskTickets}"
+        <DataGrid ItemsSource="{Binding TicketQueueTickets}"
                   x:Name="QueueGrid"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False" 
@@ -41,9 +53,11 @@
                 <DataGridTextColumn Header="Ticket ID" Binding="{Binding TicketId}" Width="100" />
                 <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="100" />
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100" />
-                <DataGridTextColumn Header="Origin" Binding="{Binding OriginId}" Width="100" />
+                <DataGridTextColumn Header="Prev Loc" Binding="{Binding PrevLocation}"/>
+                <DataGridTextColumn Header="Origin" Binding="{Binding Origin}" Width="100" />
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
+    </StackPanel>
 </UserControl>

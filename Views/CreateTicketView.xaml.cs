@@ -13,17 +13,17 @@ public partial class CreateTicketView : UserControl
         InitializeComponent();
     }
 
-    private void ValidationAtoZ_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
-    {
-        Regex regex = new Regex ( "[^a-zA-Z]+" );
-        if ( regex.IsMatch ( AuthorTextBox.Text ) )
-        {
-            MessageBox.Show("Invalid author Id. Only letters are allowed.");
-        } 
-        if ( regex.IsMatch ( ReportedByTextBox.Text ) )
-        {
-            MessageBox.Show("Invalid reported by. Only letters are allowed.");
-        } 
-    }
+    // private void ValidationAtoZ_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
+    // {
+    //     Regex regex = new Regex ( "[^a-zA-Z]+" );
+    //     if ( regex.IsMatch ( AuthorTextBox.Text ) )
+    //     {
+    //         MessageBox.Show("Invalid author Id. Only letters are allowed.");
+    //     } 
+    //     if ( regex.IsMatch ( ReportedByTextBox.Text ) )
+    //     {
+    //         MessageBox.Show("Invalid reported by. Only letters are allowed.");
+    //     } 
+    // }
     
 }

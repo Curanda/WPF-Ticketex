@@ -1,0 +1,7 @@
+- odpowiednia struktura danych która może przyjmować tylko określone wartości.
+var costam = nameof(Severity.Low);
+var costam1 = Severity.Low.ToString();
+
+- jak to zaimplementować przelogowywanie bez wyszukiwania niezamkniętych okien.
+- gdzie przechowywać credentiale dostępowe do bazy.
+- zapytać o zadanie na sobotę.

@@ -23,5 +23,4 @@ public partial class TicketQueueView
         var ticket = row?.DataContext as TicketQueueTicket;
         MessageBox.Show(ticket?.Description);
     }
-
 }
