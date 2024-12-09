@@ -14,21 +14,19 @@ public class CreateTicketViewModel : ObservableObject
 {
     public RelayCommand_ CreateTicketCommand { get; }
     private LoggedUser _loggedUser;
-    private Severity _selectedSeverity;
-    private Severity _severity;
-    private Location _selectedDestination;
-    private Location _location;
+    private string _selectedSeverity;
+    private string _selectedDestination;
+    private string _location;
     private string _author;
     private string _reportedBy;
     private string _description;
-    private string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+    private readonly string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
 
     public ComboBoxItem SelectedSeverity
     {
         set
         {
-            CastSeverityToEnum(value.Content.ToString());
-            _selectedSeverity = _severity;
+            _selectedSeverity = value.Content.ToString();
             OnPropertyChanged();
         }
     }
@@ -52,37 +50,12 @@ public class CreateTicketViewModel : ObservableObject
             OnPropertyChanged();
         }
     }
-    
-    private void CastSeverityToEnum(string targetString)
-    {
-        foreach (Severity item in Enum.GetValues(typeof(Severity)))
-        {
-            if (targetString.Equals(item.ToString()))
-            {
-                _severity = item;
-                break;
-            }
-        }
-    }
-    
-    private void CastDestinationToEnum(string targetString)
-    {
-        foreach (Location item in Enum.GetValues(typeof(Location)))
-        {
-            if (targetString.Equals(item.ToString()))
-            {
-                _location = item;
-                break;
-            }
-        }
-    }
 
     public ComboBoxItem SelectedDestination
     {
         set
         {
-            CastDestinationToEnum(value.Content.ToString());
-            _selectedDestination = _location;
+            _selectedDestination = value.Name;
             OnPropertyChanged();
         }
     }
@@ -108,7 +81,7 @@ public class CreateTicketViewModel : ObservableObject
 
     private async Task<string> GenerateNewTicketNumber()
     {
-        var targetDepartment = EnumDescription.GetDescription(_loggedUser.Department);
+        string targetDepartment = _loggedUser.Department;
         await using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
         string query = @"SELECT TotalTickets FROM ticket_counter WHERE Department = @targetDepartment FOR UPDATE";
@@ -116,12 +89,10 @@ public class CreateTicketViewModel : ObservableObject
         try
         {
             Console.WriteLine("trying connection to db");
-            var numOfTickets = connection.Query<int>(query, new { targetDepartment }).FirstOrDefault();
-            Console.WriteLine($"numOfTickets: {numOfTickets}");
-            int newTicketNumber = numOfTickets + 1;
+            int newTicketNumber = connection.Query<int>(query, new { targetDepartment }).FirstOrDefault()+1;
             string newTicketId = $"{targetDepartment}-{newTicketNumber}";
             string updateQuery = "UPDATE ticket_counter SET TotalTickets = @newTicketNumber WHERE Department = @targetDepartment";
-            var isSuccess = await connection.ExecuteAsync(updateQuery, new { newTicketNumber, targetDepartment });
+            int isSuccess = await connection.ExecuteAsync(updateQuery, new { newTicketNumber, targetDepartment });
 
             Console.WriteLine($"isSuccess: {isSuccess}");
             return newTicketId;
@@ -137,28 +108,28 @@ public class CreateTicketViewModel : ObservableObject
     {
         string newTicketId = await GenerateNewTicketNumber();
         Console.WriteLine($"new ticket number: {newTicketId}");
-        var ticket = new Ticket_
-        (
-            newTicketId,
-            _loggedUser.Department,
-            Status.Open,
-            _selectedSeverity,
-            _loggedUser.UserId,
-            _selectedDestination,
-            _loggedUser.Department,
-            _reportedBy,
-            DateTime.Now,
-            DateTime.Now,
-            _description,
-            0,
-            0,
-            0,
-            0,
-            0
-        );
+        var ticket = new Ticket
+            {
+            TicketId = newTicketId,
+            Origin = _loggedUser.Department,
+            Status = "Open",
+            Severity = _selectedSeverity,
+            AuthorId = _loggedUser.UserId,
+            CurrentLocation = _selectedDestination,
+            PrevLocation = _loggedUser.Department,
+            ReporterId = _reportedBy,
+            DateTimeCreated = DateTime.Now,
+            DateTimeLastUpdated = DateTime.Now,
+            Description = _description,
+            NumOfUpdates = 0,
+            NumOfDownVotes = 0,
+            NumOfUpVotes = 0,
+            VotesRatio = 0,
+            Attachments = 0
+        };
         try
         {
-            Console.WriteLine($"ticket created: {ticket.Status}, {ticket.Description}, {ticket.DateTimeCreated}");
+            Console.WriteLine($"ticket created: {ticket.Status}, {ticket.Description}, {ticket.DateTimeCreated}, {ticket.CurrentLocation}");
         }
         catch (Exception ex)
         {
@@ -167,21 +138,21 @@ public class CreateTicketViewModel : ObservableObject
         await SendTicketToDb(ticket);
     }
     
-    private async Task SendTicketToDb(Ticket_ ticket)
+    private async Task SendTicketToDb(Ticket ticket)
     {
         try
         {
             await using var connection = new MySqlConnection(_connectionString);
-            var query = $"INSERT INTO {_selectedDestination.ToString().ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
+            var query = $"INSERT INTO {_selectedDestination}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
             await connection.ExecuteAsync(query, new
             {
                 ticket.TicketId,
-                Status = ticket.Status.ToString(),
-                Severity = ticket.Severity.ToString(),
+                ticket.Status,
+                ticket.Severity,
                 ticket.AuthorId,
-                Origin = ticket.Origin.ToString(),
-                CurrentLocation = ticket.CurrentLocation.ToString(),
-                PrevLocation = ticket.PrevLocation.ToString(),
+                ticket.Origin,
+                ticket.CurrentLocation,
+                ticket.PrevLocation,
                 ticket.ReporterId,
                 ticket.Description,
                 ticket.NumOfUpdates,

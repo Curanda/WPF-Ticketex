@@ -8,20 +8,19 @@ namespace TicketeX_.ViewModels;
 
 public class TicketQueueViewModel: ObservableObject
 {
-    public ObservableCollection<TicketQueueTicket_> TicketQueueTickets { get; set; }
-    public TicketQueueTicket_ SelectedTicket { get; set; }
-    public TicketQueueViewModel(ObservableCollection<TicketQueueTicket_> ticketQueueTickets)
+    public ObservableCollection<Ticket> TicketQueueTickets { get; set; }
+    public Ticket SelectedTicket { get; set; }
+    public TicketQueueViewModel(ObservableCollection<Ticket> ticketQueueTickets)
     {
         TicketQueueTickets = ticketQueueTickets;
-        // SelectedTicket = TicketQueueTickets?.FirstOrDefault();
+        SelectedTicket = TicketQueueTickets?.FirstOrDefault();
         // DisplaySelected();
     }
 
     private void DisplaySelected()
     {
-        // while (true)
+        // while (SelectedTicket != null)
         // {
-        //     if (SelectedTicket == null) return;
         //     Console.WriteLine(SelectedTicket?.Description);
         //     Thread.Sleep(5000);
         // }

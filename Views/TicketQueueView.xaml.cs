@@ -20,7 +20,13 @@ public partial class TicketQueueView
     private void EventSetter_OnHandler(object sender, MouseButtonEventArgs e)
     {
         var row = sender as DataGridRow;
-        var ticket = row?.DataContext as TicketQueueTicket;
-        MessageBox.Show(ticket?.Description);
+        var selectedTicket = row?.DataContext as Ticket;
+        var ticketVm = new TicketViewModel(selectedTicket);
+        var ticketView = new TicketView
+        {
+            DataContext = ticketVm
+        };
+        ticketView.Show();
+        MessageBox.Show(selectedTicket?.Description);
     }
 }

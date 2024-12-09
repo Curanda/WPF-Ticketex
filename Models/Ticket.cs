@@ -26,4 +26,10 @@ public class Ticket
         string sqlDateTime = new SqlDateTime(dateTime).ToString();
         return sqlDateTime;
     }
+
+    public static DateTime SqlStringToDateTime(string sqlDateTime)
+    {
+        DateTime dateTime = DateTime.Parse(sqlDateTime);
+        return dateTime;
+    }
 }

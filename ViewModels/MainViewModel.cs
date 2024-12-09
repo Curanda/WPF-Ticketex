@@ -20,7 +20,7 @@ public class MainViewModel: ObservableObject
     public RelayCommand_ RefreshQueueCommand { get; set; }
     public RelayCommand_ LogoutCommand { get; set; }
     private LoggedUser _loggedUser { get; set; }
-    private ObservableCollection<TicketQueueTicket_> TicketQueueTickets { get; set; } = new();
+    private ObservableCollection<Ticket> TicketQueueTickets { get; set; } = new();
     private HomeViewModel HomeVm { get; set; }
     private TicketQueueViewModel TicketQueueVm { get; set; }
     public CreateTicketViewModel CreateTicketVm { get; set; }
@@ -37,8 +37,8 @@ public class MainViewModel: ObservableObject
     {
         Console.WriteLine(loggedUser.Department);
         _loggedUser = loggedUser;
-        CurrentAccount = loggedUser.Department.ToString();
-        _currentView = HomeVm = new HomeViewModel(loggedUser.FirstName, loggedUser.Department.ToString());
+        CurrentAccount = loggedUser.Department;
+        _currentView = HomeVm = new HomeViewModel(loggedUser.FirstName, loggedUser.Department);
         TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets);
         LoadTicketQueue(CurrentAccount);
         
@@ -118,7 +118,7 @@ public class MainViewModel: ObservableObject
         {
             await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
             
-            var tickets = await connection.QueryAsync<TicketQueueTicket_>(query);
+            var tickets = await connection.QueryAsync<Ticket>(query);
             foreach (var ticket in tickets)
             {
                 TicketQueueTickets.Add(ticket);

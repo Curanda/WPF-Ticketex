@@ -43,11 +43,14 @@
         
         <Label Grid.Row="3" Grid.Column="0">Destination:</Label>
         <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" Name="DestinationDropdown" HorizontalAlignment="Left" Width="150" Height="20" SelectedItem="{Binding SelectedDestination, UpdateSourceTrigger=PropertyChanged}">
-            <ComboBoxItem Content="Helpdesk"></ComboBoxItem>
-            <ComboBoxItem Content="HR"></ComboBoxItem>
-            <ComboBoxItem Content="Lager"></ComboBoxItem>
-            <ComboBoxItem Content="Windows Support"></ComboBoxItem>
-            <ComboBoxItem Content="Networks Support"></ComboBoxItem>
+            <ComboBoxItem Name="helpdesk" Content="Helpdesk"></ComboBoxItem>
+            <ComboBoxItem Name="hr" Content="HR"></ComboBoxItem>
+            <ComboBoxItem Name="windowssupport" Content="Windows Support"></ComboBoxItem>
+            <ComboBoxItem Name="networkssuport" Content="Networks Support"></ComboBoxItem>
+            <ComboBoxItem Name="lager" Content="Lager"></ComboBoxItem>
+            <ComboBoxItem Name="dbsupport" Content="Database Support"></ComboBoxItem>
+            <ComboBoxItem Name="technician" Content="Technician Support"></ComboBoxItem>
+            <ComboBoxItem Name="janitor" Content="Janitor Support"></ComboBoxItem>
         </ComboBox>
         
         <Label Grid.Row="4" Grid.Column="0">Description:</Label>
