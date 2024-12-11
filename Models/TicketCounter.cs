@@ -4,6 +4,6 @@ namespace TicketeX_.Models;
 
 public class TicketCounter
 {
-    public Location Department { get; set; }
+    public Location_ Department { get; set; }
     public int TotalTickets { get; set; }
 }

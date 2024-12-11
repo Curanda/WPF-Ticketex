@@ -17,16 +17,16 @@ public partial class TicketQueueView
         InitializeComponent();
     }
 
-    private void EventSetter_OnHandler(object sender, MouseButtonEventArgs e)
-    {
-        var row = sender as DataGridRow;
-        var selectedTicket = row?.DataContext as Ticket;
-        var ticketVm = new TicketViewModel(selectedTicket);
-        var ticketView = new TicketView
-        {
-            DataContext = ticketVm
-        };
-        ticketView.Show();
-        MessageBox.Show(selectedTicket?.Description);
-    }
+    // private void EventSetter_OnHandler(object sender, MouseButtonEventArgs e)
+    // {
+    //     var row = sender as DataGridRow;
+    //     var selectedTicket = row?.DataContext as Ticket;
+    //     var ticketVm = new TicketViewModel(selectedTicket);
+    //     var ticketView = new TicketView
+    //     {
+    //         DataContext = ticketVm
+    //     };
+    //     ticketView.Show();
+    // }
+    
 }

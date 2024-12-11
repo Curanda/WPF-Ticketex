@@ -36,21 +36,25 @@
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
                   SelectedItem="{Binding SelectedTicket, Mode=TwoWay}">
-            <DataGrid.Resources>
-                <Style TargetType="DataGridRow">
-                    <EventSetter Event="MouseDoubleClick" Handler="EventSetter_OnHandler"/>
-                    <Setter Property="ContextMenu">
-                        <Setter.Value>
-                            <ContextMenu>
-                                <MenuItem Header="Show ticket"/>
-                                <MenuItem Header="Copy ticket"/>
-                            </ContextMenu>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </DataGrid.Resources>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Show ticket"  Command="{Binding ShowTicketCommand}" CommandParameter="{Binding SelectedTicket}"/>
+                    <MenuItem Header="Copy ticket" Command="{Binding CopyTicketDataCommand}"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <!-- </DataGrid.ContextMenu> -->
+            <!-- <DataGrid.Resources> -->
+            <!--     <Style TargetType="DataGridRow"> -->
+            <!--         ~1~ <EventSetter Event="MouseDoubleClick" Handler="EventSetter_OnHandler"/> @1@ -->
+            <!--         <Setter Property="ContextMenu"> -->
+            <!--             <Setter.Value> -->
+            <!-- -->
+            <!--             </Setter.Value> -->
+            <!--         </Setter> -->
+            <!--     </Style> -->
+            <!-- </DataGrid.Resources> -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Ticket ID" Binding="{Binding TicketId}" Width="100" />
+                <DataGridTextColumn Header="Ticket ID" Binding="{Binding TicketId}" Width="100"/>
                 <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="100" />
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100" />
                 <DataGridTextColumn Header="Prev Loc" Binding="{Binding PrevLocation}"/>

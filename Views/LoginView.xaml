@@ -109,30 +109,9 @@
                             Cursor="Hand"                           
                             Margin="0,50,0,0"
                             Command="{Binding  LoginCommand}"
-                            CommandParameter="{Binding ElementName=PasswordBox}">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="#20CAFD"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#28AEED"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Width="130" Height="35"
-                                        CornerRadius="20"
-                                        BorderThickness="1"
-                                        BorderBrush="DarkGray"
-                                        Background="{TemplateBinding Background}">
-                                    <ContentPresenter VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                            CommandParameter="{Binding ElementName=PasswordBox}"
+                            Style="{StaticResource NiceButton}"
+                            />
                 </StackPanel>
             </Grid>
         </Border>

@@ -1,4 +1,5 @@
 using System.Windows;
+using TicketeX_.Models;
 
 namespace TicketeX_.Views;
 
@@ -35,11 +36,8 @@ public partial class TicketView : Window
     
     private void EnableFormEditing(bool enable)
     {
-        StatusComboBox.IsEnabled = enable;
         SeverityComboBox.IsEnabled = enable;
         DescriptionTextBox.IsEnabled = enable;
-        OriginTextBox.IsEnabled = enable;
         CurrentLocationTextBox.IsEnabled = enable;
-        PrevLocationTextBox.IsEnabled = enable;
     }
 }

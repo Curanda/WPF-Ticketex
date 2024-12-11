@@ -4,137 +4,199 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:TicketeX_.Views"
+        xmlns:utilities="clr-namespace:TicketeX_.Utilities"
+        xmlns:viewModels="clr-namespace:TicketeX_.ViewModels"
         mc:Ignorable="d"
-        Title="TicketView" Height="650" Width="800">
-<Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <!-- Header -->
-        <TextBlock Text="Ticket Details" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
-
-        <!-- Main Content -->
-        <ScrollViewer Grid.Row="1">
-            <StackPanel>
-                <!-- Basic Info Section -->
-                <GroupBox Header="Basic Information" Margin="0,0,0,15">
-                    <Grid Margin="10">
+        Title="TicketView" Height="800" Width="500">
+    <!-- <Window.DataContext> -->
+    <!--     <viewModels:TicketViewModel></viewModels:TicketViewModel> -->
+    <!-- </Window.DataContext> -->
+    <Window.Resources>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontSize" Value="10"></Setter>
+        </Style>
+        
+    </Window.Resources>
+    <utilities:DashedBorder UseDashedBorder="True"
+                            DashedBorderBrush="#1C2630"
+                            StrokeDashArray="5 1 5 1"
+                            Background="#274472"                               
+                            BorderThickness="4"
+                            DockPanel.Dock="Top"
+                            CornerRadius="0,0,0,0">
+        <Border CornerRadius="0"                    
+                BorderThickness="0"
+                Opacity="0.95">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                    <GradientStop Color="#1C2630" Offset="0"/>
+                    <GradientStop Color="#274472" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            
+            <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Text="Ticket ID:" VerticalAlignment="Center"/>
-                        <TextBox x:Name="TicketIdTextBox" Grid.Row="0" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding ticket.TicketId}"/>
-
-                        <TextBlock Text="Status:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                        <ComboBox x:Name="StatusComboBox" Grid.Row="1" Grid.Column="1" Margin="5" IsEnabled="False">
-                            <ComboBoxItem>Open</ComboBoxItem>
-                            <ComboBoxItem>Pending</ComboBoxItem>
-                            <ComboBoxItem>Closed</ComboBoxItem>
-                        </ComboBox>
-
-                        <TextBlock Text="Severity:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-                        <ComboBox x:Name="SeverityComboBox" Grid.Row="2" Grid.Column="1" Margin="5" IsEnabled="False">
-                            <ComboBoxItem>Low</ComboBoxItem>
-                            <ComboBoxItem>Medium</ComboBoxItem>
-                            <ComboBoxItem>High</ComboBoxItem>
-                            <ComboBoxItem>Critical</ComboBoxItem>
-                        </ComboBox>
-
-                        <TextBlock Text="Description:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" Margin="0,5,0,0"/>
-                        <TextBox x:Name="DescriptionTextBox" Grid.Row="3" Grid.Column="1" 
-                                 Margin="5" Height="100" TextWrapping="Wrap" 
-                                 AcceptsReturn="True" IsEnabled="False"
-                                 Text="{Binding Description}"/>
+                    <TextBlock Text="Ticket" FontSize="24" FontWeight="Bold" Foreground="Azure" Margin="10,0,0,10"/>
+                    <TextBlock Grid.Column="1" Text="{Binding TicketId}" Foreground="Azure"  FontSize="15"></TextBlock>
                     </Grid>
-                </GroupBox>
+                    <Separator Grid.Row="0" Style="{StaticResource SeparatorTheme}" Tag="Details"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                <!-- Location Info Section -->
-                <GroupBox Header="Location Information" Margin="0,0,0,15">
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                            <TextBlock Text="Ticket ID:" Foreground="Azure"  VerticalAlignment="Center"/>
+                            <TextBox x:Name="TicketIdTextBox" Grid.Row="0" Grid.Column="1" IsEnabled="False" Text="{Binding TicketId}" Style="{StaticResource FormTextBoxTheme}"/>
 
-                        <TextBlock Text="Origin:" VerticalAlignment="Center"/>
-                        <TextBox x:Name="OriginTextBox" Grid.Row="0" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding ticket.Origin}"/>
-                        
-                        <TextBlock Text="Previous Location:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-                        <TextBox x:Name="PrevLocationTextBox" Grid.Row="2" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding ticket.PrevLocation}"/>
-                        
-                        <TextBlock Text="Destination:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                        <TextBox x:Name="CurrentLocationTextBox" Grid.Row="1" Grid.Column="1" Margin="5" IsEnabled="False"/>
-                    </Grid>
-                </GroupBox>
+                            <TextBlock Text="Status:" Grid.Row="1" Grid.Column="0" Foreground="Azure"  VerticalAlignment="Center"/>
+                            <Border Grid.Row="1" Grid.Column="1" CornerRadius="2" 
+                                    Background="Transparent" 
+                                    BorderBrush="White" 
+                                    BorderThickness="1"
+                                    Height="20"
+                                    Margin="0,5,0,5"
+                                    HorizontalAlignment="Stretch"
+                                    MaxWidth="270">
+                                <ComboBox x:Name="StatusComboBox"  
+                                          IsEnabled="False" 
+                                          BorderThickness="0" 
+                                          Background="White" 
+                                          Foreground="Black"
+                                          SelectedItem="{Binding Status, Mode=TwoWay}"
+                                          Text="{Binding Status, Mode=TwoWay}">
+                                    <ComboBoxItem>Open</ComboBoxItem>
+                                    <ComboBoxItem>Pending</ComboBoxItem>
+                                    <ComboBoxItem>Closed</ComboBoxItem>
+                                </ComboBox>
+                            </Border>
+                            <TextBlock Text="Severity:" Grid.Row="2" Grid.Column="0" Foreground="Azure"  VerticalAlignment="Center"/>
+                            <Border Grid.Row="2" Grid.Column="1" CornerRadius="2" 
+                                    Background="Transparent" 
+                                    BorderBrush="White" 
+                                    BorderThickness="1"
+                                    Height="20"
+                                    Margin="0,5,0,5"
+                                    HorizontalAlignment="Stretch"
+                                    MaxWidth="270">
+                                <ComboBox x:Name="SeverityComboBox" 
+                                          Margin="0" 
+                                          IsEnabled="False"
+                                          BorderThickness="0"
+                                          Background="White"
+                                          Foreground="Black"
+                                          SelectedItem="{Binding Severity, Mode=TwoWay}"
+                                          Text="{Binding Severity, Mode=TwoWay}">
+                                    <ComboBoxItem>Low</ComboBoxItem>
+                                    <ComboBoxItem>Medium</ComboBoxItem>
+                                    <ComboBoxItem>High</ComboBoxItem>
+                                    <ComboBoxItem>Critical</ComboBoxItem>
+                                </ComboBox>
+                            </Border>
+                            <TextBlock Text="Description:" Grid.Row="3" Foreground="Azure"  Grid.Column="0" VerticalAlignment="Top" Margin="0,5,0,0"/>
+                            <Border Grid.Row="3" Grid.Column="1" Margin="5" Background="White" CornerRadius="3" BorderThickness="2" BorderBrush="White" Height="200">
+                                <TextBox x:Name="DescriptionTextBox" 
+                                         BorderThickness="0"
+                                         HorizontalScrollBarVisibility="Auto" 
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True" IsEnabled="False"
+                                         Background="Transparent"
+                                         Foreground="Black"
+                                         Text="{Binding Description}" VerticalScrollBarVisibility="Auto"
+                                />
+                            </Border>
+                                     <!-- Style="{StaticResource FormInputField}" -->
+                        </Grid>
+                    <Separator Style="{StaticResource SeparatorTheme}" Tag="History" Foreground="Azure" BorderBrush="White"/>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Origin:"  Foreground="Azure" VerticalAlignment="Center"/>
+                            <Border Grid.Row="0" Grid.Column="1" CornerRadius="2" 
+                                    Background="Transparent" 
+                                    BorderBrush="White" 
+                                    BorderThickness="1"
+                                    Height="20"
+                                    Margin="0,5,0,5"
+                                    HorizontalAlignment="Stretch"
+                                    MaxWidth="270">
+                                <ComboBox x:Name="DestinationComboBox" 
+                                          Margin="0" 
+                                          IsEnabled="False"
+                                          BorderThickness="0"
+                                          Background="White"
+                                          Foreground="Black"
+                                          SelectedItem="{Binding SelectedDestination, Mode=TwoWay}"
+                                          Text="{Binding SelectedDestination, Mode=TwoWay}">
+                                    <ComboBoxItem>Helpdesk</ComboBoxItem>
+                                    <ComboBoxItem>Windowssupport</ComboBoxItem>
+                                    <ComboBoxItem>Networksupport</ComboBoxItem>
+                                    <ComboBoxItem>Hr</ComboBoxItem>
+                                    <ComboBoxItem>Lager</ComboBoxItem>
+                                    <ComboBoxItem>Dbsupport</ComboBoxItem>
+                                    <ComboBoxItem>Technician</ComboBoxItem>
+                                    <ComboBoxItem>Janitor</ComboBoxItem>
+                                </ComboBox>
+                            </Border>
+                            <TextBlock Text="Previous Location:" Grid.Row="2" Grid.Column="0" Foreground="Azure"  VerticalAlignment="Center"/>
+                            <TextBox x:Name="PrevLocationTextBox" Grid.Row="2" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding PrevLocation}"
+                                     Style="{StaticResource FormTextBoxTheme}"/>
+                            
+                            <TextBlock Text="Destination:" Grid.Row="1" Grid.Column="0" Foreground="Azure"  VerticalAlignment="Center"/>
+                            <TextBox x:Name="CurrentLocationTextBox" Grid.Row="1" Grid.Column="1" Margin="5" IsEnabled="False"
+                                     Style="{StaticResource FormTextBoxTheme}"/>
+                        </Grid>
+                    <Separator Style="{StaticResource SeparatorTheme}" Tag="Timeline" Foreground="Azure" BorderBrush="White"/>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Created:" Foreground="Azure"  VerticalAlignment="Center"/>
+                            <TextBox x:Name="DateTimeCreatedTextBox" Grid.Row="0" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding DateTimeCreated}"
+                                     Style="{StaticResource FormTextBoxTheme}"/>
 
-                <!-- Statistics Section -->
-                <!-- <GroupBox Header="Statistics" Margin="0,0,0,15"> -->
-                <!--     <Grid Margin="10"> -->
-                <!--         <Grid.ColumnDefinitions> -->
-                <!--             <ColumnDefinition Width="150"/> -->
-                <!--             <ColumnDefinition Width="*"/> -->
-                <!--             <ColumnDefinition Width="150"/> -->
-                <!--             <ColumnDefinition Width="*"/> -->
-                <!--         </Grid.ColumnDefinitions> -->
-                <!--         <Grid.RowDefinitions> -->
-                <!--             <RowDefinition Height="Auto"/> -->
-                <!--             <RowDefinition Height="Auto"/> -->
-                <!--         </Grid.RowDefinitions> -->
-                <!-- -->
-                <!--         <TextBlock Text="Updates:" VerticalAlignment="Center"/> -->
-                <!--         <TextBox x:Name="NumOfUpdatesTextBox" Grid.Row="0" Grid.Column="1" Margin="5" IsEnabled="False"/> -->
-                <!-- -->
-                <!--         <TextBlock Text="Attachments:" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"/> -->
-                <!--         <TextBox x:Name="AttachmentsTextBox" Grid.Row="0" Grid.Column="3" Margin="5" IsEnabled="False"/> -->
-                <!-- -->
-                <!--         <TextBlock Text="Votes Ratio:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/> -->
-                <!--         <TextBox x:Name="VotesRatioTextBox" Grid.Row="1" Grid.Column="1" Margin="5" IsEnabled="False"/> -->
-                <!--     </Grid> -->
-                <!-- </GroupBox> -->
-
-                <!-- Timestamps Section -->
-                <GroupBox Header="Timestamps" Margin="0,0,0,15">
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Text="Created:" VerticalAlignment="Center"/>
-                        <TextBox x:Name="DateTimeCreatedTextBox" Grid.Row="0" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding ticket.DateTimeCreated}"/>
-
-                        <TextBlock Text="Last Updated:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                        <TextBox x:Name="DateTimeLastUpdatedTextBox" Grid.Row="1" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding ticket.DateTimeLastUpdated}"/>
-                    </Grid>
-                </GroupBox>
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-            <Button x:Name="EditButton" Content="Edit Ticket" Width="100" Height="30" Margin="5" Click="EditButton_Click" Command="{Binding EditButton_Click}"/>
-            <Button x:Name="SaveButton" Content="Save" Width="100" Height="30" Margin="5" Click="SaveButton_Click" Command="{Binding SaveButton_Click}" Visibility="Collapsed"/>
-            <Button x:Name="CancelButton" Content="Cancel" Width="100" Height="30" Margin="5" Click="CancelButton_Click" Command="{Binding CancelButton_Click}" Visibility="Collapsed"/>
-        </StackPanel>
-    </Grid>
+                            <TextBlock Text="Last Updated:" Grid.Row="1" Grid.Column="0" Foreground="Azure"  VerticalAlignment="Center"/>
+                            <TextBox x:Name="DateTimeLastUpdatedTextBox" Grid.Row="1" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding DateTimeLastUpdated}"
+                                     Style="{StaticResource FormTextBoxTheme}"/>
+                        </Grid>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,0">
+                    <Button x:Name="EditButton" Content="Edit Ticket" Margin="5" Click="EditButton_Click" Command="{Binding EditButton_Click}" Style="{StaticResource NiceButton}"/>
+                    <Button x:Name="SaveButton" Content="Save" Margin="5" Click="SaveButton_Click" Command="{Binding SaveButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
+                    <Button x:Name="CancelButton" Content="Cancel" Margin="5" Click="CancelButton_Click" Command="{Binding CancelButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </utilities:DashedBorder>
 </Window>

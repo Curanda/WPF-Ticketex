@@ -1,0 +1,21 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="{x:Type TextBox}" x:Key="FormTextBoxTheme">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border CornerRadius="2" 
+                            Background="White" 
+                            BorderBrush="White" 
+                            BorderThickness="1"
+                            Height="20"
+                            Margin="0,5,0,5"
+                            HorizontalAlignment="Stretch"
+                            MaxWidth="270">
+                        <TextBox x:Name="TicketTextBox" BorderThickness="0" IsEnabled="{TemplateBinding IsEnabled}" Background="Transparent" Foreground="Black" Height="22" MaxWidth="270" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Text="{TemplateBinding Text}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

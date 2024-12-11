@@ -3,7 +3,7 @@ using TicketeX_.CustomAttributes;
 
 namespace TicketeX_.Models;
 
-public enum Location
+public enum Location_
 {
     [EnumDescription("Helpdesk")]
     Helpdesk,

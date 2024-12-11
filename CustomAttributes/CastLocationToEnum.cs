@@ -6,7 +6,7 @@ namespace TicketeX_.CustomAttributes;
 public class CastLocationToEnum: Attribute
 {
     public string targetString;
-    public static Location location { get; set; }
+    public static Location_ location { get; set; }
 
     public CastLocationToEnum(string targetString)
     {
@@ -15,7 +15,7 @@ public class CastLocationToEnum: Attribute
     
     public static void castLocationToEnum(string targetString)
     {
-        foreach (Location item in Enum.GetValues(typeof(Location)))
+        foreach (Location_ item in Enum.GetValues(typeof(Location_)))
         {
             if (targetString.Equals(item.ToString()))
             {
