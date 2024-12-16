@@ -10,7 +10,10 @@ namespace TicketeX_.ViewModels;
 
 public class TicketViewModel: ObservableObject
 {
+    public int editCounter = 0;
+    private bool descriptionEdited = false;
     private Ticket ticket;
+    private Ticket uneditedTicket;
     public string EditorId = "Editor";
     public string EditorDepartmentId = "EditorDepartmentId";
     
@@ -79,6 +82,7 @@ public class TicketViewModel: ObservableObject
         set
         {
             _description = value;
+            OnPropertyChanged();
         }
     }
     
@@ -86,6 +90,7 @@ public class TicketViewModel: ObservableObject
     public TicketViewModel(Ticket selectedTicket)
     {
         ticket = selectedTicket;
+        uneditedTicket = selectedTicket;
         TicketId = selectedTicket.TicketId;
         Severity = selectedTicket.Severity;
         Status = selectedTicket.Status;
@@ -96,9 +101,8 @@ public class TicketViewModel: ObservableObject
         _description = selectedTicket.Description;
         _prevLocation = selectedTicket.PrevLocation;
         ReporterId = selectedTicket.ReporterId;
-        
+        _selectedDestination = "";
         OldDescription = selectedTicket.Description;
-        Description = selectedTicket.Description;
         
         EditButton_Click = new RelayCommand_(o =>
         {
@@ -109,14 +113,19 @@ public class TicketViewModel: ObservableObject
         {
             Console.WriteLine("Save button clicked");
             ticket.Status = "Pending";
-            ticket.Description = OldDescription+$"\n \n {DateTime.Now}, Update by: {EditorId}, Department {EditorDepartmentId} \n \n "+_description;
-            OldDescription = ticket.Description;
+            // if (_description.Length > OldDescription.Length) editCounter++;
             ticket.DateTimeLastUpdated = DateTime.Now;
+            ticket.Description = ticket.Description+$"\n \n {ticket.DateTimeLastUpdated}, Update by: {EditorId}, Department: {EditorDepartmentId} \n \n "+_description;
+            Description = ticket.Description;
+            Console.WriteLine(editCounter);
         });
         
         CancelButton_Click = new RelayCommand_(o =>
         {
             Console.WriteLine("Cancel button clicked");
+            Severity = selectedTicket.Severity;
+            Status = selectedTicket.Status;
+            Description = selectedTicket.Description;
         });
     }
 
