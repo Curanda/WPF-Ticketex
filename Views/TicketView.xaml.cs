@@ -10,7 +10,6 @@ namespace TicketeX_.Views;
 
 public partial class TicketView : Window
 {
-    
     public TicketView()
     {
         InitializeComponent();
@@ -30,8 +29,8 @@ public partial class TicketView : Window
         SaveButton.Visibility = Visibility.Collapsed;
         CancelButton.Visibility = Visibility.Collapsed;
         EnableFormEditing(false);
-        var vm = (TicketViewModel)DataContext;
-        vm.editCounter++;
+        // var vm = (TicketViewModel)DataContext;
+        // vm.editCounter++;
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -63,5 +62,10 @@ public partial class TicketView : Window
             };
             DescriptionTextBox.SetBinding(TextBox.TextProperty, displayBinging);
         }
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
     }
 }

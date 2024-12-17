@@ -88,7 +88,7 @@ public class CreateTicketViewModel : ObservableObject
         
         try
         {
-            Console.WriteLine("trying connection to db");
+            // Console.WriteLine("trying connection to db");
             int newTicketNumber = connection.Query<int>(query, new { targetDepartment }).FirstOrDefault()+1;
             string newTicketId = $"{targetDepartment}-{newTicketNumber}";
             string updateQuery = "UPDATE ticket_counter SET TotalTickets = @newTicketNumber WHERE Department = @targetDepartment";

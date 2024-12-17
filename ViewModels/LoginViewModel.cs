@@ -40,7 +40,7 @@ public class LoginViewModel: ObservableObject
 
     private async Task LoginUser(string _username, object parameter)
     {
-        Console.WriteLine(_username);
+        // Console.WriteLine(_username);
         await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
         await connection.OpenAsync();
         var passwordBox = parameter as PasswordBox;
@@ -48,7 +48,7 @@ public class LoginViewModel: ObservableObject
     
         try
         {
-            Console.WriteLine("trying connection to db");
+            // Console.WriteLine("trying connection to db");
             var res = connection.Query<LoggedUser>(query, new 
             { 
                 UserId = _username, 

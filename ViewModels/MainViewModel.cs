@@ -17,7 +17,7 @@ public class MainViewModel: ObservableObject
     public RelayCommand_ HomeViewCommand { get; set; }
     public RelayCommand_ TicketQueueViewCommand { get; set; }
     public RelayCommand_ CreateTicketViewCommand { get; set; }
-    public RelayCommand_ RefreshQueueCommand { get; set; }
+    public static RelayCommand_ RefreshQueueCommand { get; set; }
     public RelayCommand_ LogoutCommand { get; set; }
     private LoggedUser _loggedUser { get; set; }
     private ObservableCollection<Ticket> TicketQueueTickets { get; set; } = new();
@@ -35,11 +35,11 @@ public class MainViewModel: ObservableObject
 
     public MainViewModel(LoggedUser loggedUser)
     {
-        Console.WriteLine(loggedUser.Department);
+        // Console.WriteLine(loggedUser.Department);
         _loggedUser = loggedUser;
         CurrentAccount = loggedUser.Department;
         _currentView = HomeVm = new HomeViewModel(loggedUser.FirstName, loggedUser.Department);
-        TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets);
+        TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets, _loggedUser);
         LoadTicketQueue(CurrentAccount);
         
         HomeViewCommand = new RelayCommand_(o =>
@@ -85,34 +85,7 @@ public class MainViewModel: ObservableObject
     private async Task LoadTicketQueue(string CurrentAccount)
     {
 
-        string query;
-        switch (CurrentAccount)
-        {
-            case "Windowssupport":
-                query = "SELECT * FROM windowssupport_tickets";
-                break;
-            case "Networksupport":
-                query = "SELECT * FROM networksupport_tickets";
-                break;
-            case "Hr":
-                query = "SELECT * FROM hr_tickets";
-                break;
-            case "Lager":
-                query = "SELECT * FROM lager_tickets";
-                break;
-            case "Dbsupport":
-                query = "SELECT * FROM dbsupport_tickets";
-                break;
-            case "Technician":
-                query = "SELECT * FROM technician_tickets";
-                break;
-            case "Janitor":
-                query = "SELECT * FROM janitor_tickets";
-                break;
-            default:
-                query = "SELECT * FROM helpdesk_tickets";
-                break;
-        }
+        string query = $"SELECT * FROM {CurrentAccount.ToLower()}_tickets";
         
         try
         {
@@ -122,9 +95,8 @@ public class MainViewModel: ObservableObject
             foreach (var ticket in tickets)
             {
                 TicketQueueTickets.Add(ticket);
-                Console.WriteLine(ticket.TicketId);
             }
-            Console.WriteLine("Ticket Queue Loaded");
+            Console.WriteLine($"{_loggedUser.Department} ticket queue loaded");
         }
         catch (MySqlException ex)
         {
@@ -135,6 +107,7 @@ public class MainViewModel: ObservableObject
     private void ClearTicketQueue()
     {
         TicketQueueTickets.Clear();
+        Console.WriteLine("Clearing queue");
     }
 
 }

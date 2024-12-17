@@ -16,31 +16,32 @@ public class TicketQueueViewModel: ObservableObject, INotifyPropertyChanged
     public ObservableCollection<Ticket> TicketQueueTickets { get; set; }
     public RelayCommand_ ShowTicketCommand { get; set; }
     public TicketQueueView ticketQueueView { get; set; }
+    private LoggedUser _loggedUser;
     private Ticket _selectedTicket { get; set; }
 
     public Ticket SelectedTicket
     {
         get => _selectedTicket;
         set {
-            _selectedTicket = value; OnPropertyChanged();
+            _selectedTicket = value; 
+            OnPropertyChanged();
         }
     }
-    public TicketQueueViewModel(ObservableCollection<Ticket> ticketQueueTickets)
+    public TicketQueueViewModel(ObservableCollection<Ticket> ticketQueueTickets, LoggedUser loggedUser)
     {
         TicketQueueTickets = ticketQueueTickets;
+        _loggedUser = loggedUser;
         SelectedTicket = TicketQueueTickets?.FirstOrDefault();
         ShowTicketCommand = new RelayCommand_( _selectedTicket =>
         {
             var ticket = _selectedTicket as Ticket;
-            Console.WriteLine("siemkla");
-            Console.WriteLine(ticket?.TicketId);
-            Show(ticket);
+            ShowTicketView(ticket);
         });
     }
 
-    private void Show(Ticket ticket)
+    private void ShowTicketView(Ticket ticket)
     {
-        var ticketVm = new TicketViewModel(ticket);
+        var ticketVm = new TicketViewModel(ticket, _loggedUser);
         var ticketView = new TicketView
         {
             DataContext = ticketVm

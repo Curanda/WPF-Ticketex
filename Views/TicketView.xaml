@@ -81,7 +81,7 @@
                                           Background="White" 
                                           Foreground="Black"
                                           SelectedItem="{Binding Status, Mode=TwoWay}"
-                                          Text="{Binding Status, Mode=TwoWay}">
+                                          Text="{Binding _status, Mode=OneWay}">
                                     <ComboBoxItem>Open</ComboBoxItem>
                                     <ComboBoxItem>Pending</ComboBoxItem>
                                     <ComboBoxItem>Closed</ComboBoxItem>
@@ -103,7 +103,7 @@
                                           Background="White"
                                           Foreground="Black"
                                           SelectedItem="{Binding Severity, Mode=TwoWay}"
-                                          Text="{Binding Severity, Mode=TwoWay}">
+                                          Text="{Binding _severity, Mode=OneWay}">
                                     <ComboBoxItem>Low</ComboBoxItem>
                                     <ComboBoxItem>Medium</ComboBoxItem>
                                     <ComboBoxItem>High</ComboBoxItem>
@@ -119,8 +119,8 @@
                                          AcceptsReturn="True" IsEnabled="False"
                                          Background="Transparent"
                                          Foreground="Black"
-                                         Text="{Binding Description, Mode=OneWay}" VerticalScrollBarVisibility="Auto"
-                                         
+                                         VerticalScrollBarVisibility="Auto"
+                                         Text="{Binding Description}"
                                 />
                             </Border>
                         </Grid>
@@ -141,7 +141,7 @@
                                      Text="{Binding Origin}"/>
                             
                             <TextBlock Text="Previous Location:" Grid.Row="1" Grid.Column="0" Foreground="Azure"  VerticalAlignment="Center"/>
-                            <TextBox x:Name="PrevLocationTextBox" Grid.Row="1" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding PrevLocation}"
+                            <TextBox x:Name="PrevLocationTextBox" Grid.Row="1" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding _prevLocation}"
                                      Style="{StaticResource FormTextBoxTheme}"/>
                             
                             <TextBlock Text="Destination:" Grid.Row="2" Grid.Column="0" Foreground="Azure"  VerticalAlignment="Center"/>
@@ -195,6 +195,8 @@
                     <Button x:Name="EditButton" Content="Edit Ticket" Margin="5" Click="EditButton_Click" Command="{Binding EditButton_Click}" Style="{StaticResource NiceButton}"/>
                     <Button x:Name="SaveButton" Content="Save" Margin="5" Click="SaveButton_Click" Command="{Binding SaveButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
                     <Button x:Name="CancelButton" Content="Cancel" Margin="5" Click="CancelButton_Click" Command="{Binding CancelButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
+                    <Button x:Name="CloseButton" Content="Close" Margin="5" Click="CloseButton_Click" Command="{Binding CloseButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
+
                 </StackPanel>
             </Grid>
             

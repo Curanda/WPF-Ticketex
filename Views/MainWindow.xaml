@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:utilities="clr-namespace:TicketeX_.Utilities"
         mc:Ignorable="d"
-        Title="TicketeX - Best way to share tickets" Height="600" Width="1000" Background="#22202f">
+        Title="TicketeX - Best way to share tickets" Height="auto" Width="1000" Background="#22202f">
 
     <Border CornerRadius="30">
     <DockPanel LastChildFill="True">

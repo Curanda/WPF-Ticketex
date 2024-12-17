@@ -1,6 +1,8 @@
 using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
+using Dapper;
+using MySql.Data.MySqlClient;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
 using TicketeX_.CustomAttributes;
@@ -12,10 +14,9 @@ public class TicketViewModel: ObservableObject
 {
     public int editCounter = 0;
     private bool descriptionEdited = false;
-    private Ticket ticket;
+    private Ticket _ticket;
     private Ticket uneditedTicket;
-    public string EditorId = "Editor";
-    public string EditorDepartmentId = "EditorDepartmentId";
+    private LoggedUser _loggedUser;
     
     public string TicketId { get; set; }
     public string _status { get; set; }
@@ -28,7 +29,7 @@ public class TicketViewModel: ObservableObject
     public DateTime DateTimeCreated { get; set; }
     public DateTime _dateTimeLastUpdated { get; set; }
     
-    private readonly string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+    private readonly string connectionString = ConfigurationManager.AppSettings["ConnectionString"];
     
     private string _selectedSeverity { get; set; }
     public RelayCommand_ EditButton_Click { get; }
@@ -40,28 +41,27 @@ public class TicketViewModel: ObservableObject
 
     public string Status
     {
-        get => _status;
+        get => _ticket.Status;
         set
         {
-        _status = value;
+        _ticket.Status = value;
         OnPropertyChanged();
         }
     }
     
-    public string PrevLocation { get => _prevLocation; set => _currentLocation = value; }
+    // public string PrevLocation { get => _prevLocation; }
 
     public DateTime DateTimeLastUpdated
     {
-        get => _dateTimeLastUpdated;
-        set => _dateTimeLastUpdated = value;
+        get => _ticket.DateTimeLastUpdated;
+        set => _ticket.DateTimeLastUpdated = value;
     }
 
-    public string Severity
+    public ComboBoxItem Severity
     {
-        get => _severity;
         set
         {
-            _severity = value;
+            _severity = value.Content.ToString();
             OnPropertyChanged();
         }
     }
@@ -69,6 +69,7 @@ public class TicketViewModel: ObservableObject
 
     public ComboBoxItem SelectedDestination
     {
+        
         set
         {
             _selectedDestination = value.Content.ToString();
@@ -87,13 +88,14 @@ public class TicketViewModel: ObservableObject
     }
     
 
-    public TicketViewModel(Ticket selectedTicket)
+    public TicketViewModel(Ticket selectedTicket, LoggedUser loggedUser)
     {
-        ticket = selectedTicket;
+        _ticket = selectedTicket;
         uneditedTicket = selectedTicket;
+        _loggedUser = loggedUser;
         TicketId = selectedTicket.TicketId;
-        Severity = selectedTicket.Severity;
-        Status = selectedTicket.Status;
+        _severity = selectedTicket.Severity;
+        _status = selectedTicket.Status;
         AuthorId = selectedTicket.AuthorId;
         Origin = selectedTicket.Origin;
         DateTimeCreated = selectedTicket.DateTimeCreated;
@@ -101,8 +103,9 @@ public class TicketViewModel: ObservableObject
         _description = selectedTicket.Description;
         _prevLocation = selectedTicket.PrevLocation;
         ReporterId = selectedTicket.ReporterId;
-        _selectedDestination = "";
+        _selectedDestination = null;
         OldDescription = selectedTicket.Description;
+        Console.WriteLine(uneditedTicket.CurrentLocation);
         
         EditButton_Click = new RelayCommand_(o =>
         {
@@ -112,23 +115,99 @@ public class TicketViewModel: ObservableObject
         SaveButton_Click = new RelayCommand_(o =>
         {
             Console.WriteLine("Save button clicked");
-            ticket.Status = "Pending";
-            // if (_description.Length > OldDescription.Length) editCounter++;
-            ticket.DateTimeLastUpdated = DateTime.Now;
-            ticket.Description = ticket.Description+$"\n \n {ticket.DateTimeLastUpdated}, Update by: {EditorId}, Department: {EditorDepartmentId} \n \n "+_description;
-            Description = ticket.Description;
-            Console.WriteLine(editCounter);
+            _ticket.Status = "Pending";
+            _ticket.DateTimeLastUpdated = DateTime.Now;
+            _ticket.DateTimeCreated = uneditedTicket.DateTimeCreated;
+            OldDescription = _ticket.Description;
+            _ticket.Description = OldDescription+$"\n \n {_ticket.DateTimeLastUpdated}, Update by: {_loggedUser.UserId}, Department: {_loggedUser.Department} \n \n "+_description;
+            Description = _ticket.Description;
+            OldDescription = _ticket.Description;
+            if (_selectedDestination != null) _ticket.CurrentLocation = _selectedDestination;
+            if ((_selectedDestination != _loggedUser.Department) && (_selectedDestination != null)) _ticket.PrevLocation = _loggedUser.Department;
+            _ticket.NumOfUpdates++;
+            Console.WriteLine("_selected: "+_selectedDestination);
+            Console.WriteLine("unedited: "+_loggedUser.Department);
+            DelegateTicket();
+            MainViewModel.RefreshQueueCommand.Execute(null);
         });
         
         CancelButton_Click = new RelayCommand_(o =>
         {
             Console.WriteLine("Cancel button clicked");
-            Severity = selectedTicket.Severity;
-            Status = selectedTicket.Status;
-            Description = selectedTicket.Description;
+            _severity = uneditedTicket.Severity;
+            Status = uneditedTicket.Status;
+            Description = uneditedTicket.Description;
+
+            SelectedDestination = null;
         });
     }
 
+    private async Task DelegateTicket()
+    {
+        
+        try
+        {
+            await using var connection = new MySqlConnection(connectionString);
+            string query;
+            if ((_selectedDestination == _loggedUser.Department) || (_selectedDestination == null))
+            {
+                if (_selectedDestination == null) Console.WriteLine("_selectedDestination is null");
+                if (_selectedDestination == _loggedUser.Department) Console.WriteLine($"_selectedDestination is equal to {uneditedTicket.CurrentLocation}. ticket.CurrentLocation is {_ticket.CurrentLocation}");
+                query = $"UPDATE {_loggedUser.Department.ToLower()}_tickets SET Status = @Status, Severity = @Severity, Description = @Description WHERE TicketId = @TicketId";
+            }
+            else
+            {
+                Console.WriteLine($"Selected destination is a new value of {_selectedDestination}");
+                query = $"INSERT INTO {_selectedDestination.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
+            }
+            await connection.ExecuteAsync(query, new
+            {
+                _ticket.TicketId,
+                _ticket.Status,
+                _ticket.Severity,
+                _ticket.AuthorId,
+                _ticket.Origin,
+                _ticket.CurrentLocation,
+                _ticket.PrevLocation,
+                _ticket.ReporterId,
+                _ticket.Description,
+                _ticket.NumOfUpdates,
+                _ticket.NumOfUpVotes,
+                _ticket.NumOfDownVotes,
+                _ticket.VotesRatio,
+                _ticket.Attachments
+            });
 
+            if ((_selectedDestination != _loggedUser.Department) && (_selectedDestination != null))
+            {
+                try
+                {
+                    var deleteQuery = $"DELETE FROM {_loggedUser.Department.ToLower()}_tickets WHERE TicketId = @TicketId";
+                    await connection.ExecuteAsync(deleteQuery, new { _ticket.TicketId });
+                    MessageBox.Show($"Ticket with Id: {_ticket.TicketId}, has been successfully delegated to {_ticket.CurrentLocation}. It's Someone else's problem now");
+                    
+                    CollapseButtons();
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Unable to delete ticket");
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Ticket with Id: {_ticket.TicketId}, has been successfully updated");
+            }
+        }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine("Unable to delegate ticket");
+            Console.WriteLine(ex.Message);
+        }
+    }
 
+    private void CollapseButtons()
+    {
+        
+    }
 }
