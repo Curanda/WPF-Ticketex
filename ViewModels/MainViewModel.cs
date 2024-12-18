@@ -17,11 +17,13 @@ public class MainViewModel: ObservableObject
     public RelayCommand_ HomeViewCommand { get; set; }
     public RelayCommand_ TicketQueueViewCommand { get; set; }
     public RelayCommand_ CreateTicketViewCommand { get; set; }
+    public RelayCommand_ TicketQueueView_Command { get; set; }
     public static RelayCommand_ RefreshQueueCommand { get; set; }
     public RelayCommand_ LogoutCommand { get; set; }
     private LoggedUser _loggedUser { get; set; }
     private ObservableCollection<Ticket> TicketQueueTickets { get; set; } = new();
     private HomeViewModel HomeVm { get; set; }
+    private TicketQueueView_Model ticketQueueVm_ { get; set; }
     private TicketQueueViewModel TicketQueueVm { get; set; }
     public CreateTicketViewModel CreateTicketVm { get; set; }
     private object _currentView;
@@ -40,6 +42,7 @@ public class MainViewModel: ObservableObject
         CurrentAccount = loggedUser.Department;
         _currentView = HomeVm = new HomeViewModel(loggedUser.FirstName, loggedUser.Department);
         TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets, _loggedUser);
+        ticketQueueVm_ = new TicketQueueView_Model(TicketQueueTickets, _loggedUser);
         LoadTicketQueue(CurrentAccount);
         
         HomeViewCommand = new RelayCommand_(o =>
@@ -50,6 +53,11 @@ public class MainViewModel: ObservableObject
         TicketQueueViewCommand = new RelayCommand_(o =>
         {
             CurrentView = TicketQueueVm;
+        });
+
+        TicketQueueView_Command = new RelayCommand_(o =>
+        {
+            CurrentView = ticketQueueVm_;
         });
 
         CreateTicketViewCommand = new RelayCommand_(o =>

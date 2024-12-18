@@ -99,11 +99,12 @@
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding CreateTicketViewCommand}"/>
-                <RadioButton Content="Your Tickets"
+                <RadioButton Content="New ticket queue"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"/>
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding TicketQueueView_Command}"/>
             </StackPanel>
         </Border>
         <Border Name="Display" DockPanel.Dock="Left">

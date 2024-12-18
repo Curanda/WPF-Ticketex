@@ -25,12 +25,11 @@ public partial class TicketView : Window
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-        EditButton.Visibility = Visibility.Visible;
+        CloseButton.Visibility = Visibility.Visible;
+        EditButton.Visibility = Visibility.Collapsed;
         SaveButton.Visibility = Visibility.Collapsed;
         CancelButton.Visibility = Visibility.Collapsed;
         EnableFormEditing(false);
-        // var vm = (TicketViewModel)DataContext;
-        // vm.editCounter++;
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -66,6 +65,6 @@ public partial class TicketView : Window
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        Close();
     }
 }

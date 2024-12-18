@@ -12,6 +12,7 @@
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
       <PackageReference Include="Dapper" Version="2.1.35" />
       <PackageReference Include="Expression.Blend.Sdk.WPF" Version="1.0.1" />
+      <PackageReference Include="MahApps.Metro.IconPacks" Version="5.1.0" />
       <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
       <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">

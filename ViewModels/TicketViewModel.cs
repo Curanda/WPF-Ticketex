@@ -12,8 +12,7 @@ namespace TicketeX_.ViewModels;
 
 public class TicketViewModel: ObservableObject
 {
-    public int editCounter = 0;
-    private bool descriptionEdited = false;
+    private bool ticketDelegated = false;
     private Ticket _ticket;
     private Ticket uneditedTicket;
     private LoggedUser _loggedUser;
@@ -86,7 +85,6 @@ public class TicketViewModel: ObservableObject
             OnPropertyChanged();
         }
     }
-    
 
     public TicketViewModel(Ticket selectedTicket, LoggedUser loggedUser)
     {
@@ -185,8 +183,6 @@ public class TicketViewModel: ObservableObject
                     var deleteQuery = $"DELETE FROM {_loggedUser.Department.ToLower()}_tickets WHERE TicketId = @TicketId";
                     await connection.ExecuteAsync(deleteQuery, new { _ticket.TicketId });
                     MessageBox.Show($"Ticket with Id: {_ticket.TicketId}, has been successfully delegated to {_ticket.CurrentLocation}. It's Someone else's problem now");
-                    
-                    CollapseButtons();
                 }
                 catch (MySqlException ex)
                 {
@@ -205,9 +201,6 @@ public class TicketViewModel: ObservableObject
             Console.WriteLine(ex.Message);
         }
     }
-
-    private void CollapseButtons()
-    {
-        
-    }
+    
+    
 }
