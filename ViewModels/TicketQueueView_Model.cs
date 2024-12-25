@@ -15,7 +15,6 @@ public class TicketQueueView_Model: ObservableObject, INotifyPropertyChanged
 {
     public ObservableCollection<Ticket> TicketQueueTickets { get; set; }
     public RelayCommand_ ShowTicketCommand { get; set; }
-    public TicketQueueView_ ticketQueueView_ { get; set; }
     private LoggedUser _loggedUser;
     private Ticket _selectedTicket { get; set; }
 

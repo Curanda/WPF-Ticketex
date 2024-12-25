@@ -7,6 +7,7 @@ using System.Windows.Input;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
 using TicketeX_.ViewModels;
+using DataGridRow = System.Windows.Controls.DataGridRow;
 
 namespace TicketeX_.Views;
 
