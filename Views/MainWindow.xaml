@@ -34,11 +34,11 @@
                     </Button>
                 </Border>
                 <Border Grid.Column="2" MaxWidth="30">
-                    <Button x:Name="AccountButton" Background="Transparent" BorderThickness="0"  HorizontalAlignment="Center">
+                    <Button x:Name="AccountButton" Background="Transparent" BorderThickness="0"  HorizontalAlignment="Center" Click="AccountButton_OnClick">
                         <materialDesign:PackIcon Kind="AccountOutline" Foreground="Azure"/>
                         <Button.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Profile"/>
+                                <MenuItem Header="Profile" Click="Account_OnClick"/>
                                 <MenuItem Header="Log out" Command="{Binding LogoutCommand, Mode=OneWay}"/>
                             </ContextMenu>
                         </Button.ContextMenu>
@@ -64,13 +64,13 @@
                 <TextBlock Foreground="Azure" HorizontalAlignment="left" VerticalAlignment="Center" FontWeight="Thin" FontSize="9" Margin="10">Designed by Nordic Gentleman ehf.</TextBlock>
                 <Border Grid.Column="2">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
-                        <Button Background="Transparent" BorderThickness="0"  HorizontalAlignment="Center" Margin="5">
+                        <Button Background="Transparent" BorderThickness="0"  HorizontalAlignment="Center" Margin="5" Click="ButtonWorkplace_OnClick">
                             <materialDesign:PackIcon Kind="FacebookWorkplace" Foreground="Azure"/>
                         </Button>
-                        <Button Background="Transparent" BorderThickness="0"  HorizontalAlignment="Center" Margin="5">
+                        <Button Background="Transparent" BorderThickness="0"  HorizontalAlignment="Center" Margin="5" Click="ButtonSlack_OnClick">
                             <materialDesign:PackIcon Kind="Slack" Foreground="Azure"/>
                         </Button>
-                        <Button Background="Transparent" BorderThickness="0"  HorizontalAlignment="Center" Margin="5">
+                        <Button Background="Transparent" BorderThickness="0"  HorizontalAlignment="Center" Margin="5" Click="ButtonEmail_OnClick">
                             <materialDesign:PackIcon Kind="Email" Foreground="Azure"/>
                         </Button>
                     </StackPanel>
