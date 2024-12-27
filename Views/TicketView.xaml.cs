@@ -40,7 +40,7 @@ public partial class TicketView : Window
         EnableFormEditing(false);
     }
     
-    private void EnableFormEditing(bool enable)
+    public void EnableFormEditing(bool enable)
     {
         SeverityComboBox.IsEnabled = enable;
         DescriptionTextBox.IsEnabled = enable;

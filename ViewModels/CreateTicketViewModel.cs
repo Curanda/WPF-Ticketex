@@ -3,21 +3,18 @@ using System.Windows;
 using System.Windows.Controls;
 using Dapper;
 using MySql.Data.MySqlClient;
-using TicketeX_.CustomAttributes;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
-using Enum = System.Enum;
+using TicketeX_.Views;
 
 namespace TicketeX_.ViewModels;
 
 public class CreateTicketViewModel : ObservableObject
 {
     public RelayCommand_ CreateTicketCommand { get; }
-    private LoggedUser _loggedUser;
+    private readonly LoggedUser _loggedUser;
     private string _selectedSeverity;
     private string _selectedDestination;
-    private string _location;
-    private string _author;
     private string _reportedBy;
     private string _description;
     private readonly string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
@@ -30,16 +27,7 @@ public class CreateTicketViewModel : ObservableObject
             OnPropertyChanged();
         }
     }
-
-    public string Author
-    {
-        get => _author; 
-        set
-        {
-            _author = value;
-            OnPropertyChanged();
-        }
-    }
+    
 
     public string ReportedBy
     {
@@ -55,7 +43,7 @@ public class CreateTicketViewModel : ObservableObject
     {
         set
         {
-            _selectedDestination = value.Name;
+            _selectedDestination = value.Content.ToString();
             OnPropertyChanged();
         }
     }
@@ -72,10 +60,9 @@ public class CreateTicketViewModel : ObservableObject
     public CreateTicketViewModel(LoggedUser loggedUser)
     {
       _loggedUser = loggedUser;
-      _author = loggedUser.UserId;
-      CreateTicketCommand = new RelayCommand_(async (parameter)=>
+      CreateTicketCommand = new RelayCommand_( (o)=>
       {
-          await CreateTicket(parameter);
+          CreateTicket();
       });
     }
 
@@ -88,7 +75,6 @@ public class CreateTicketViewModel : ObservableObject
         
         try
         {
-            // Console.WriteLine("trying connection to db");
             int newTicketNumber = connection.Query<int>(query, new { targetDepartment }).FirstOrDefault()+1;
             string newTicketId = $"{targetDepartment}-{newTicketNumber}";
             string updateQuery = "UPDATE ticket_counter SET TotalTickets = @newTicketNumber WHERE Department = @targetDepartment";
@@ -104,7 +90,7 @@ public class CreateTicketViewModel : ObservableObject
         }
     }
 
-    private async Task CreateTicket(object parameter)
+    private async Task CreateTicket()
     {
         string newTicketId = await GenerateNewTicketNumber();
         Console.WriteLine($"new ticket number: {newTicketId}");
@@ -117,24 +103,16 @@ public class CreateTicketViewModel : ObservableObject
             AuthorId = _loggedUser.UserId,
             CurrentLocation = _selectedDestination,
             PrevLocation = _loggedUser.Department,
-            ReporterId = _reportedBy,
+            ReporterId = ReportedBy,
             DateTimeCreated = DateTime.Now,
             DateTimeLastUpdated = DateTime.Now,
-            Description = _description,
+            Description = Description,
             NumOfUpdates = 0,
             NumOfDownVotes = 0,
             NumOfUpVotes = 0,
             VotesRatio = 0,
             Attachments = 0
         };
-        try
-        {
-            Console.WriteLine($"ticket created: {ticket.Status}, {ticket.Description}, {ticket.DateTimeCreated}, {ticket.CurrentLocation}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
         await SendTicketToDb(ticket);
     }
     
@@ -143,7 +121,7 @@ public class CreateTicketViewModel : ObservableObject
         try
         {
             await using var connection = new MySqlConnection(_connectionString);
-            var query = $"INSERT INTO {_selectedDestination}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
+            var query = $"INSERT INTO {_selectedDestination.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
             await connection.ExecuteAsync(query, new
             {
                 ticket.TicketId,
@@ -162,11 +140,31 @@ public class CreateTicketViewModel : ObservableObject
                 ticket.Attachments
             });
             MessageBox.Show($"A new ticket with Id: {ticket.TicketId}, has been created successfully and sent to {ticket.CurrentLocation}");
+            ShowCreatedTicket(ticket);
         }
         catch (MySqlException ex)
         {
             Console.WriteLine(ex.Message);
         }
     }
-    
+
+    private void ShowCreatedTicket(Ticket ticket)
+    {
+        var createdTicketVm = new TicketViewModel(ticket, _loggedUser);
+        var createdTicketView = new TicketView
+        {
+            DataContext = createdTicketVm
+        };
+        if (!string.Equals(_loggedUser.Department, _selectedDestination, StringComparison.CurrentCultureIgnoreCase)) ProhibitCreatedTicketEditing(createdTicketView);
+        createdTicketView.Show();
+    }
+
+    private void ProhibitCreatedTicketEditing(TicketView createdTicketView)
+    {
+        createdTicketView.EditButton.Visibility = Visibility.Collapsed;
+        createdTicketView.SaveButton.Visibility = Visibility.Collapsed;
+        createdTicketView.CancelButton.Visibility = Visibility.Collapsed;
+        createdTicketView.CloseButton.Visibility = Visibility.Visible;
+        createdTicketView.EnableFormEditing(false);
+    }
 }

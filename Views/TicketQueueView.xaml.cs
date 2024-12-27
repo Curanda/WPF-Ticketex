@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
@@ -16,18 +18,15 @@ public partial class TicketQueueView
     public TicketQueueView()
     {
         InitializeComponent();
+        SortQueue();
     }
 
-    // private void EventSetter_OnHandler(object sender, MouseButtonEventArgs e)
-    // {
-    //     var row = sender as DataGridRow;
-    //     var selectedTicket = row?.DataContext as Ticket;
-    //     var ticketVm = new TicketViewModel(selectedTicket);
-    //     var ticketView = new TicketView
-    //     {
-    //         DataContext = ticketVm
-    //     };
-    //     ticketView.Show();
-    // }
+    private void SortQueue()
+    {
+        var view = CollectionViewSource.GetDefaultView(TicketQueueViewModel.TicketQueueTickets);
+        view.SortDescriptions.Add(new SortDescription("DateTimeLastUpdated", ListSortDirection.Descending));
+        QueueGrid.ItemsSource = view;
+    }
     
 }
+

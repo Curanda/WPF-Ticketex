@@ -1,9 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Windows;
-using System.Windows.Input;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
@@ -57,7 +55,7 @@ public class MainViewModel: ObservableObject
 
         TicketQueueView_Command = new RelayCommand_(o =>
         {
-            CurrentView = ticketQueueVm_;
+            CurrentView = TicketQueueVm;
         });
 
         CreateTicketViewCommand = new RelayCommand_(o =>

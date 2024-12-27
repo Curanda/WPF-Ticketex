@@ -29,7 +29,7 @@ public class Ticket
 
     public static DateTime SqlStringToDateTime(string sqlDateTime)
     {
-        DateTime dateTime = DateTime.Parse(sqlDateTime);
-        return dateTime;
+        DateTime csDateTime = DateTime.Parse(sqlDateTime);
+        return csDateTime;
     }
 }

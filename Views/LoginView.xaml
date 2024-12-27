@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:TicketeX_.Views"
         xmlns:utilities="clr-namespace:TicketeX_.Utilities"
         xmlns:viewModels="clr-namespace:TicketeX_.ViewModels"
         mc:Ignorable="d"
@@ -71,13 +70,18 @@
                              FontFamily="Montserrat"                            
                              Foreground="Black"
                              CaretBrush="LightGray"
-                             BorderBrush="DarkGray"
+                             BorderBrush="#20CAFD"
                              BorderThickness="0,0,0,2"
                              Height="28"
                              VerticalContentAlignment="Center"
                              Margin="0,5,0,0"
-                             Padding="20,0,0,0"
+                             Padding="10,0,0,0"
                              Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </TextBox.Resources>
                     </TextBox>
                     <TextBlock Text="Password"
                                Foreground="DarkGray"
@@ -91,13 +95,23 @@
                              FontFamily="Montserrat"                            
                              Foreground="Black"
                              CaretBrush="LightGray"
-                             BorderBrush="DarkGray"
-                             BorderThickness="0,0,0,2"
                              Height="28"
                              VerticalContentAlignment="Center"
                              Margin="0,5,0,0"
-                             Padding="20,0,0,0"
-                             >
+                             Padding="10,0,0,0">
+                        <PasswordBox.Resources>
+                            <Style TargetType="PasswordBox">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Border CornerRadius="3" BorderThickness="0, 0,0,2" BorderBrush="#20CAFD" Background="White">
+                                                <ScrollViewer x:Name="PART_ContentHost"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </PasswordBox.Resources>
                     </PasswordBox>
                     <Button x:Name="LoginButton"                          
                             BorderThickness="3"

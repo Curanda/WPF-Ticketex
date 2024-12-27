@@ -18,7 +18,7 @@
             <Setter Property="FontSize" Value="12"/>
         </Style>
     </UserControl.Resources>
-    <Grid Margin="10">
+    <Grid Margin="10" x:Name="CreateTicketForm">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -32,29 +32,73 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Label>Severity:</Label>
-        <ComboBox x:Name="SeverityDropdown" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" HorizontalAlignment="Left" Width="150" Height="20" SelectedItem="{Binding SelectedSeverity, UpdateSourceTrigger=PropertyChanged}">
-            <ComboBoxItem Content="Low"></ComboBoxItem>
-            <ComboBoxItem Content="Medium"></ComboBoxItem>
-            <ComboBoxItem Content="High"></ComboBoxItem>
-            <ComboBoxItem Content="Critical"></ComboBoxItem>
-        </ComboBox>
-        <Label Grid.Row="2" Grid.Column="0">Reported by:</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" x:Name="ReportedByTextBox" Text="{Binding ReportedBy, UpdateSourceTrigger=PropertyChanged}"/>
         
+        
+        <Border Grid.Row="0" Grid.Column="1" CornerRadius="2" 
+                Background="Transparent" 
+                BorderBrush="White" 
+                BorderThickness="1"
+                Height="25"
+                Margin="0,5,60,5"
+                HorizontalAlignment="Stretch"
+                MaxWidth="270">
+            <ComboBox x:Name="SeverityComboBox" 
+                      Margin="0" 
+                      IsEnabled="True"
+                      BorderThickness="0"
+                      Background="White"
+                      Foreground="Black"
+                      SelectedItem="{Binding SelectedSeverity, Mode=OneWayToSource}">
+                <ComboBoxItem>Low</ComboBoxItem>
+                <ComboBoxItem>Medium</ComboBoxItem>
+                <ComboBoxItem>High</ComboBoxItem>
+                <ComboBoxItem>Critical</ComboBoxItem>
+            </ComboBox>
+        </Border>
+        <Label Grid.Row="2" Grid.Column="0">Reported by:</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,60,0" x:Name="ReportedByTextBox" Text="{Binding ReportedBy, Mode=OneWayToSource}" Style="{StaticResource FormTextBoxTheme}"/>
         <Label Grid.Row="3" Grid.Column="0">Destination:</Label>
-        <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" Name="DestinationDropdown" HorizontalAlignment="Left" Width="150" Height="20" SelectedItem="{Binding SelectedDestination, UpdateSourceTrigger=PropertyChanged}">
-            <ComboBoxItem Name="helpdesk" Content="Helpdesk"></ComboBoxItem>
-            <ComboBoxItem Name="hr" Content="HR"></ComboBoxItem>
-            <ComboBoxItem Name="windowssupport" Content="Windows Support"></ComboBoxItem>
-            <ComboBoxItem Name="networkssuport" Content="Networks Support"></ComboBoxItem>
-            <ComboBoxItem Name="lager" Content="Lager"></ComboBoxItem>
-            <ComboBoxItem Name="dbsupport" Content="Database Support"></ComboBoxItem>
-            <ComboBoxItem Name="technician" Content="Technician Support"></ComboBoxItem>
-            <ComboBoxItem Name="janitor" Content="Janitor Support"></ComboBoxItem>
-        </ComboBox>
+        <Border Grid.Row="3" Grid.Column="1" CornerRadius="2" 
+                Background="Transparent" 
+                BorderBrush="White" 
+                BorderThickness="1"
+                Height="25"
+                Margin="0,5,60,5"
+                HorizontalAlignment="Stretch"
+                MaxWidth="270">
+            <ComboBox x:Name="DestinationComboBox" 
+                      Margin="0" 
+                      IsEnabled="True"
+                      BorderThickness="0"
+                      Background="White"
+                      Foreground="Black"
+                      SelectedItem="{Binding SelectedDestination, Mode=OneWayToSource}">
+                <ComboBoxItem>Helpdesk</ComboBoxItem>
+                <ComboBoxItem>Windowssupport</ComboBoxItem>
+                <ComboBoxItem>Networksupport</ComboBoxItem>
+                <ComboBoxItem>Hr</ComboBoxItem>
+                <ComboBoxItem>Lager</ComboBoxItem>
+                <ComboBoxItem>Dbsupport</ComboBoxItem>
+                <ComboBoxItem>Technician</ComboBoxItem>
+                <ComboBoxItem>Janitor</ComboBoxItem>
+            </ComboBox>
+        </Border>
         
         <Label Grid.Row="4" Grid.Column="0">Description:</Label>
-        <TextBox Grid.Row="4" Grid.Column="1" AcceptsReturn="True" x:Name="DescriptionTextBox" Margin="0,0,0,10" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+        
+        <Border Grid.Row="4" Grid.Column="1" Margin="5" Background="White" CornerRadius="3" BorderThickness="2" BorderBrush="White" Height="auto" MaxHeight="600" Width="auto" MaxWidth="500">
+            <TextBox x:Name="DescriptionTextBox" 
+                     BorderThickness="0"
+                     HorizontalScrollBarVisibility="Auto" 
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True" IsEnabled="True"
+                     Background="Transparent"
+                     Foreground="Black"
+                     VerticalScrollBarVisibility="Auto"
+                     Text="{Binding Description, Mode=OneWayToSource}"
+            />
+        </Border>
+        
         <Button Grid.Row="5" 
                 Grid.Column="1" 
                 HorizontalAlignment="Right" 
@@ -62,6 +106,7 @@
                 Height="25"
                 Margin="0,10,20,0" 
                 Command="{Binding CreateTicketCommand}"
+                Click="ButtonBase_OnClick"
                 Background="#274472">
             <Button.Template>
                 <ControlTemplate TargetType="Button">

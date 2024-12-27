@@ -133,10 +133,10 @@ public class TicketViewModel: ObservableObject
         {
             Console.WriteLine("Cancel button clicked");
             _severity = uneditedTicket.Severity;
-            Status = uneditedTicket.Status;
+            _status = uneditedTicket.Status;
             Description = uneditedTicket.Description;
 
-            SelectedDestination = null;
+            _selectedDestination = null;
         });
     }
 
@@ -151,12 +151,12 @@ public class TicketViewModel: ObservableObject
             {
                 if (_selectedDestination == null) Console.WriteLine("_selectedDestination is null");
                 if (_selectedDestination == _loggedUser.Department) Console.WriteLine($"_selectedDestination is equal to {uneditedTicket.CurrentLocation}. ticket.CurrentLocation is {_ticket.CurrentLocation}");
-                query = $"UPDATE {_loggedUser.Department.ToLower()}_tickets SET Status = @Status, Severity = @Severity, Description = @Description WHERE TicketId = @TicketId";
+                query = $"UPDATE {_loggedUser.Department.ToLower()}_tickets SET Status = @Status, Severity = @Severity, Description = @Description, DateTimeLastUpdated = @DateTimeLastUpdated WHERE TicketId = @TicketId";
             }
             else
             {
                 Console.WriteLine($"Selected destination is a new value of {_selectedDestination}");
-                query = $"INSERT INTO {_selectedDestination.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
+                query = $"INSERT INTO {_selectedDestination.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, DateTimeCreated, DateTimeLastUpdated, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @DateTimeCreated, @DateTimeLastUpdated, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
             }
             await connection.ExecuteAsync(query, new
             {
@@ -169,6 +169,8 @@ public class TicketViewModel: ObservableObject
                 _ticket.PrevLocation,
                 _ticket.ReporterId,
                 _ticket.Description,
+                _ticket.DateTimeCreated,
+                _ticket.DateTimeLastUpdated,
                 _ticket.NumOfUpdates,
                 _ticket.NumOfUpVotes,
                 _ticket.NumOfDownVotes,

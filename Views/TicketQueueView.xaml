@@ -3,10 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:local="clr-namespace:TicketeX_.Views"
-             xmlns:viewModels="clr-namespace:TicketeX_.ViewModels"
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="auto" d:DesignWidth="auto"
@@ -23,7 +19,7 @@
             </Button>
         </Grid>
 
-        <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding TicketQueueTickets}"
+        <DataGrid DockPanel.Dock="Top"
                   x:Name="QueueGrid"
                   Background="Transparent"
                   Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}"
@@ -54,7 +50,7 @@
                 <DataGridTextColumn Header="Ticket ID" Binding="{Binding TicketId}" Width="auto"/>
                 <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="auto" />
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="auto" />
-                <DataGridTextColumn Header="Prev Loc" Binding="{Binding PrevLocation}" Width="auto"/>
+                <DataGridTextColumn Header="Last updated" Binding="{Binding DateTimeLastUpdated}" Width="auto"/>
                 <DataGridTextColumn Header="Origin" Binding="{Binding Origin}" Width="auto" />
                 <DataGridTemplateColumn Header="Description" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -71,7 +67,8 @@
                 <Style TargetType="DataGridCell">
                     <Setter Property="Focusable" Value="False"/>
                     <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Background" Value="Transparent"></Setter>
+                    <Setter Property="Background" Value="Transparent"/>
+                    
                     <Setter Property="Margin" Value="15 0" />
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
@@ -82,7 +79,7 @@
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Resources>
-                    <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
+                <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
                     <Setter Property="OverridesDefaultStyle" Value="True"/>
                     <Setter Property="Template">
                         <Setter.Value>
@@ -127,26 +124,6 @@
                         </Setter.Value>
                     </Setter>
                 </Style>
-                <!-- <Style TargetType="{x:Type ScrollViewer}"> -->
-                <!--     <Setter Property="Template"> -->
-                <!--         <Setter.Value> -->
-                <!--             <ControlTemplate TargetType="{x:Type ScrollViewer}"> -->
-                <!--                 <Grid> -->
-                <!--                     <Grid.ColumnDefinitions> -->
-                <!--                         <ColumnDefinition Width="*"/> -->
-                <!--                         <ColumnDefinition Width="Auto"/> -->
-                <!--                     </Grid.ColumnDefinitions> -->
-                <!--                     <ScrollContentPresenter Grid.Column="0"/> -->
-                <!--                     <ScrollBar Grid.Column="1"  -->
-                <!--                                Value="{TemplateBinding VerticalOffset}" -->
-                <!--                                Maximum="{TemplateBinding ScrollableHeight}" -->
-                <!--                                ViewportSize="{TemplateBinding ViewportHeight}" -->
-                <!--                                Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/> -->
-                <!--                 </Grid> -->
-                <!--             </ControlTemplate> -->
-                <!--         </Setter.Value> -->
-                <!--     </Setter> -->
-                <!-- </Style> -->
             </DataGrid.Resources>
         </DataGrid>
     </DockPanel>

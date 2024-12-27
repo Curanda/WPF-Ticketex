@@ -13,7 +13,7 @@ namespace TicketeX_.ViewModels;
 
 public class TicketQueueViewModel: ObservableObject, INotifyPropertyChanged
 {
-    public ObservableCollection<Ticket> TicketQueueTickets { get; set; }
+    public static ObservableCollection<Ticket> TicketQueueTickets { get; set; }
     public RelayCommand_ ShowTicketCommand { get; set; }
     public TicketQueueView ticketQueueView { get; set; }
     private LoggedUser _loggedUser;
