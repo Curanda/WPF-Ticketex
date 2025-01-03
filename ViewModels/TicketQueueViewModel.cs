@@ -1,21 +1,16 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Controls;
-using System.Windows.Input;
-using CommunityToolkit.Mvvm.Input;
-using Google.Protobuf.WellKnownTypes;
-using MaterialDesignThemes.Wpf;
+using System.Windows.Data;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
 using TicketeX_.Views;
 
 namespace TicketeX_.ViewModels;
 
-public class TicketQueueViewModel: ObservableObject, INotifyPropertyChanged
+public class TicketQueueViewModel: ObservableObject
 {
     public static ObservableCollection<Ticket> TicketQueueTickets { get; set; }
+   
     public RelayCommand_ ShowTicketCommand { get; set; }
-    public TicketQueueView ticketQueueView { get; set; }
     private LoggedUser _loggedUser;
     private Ticket _selectedTicket { get; set; }
 
@@ -27,14 +22,15 @@ public class TicketQueueViewModel: ObservableObject, INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+    
     public TicketQueueViewModel(ObservableCollection<Ticket> ticketQueueTickets, LoggedUser loggedUser)
     {
         TicketQueueTickets = ticketQueueTickets;
         _loggedUser = loggedUser;
         SelectedTicket = TicketQueueTickets?.FirstOrDefault();
-        ShowTicketCommand = new RelayCommand_( _selectedTicket =>
+        ShowTicketCommand = new RelayCommand_( o =>
         {
-            var ticket = _selectedTicket as Ticket;
+            var ticket = _selectedTicket;
             ShowTicketView(ticket);
         });
     }

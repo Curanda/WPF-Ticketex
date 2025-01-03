@@ -15,17 +15,17 @@ namespace TicketeX_.Views;
 
 public partial class TicketQueueView
 {
+    private CollectionViewSource TicketsViewSource { get; } = new CollectionViewSource { Source = TicketQueueViewModel.TicketQueueTickets };
     public TicketQueueView()
     {
         InitializeComponent();
-        SortQueue();
+        DefaultSortQueue();
     }
 
-    private void SortQueue()
+    private void DefaultSortQueue()
     {
-        var view = CollectionViewSource.GetDefaultView(TicketQueueViewModel.TicketQueueTickets);
-        view.SortDescriptions.Add(new SortDescription("DateTimeLastUpdated", ListSortDirection.Descending));
-        QueueGrid.ItemsSource = view;
+        TicketsViewSource.SortDescriptions.Add(new SortDescription("DateTimeLastUpdated", ListSortDirection.Descending));
+        QueueGrid.ItemsSource = TicketsViewSource.View;
     }
     
 }

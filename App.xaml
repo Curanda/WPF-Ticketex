@@ -18,9 +18,6 @@
                 <ResourceDictionary x:Name="DataGridRowTheme" Source="Components/DataGridRowTheme.xaml"/>
                 <ResourceDictionary x:Name="DataGridHeaderTheme" Source="Components/DataGridHeaderTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate DataType="{x:Type viewModel:TicketQueueView_Model}">
-                <views:TicketQueueView_/>
-            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:MainViewModel}">
                 <views:MainWindow/>
             </DataTemplate>

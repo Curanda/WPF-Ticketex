@@ -6,13 +6,13 @@
         xmlns:utilities="clr-namespace:TicketeX_.Utilities"
         xmlns:viewModels="clr-namespace:TicketeX_.ViewModels"
         mc:Ignorable="d"
-        Title="LoginView" Height="500" Width="350"
-        WindowStyle="None"
+        Title="TicketeX login" Height="500" Width="350"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
-        AllowsTransparency="True"
         >
+        <!-- WindowStyle="None" -->
+        <!-- AllowsTransparency="True" -->
     
     <Window.DataContext>
         <viewModels:LoginViewModel/>

@@ -7,7 +7,7 @@
         xmlns:utilities="clr-namespace:TicketeX_.Utilities"
         xmlns:viewModels="clr-namespace:TicketeX_.ViewModels"
         mc:Ignorable="d"
-        Title="TicketView" Height="auto" Width="500">
+        Title="Ticket details" Height="auto" Width="500">
     <Window.Resources>
         <Style TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="Black"/>

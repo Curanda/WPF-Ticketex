@@ -21,7 +21,6 @@ public class MainViewModel: ObservableObject
     private LoggedUser _loggedUser { get; set; }
     private ObservableCollection<Ticket> TicketQueueTickets { get; set; } = new();
     private HomeViewModel HomeVm { get; set; }
-    private TicketQueueView_Model ticketQueueVm_ { get; set; }
     private TicketQueueViewModel TicketQueueVm { get; set; }
     public CreateTicketViewModel CreateTicketVm { get; set; }
     private object _currentView;
@@ -35,13 +34,11 @@ public class MainViewModel: ObservableObject
 
     public MainViewModel(LoggedUser loggedUser)
     {
-        // Console.WriteLine(loggedUser.Department);
         _loggedUser = loggedUser;
         CurrentAccount = loggedUser.Department;
         _currentView = HomeVm = new HomeViewModel(loggedUser.FirstName, loggedUser.Department);
         TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets, _loggedUser);
-        ticketQueueVm_ = new TicketQueueView_Model(TicketQueueTickets, _loggedUser);
-        LoadTicketQueue(CurrentAccount);
+        LoadTicketQueue();
         
         HomeViewCommand = new RelayCommand_(o =>
         {
@@ -66,7 +63,7 @@ public class MainViewModel: ObservableObject
         RefreshQueueCommand = new RelayCommand_( o =>
         {
             ClearTicketQueue();
-            LoadTicketQueue(CurrentAccount);
+            LoadTicketQueue();
         });
 
         LogoutCommand = new RelayCommand_(o =>
@@ -88,7 +85,7 @@ public class MainViewModel: ObservableObject
 
     }
     
-    private async Task LoadTicketQueue(string CurrentAccount)
+    private async Task LoadTicketQueue()
     {
 
         string query = $"SELECT * FROM {CurrentAccount.ToLower()}_tickets";

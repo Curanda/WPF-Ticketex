@@ -32,4 +32,14 @@ public class Ticket
         DateTime csDateTime = DateTime.Parse(sqlDateTime);
         return csDateTime;
     }
+
+    public int SeverityAsNumber()
+    {
+        int number = 0;
+        if (Severity == "Low") number = 1;
+        if (Severity == "Medium") number = 2;
+        if (Severity == "High") number = 3;
+        if (Severity == "Critical") number = 4;
+        return number;
+    }
 }
