@@ -10,13 +10,82 @@
     <DockPanel Background="#22202f">
         <Grid DockPanel.Dock="Top" Margin="20,10,20,5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock  Width="100" HorizontalAlignment="Left" Background="Transparent" Foreground="Azure" Text="{Binding DataContext.CurrentAccount, RelativeSource={RelativeSource AncestorType=Window}}"/>
-            <Button Grid.Column="1" Width="20" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Command="{Binding DataContext.RefreshQueueCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button Name="FilterMenuButton" Width="20" Margin="15, 0" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Click="OpenContextMenuOnLeftClick">
+                <materialDesign:PackIcon Kind="Tune" Background="Transparent" Foreground="Azure"/>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <ContextMenu.Style>
+                            <Style TargetType="ContextMenu">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ContextMenu">
+                                            <Border CornerRadius="4" Padding="3" BorderThickness="1" BorderBrush="#22202f" Background="Azure" SnapsToDevicePixels="True">
+                                                <ItemsPresenter/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </ContextMenu.Style>
+                        <MenuItem Header="Filter by"/>
+                        <Separator />
+                        <MenuItem Header="Severity Lo" IsCheckable="True" Checked="Bold_Checked"
+                                  Unchecked="Bold_Unchecked" />
+                        <MenuItem Header="Severity Medium" IsCheckable="True" Checked="Bold_Checked"
+                                  Unchecked="Bold_Unchecked" />
+                        <MenuItem Header="Severity High" IsCheckable="True" Checked="Bold_Checked"
+                                  Unchecked="Bold_Unchecked" />
+                        <MenuItem Header="Severity Critical" IsCheckable="True" Checked="Bold_Checked"
+                                  Unchecked="Bold_Unchecked" />
+                        <MenuItem Header="Update less than 1h ago" IsCheckable="True" Checked="Bold_Checked"
+                                  Unchecked="Bold_Unchecked" />
+                        <MenuItem Header="Update less than 3h ago" IsCheckable="True" Checked="Bold_Checked"
+                                  Unchecked="Bold_Unchecked" />
+                        <MenuItem Header="Update less than 10h ago" IsCheckable="True" Checked="Bold_Checked"
+                                  Unchecked="Bold_Unchecked" />
+                        <Separator/>
+                        <MenuItem>Clear filters</MenuItem>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+            <Button Width="20" Margin="15, 0" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Click="OpenContextMenuOnLeftClick">
+                <materialDesign:PackIcon Kind="SwapVertical" Background="Transparent" Foreground="Azure"/>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <ContextMenu.Style>
+                            <Style TargetType="ContextMenu">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ContextMenu">
+                                            <Border CornerRadius="4" Padding="3" BorderThickness="1" BorderBrush="#22202f" Background="Azure" SnapsToDevicePixels="True">
+                                                <ItemsPresenter/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </ContextMenu.Style>
+                        <MenuItem Header="Sort by"/>
+                        <Separator />
+                        <MenuItem Header="Severity Lo-Hi" Click="SortSevLoFirst_OnClick"/>
+                        <MenuItem Header="Severity Hi-Lo" Click="SortSevHiFirst_OnClick"/>
+                        <MenuItem Header="Oldest updated" Click="SortLastUpdatedAsc_OnClick"/>
+                        <MenuItem Header="Recently updated" Click="SortLastUpdatedDesc_OnClick"/>
+
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+            <Button Width="20" Margin="15, 0,0 0" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Command="{Binding DataContext.RefreshQueueCommand, RelativeSource={RelativeSource AncestorType=Window}}">
                 <materialDesign:PackIcon Kind="Refresh" Background="Transparent" Foreground="Azure"/>
             </Button>
+            </StackPanel>
         </Grid>
 
         <DataGrid DockPanel.Dock="Top"
@@ -42,7 +111,21 @@
                   SelectedItem="{Binding SelectedTicket, Mode=TwoWay}">
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Show ticket"  Command="{Binding ShowTicketCommand}" CommandParameter="{Binding SelectedTicket}"/>
+                    <ContextMenu.Style>
+                        <Style TargetType="ContextMenu">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ContextMenu">
+                                        <Border CornerRadius="4" Padding="3" BorderThickness="1" BorderBrush="#22202f" Background="Azure" SnapsToDevicePixels="True">
+                                            <ItemsPresenter/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Style>
+                    </ContextMenu.Style>
+                    <MenuItem Header="Show ticket" Command="{Binding ShowTicketCommand}" CommandParameter="{Binding SelectedTicket}"/>
                     <MenuItem Header="Copy ticket" Command="{Binding CopyTicketDataCommand}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>

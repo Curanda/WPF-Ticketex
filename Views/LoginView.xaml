@@ -9,11 +9,7 @@
         Title="TicketeX login" Height="500" Width="350"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Background="Transparent"
-        >
-        <!-- WindowStyle="None" -->
-        <!-- AllowsTransparency="True" -->
-    
+        Background="Transparent">
     <Window.DataContext>
         <viewModels:LoginViewModel/>
     </Window.DataContext>

@@ -38,7 +38,21 @@
                         <materialDesign:PackIcon Kind="AccountOutline" Foreground="Azure"/>
                         <Button.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Profile" Click="Account_OnClick"/>
+                                <ContextMenu.Style>
+                                    <Style TargetType="ContextMenu">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ContextMenu">
+                                                    <Border CornerRadius="4" Padding="3" BorderThickness="1" BorderBrush="#22202f" Background="Azure" SnapsToDevicePixels="True">
+                                                        <ItemsPresenter/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="Black"/>
+                                    </Style>
+                                </ContextMenu.Style>
+                                <MenuItem Header="Profile" Click="Account_OnClick" />
                                 <MenuItem Header="Log out" Command="{Binding LogoutCommand, Mode=OneWay}"/>
                             </ContextMenu>
                         </Button.ContextMenu>
