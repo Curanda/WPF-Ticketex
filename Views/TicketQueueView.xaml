@@ -35,20 +35,16 @@
                         </ContextMenu.Style>
                         <MenuItem Header="Filter by"/>
                         <Separator />
-                        <MenuItem Header="Severity Lo" IsCheckable="True" Checked="Bold_Checked"
-                                  Unchecked="Bold_Unchecked" />
-                        <MenuItem Header="Severity Medium" IsCheckable="True" Checked="Bold_Checked"
-                                  Unchecked="Bold_Unchecked" />
-                        <MenuItem Header="Severity High" IsCheckable="True" Checked="Bold_Checked"
-                                  Unchecked="Bold_Unchecked" />
-                        <MenuItem Header="Severity Critical" IsCheckable="True" Checked="Bold_Checked"
-                                  Unchecked="Bold_Unchecked" />
-                        <MenuItem Header="Update less than 1h ago" IsCheckable="True" Checked="Bold_Checked"
-                                  Unchecked="Bold_Unchecked" />
-                        <MenuItem Header="Update less than 3h ago" IsCheckable="True" Checked="Bold_Checked"
-                                  Unchecked="Bold_Unchecked" />
-                        <MenuItem Header="Update less than 10h ago" IsCheckable="True" Checked="Bold_Checked"
-                                  Unchecked="Bold_Unchecked" />
+                        <MenuItem Header="Severity Lo" IsCheckable="True" Checked="SevLo" Unchecked="SevLo" IsChecked="True"/>
+                        <MenuItem Header="Severity Medium" IsCheckable="True" Checked="SevMed" Unchecked="SevMed" IsChecked="True"/>
+                        <MenuItem Header="Severity High" IsCheckable="True" Checked="SevHi" Unchecked="SevHi" IsChecked="True"/>
+                        <MenuItem Header="Severity Critical" IsCheckable="True" Checked="SevCrit" Unchecked="SevCrit" IsChecked="True"/>
+                        <!-- <MenuItem Header="Update less than 1h ago" IsCheckable="True" Checked="Up1hAgo_Checked" -->
+                        <!--           Unchecked="Up1hAgo_Unchecked" /> -->
+                        <!-- <MenuItem Header="Update less than 3h ago" IsCheckable="True" Checked="Up3hAgo_Checked" -->
+                        <!--           Unchecked="Up3hAgo_Unchecked" /> -->
+                        <!-- <MenuItem Header="Update less than 10h ago" IsCheckable="True" Checked="Up10hAgo_Checked" -->
+                        <!--           Unchecked="Up10hAgo_Unchecked" /> -->
                         <Separator/>
                         <MenuItem>Clear filters</MenuItem>
                     </ContextMenu>
