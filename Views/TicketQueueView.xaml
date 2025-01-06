@@ -35,10 +35,10 @@
                         </ContextMenu.Style>
                         <MenuItem Header="Filter by"/>
                         <Separator />
-                        <MenuItem Header="Severity Lo" IsCheckable="True" Checked="SevLo" Unchecked="SevLo" IsChecked="True"/>
-                        <MenuItem Header="Severity Medium" IsCheckable="True" Checked="SevMed" Unchecked="SevMed" IsChecked="True"/>
-                        <MenuItem Header="Severity High" IsCheckable="True" Checked="SevHi" Unchecked="SevHi" IsChecked="True"/>
-                        <MenuItem Header="Severity Critical" IsCheckable="True" Checked="SevCrit" Unchecked="SevCrit" IsChecked="True"/>
+                        <MenuItem Name="FilterCheckSevLo" Header="Severity Lo" IsCheckable="True" Checked="SevLo" Unchecked="SevLo" IsChecked="True"/>
+                        <MenuItem Name="FilterCheckSevMed" Header="Severity Medium" IsCheckable="True" Checked="SevMed" Unchecked="SevMed" IsChecked="True"/>
+                        <MenuItem Name="FilterCheckSevHi" Header="Severity High" IsCheckable="True" Checked="SevHi" Unchecked="SevHi" IsChecked="True"/>
+                        <MenuItem Name="FilterCheckSevCrit" Header="Severity Critical" IsCheckable="True" Checked="SevCrit" Unchecked="SevCrit" IsChecked="True"/>
                         <!-- <MenuItem Header="Update less than 1h ago" IsCheckable="True" Checked="Up1hAgo_Checked" -->
                         <!--           Unchecked="Up1hAgo_Unchecked" /> -->
                         <!-- <MenuItem Header="Update less than 3h ago" IsCheckable="True" Checked="Up3hAgo_Checked" -->
@@ -46,7 +46,7 @@
                         <!-- <MenuItem Header="Update less than 10h ago" IsCheckable="True" Checked="Up10hAgo_Checked" -->
                         <!--           Unchecked="Up10hAgo_Unchecked" /> -->
                         <Separator/>
-                        <MenuItem>Clear filters</MenuItem>
+                        <MenuItem Name="RefreshFilters" Header="Clear all filters" IsCheckable="False" Click="RefreshFiltersButton_OnClick"/>
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
@@ -78,7 +78,7 @@
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
-            <Button Width="20" Margin="15, 0,0 0" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Command="{Binding DataContext.RefreshQueueCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+            <Button Width="20" Margin="15, 0,0 0" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Click="RefreshFiltersButton_OnClick" Command="{Binding DataContext.RefreshQueueCommand, RelativeSource={RelativeSource AncestorType=Window}}">
                 <materialDesign:PackIcon Kind="Refresh" Background="Transparent" Foreground="Azure"/>
             </Button>
             </StackPanel>

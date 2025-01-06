@@ -1,6 +1,9 @@
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using CommunityToolkit.Mvvm.Messaging;
 using Dapper;
 using MySql.Data.MySqlClient;
 using TicketeX_.Models;
@@ -12,6 +15,7 @@ namespace TicketeX_.ViewModels;
 
 public class MainViewModel: ObservableObject
 {
+    private IMessenger _messenger = new WeakReferenceMessenger();
     public RelayCommand_ HomeViewCommand { get; set; }
     public RelayCommand_ TicketQueueViewCommand { get; set; }
     public RelayCommand_ CreateTicketViewCommand { get; set; }
@@ -64,6 +68,7 @@ public class MainViewModel: ObservableObject
         {
             ClearTicketQueue();
             LoadTicketQueue();
+            
         });
 
         LogoutCommand = new RelayCommand_(o =>
@@ -100,6 +105,8 @@ public class MainViewModel: ObservableObject
                 TicketQueueTickets.Add(ticket);
             }
             Console.WriteLine($"{_loggedUser.Department} ticket queue loaded");
+            StrongReferenceMessenger.Default.Send(new StatusMessage("queue_refreshed"));
+            Console.WriteLine($"Queue refreshed in viewmodel");
         }
         catch (MySqlException ex)
         {
