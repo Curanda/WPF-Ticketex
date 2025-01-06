@@ -131,6 +131,7 @@
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="auto" />
                 <DataGridTextColumn Header="Last updated" Binding="{Binding DateTimeLastUpdated}" Width="auto"/>
                 <DataGridTextColumn Header="Origin" Binding="{Binding Origin}" Width="auto" />
+                <DataGridTextColumn Header="SeverityAsNumber" Binding="{Binding SeverityNumber}" Width="0" Visibility="Hidden"/>
                 <DataGridTemplateColumn Header="Description" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

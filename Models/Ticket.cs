@@ -20,6 +20,7 @@ public class Ticket
     public int NumOfDownVotes { get; set; }
     public double VotesRatio { get; set; }
     public int Attachments { get; set; }
+    public int SeverityNumber => SeverityToNumber();
 
     public static string DateTimeCsToSql(DateTime dateTime)
     {
@@ -33,7 +34,7 @@ public class Ticket
         return csDateTime;
     }
 
-    public int SeverityAsNumber()
+    public int SeverityToNumber()
     {
         int number = 0;
         if (Severity == "Low") number = 1;

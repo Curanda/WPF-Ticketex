@@ -30,7 +30,7 @@ public partial class TicketQueueView
         StrongReferenceMessenger.Default.Register<StatusMessage>(this,(r,m)=>
         {
             if (m.Status != "queue_refreshed") return;
-            // ResetFilters();
+            Console.WriteLine(m.Status+" arrived in TicketQueueView.xaml.cs");
         });
     }
 
@@ -52,11 +52,13 @@ public partial class TicketQueueView
     private void SortSevLoFirst_OnClick(object sender, RoutedEventArgs e)
     {
         TicketsViewSource.SortDescriptions.Clear();
+        TicketsViewSource.SortDescriptions.Add(new SortDescription("SeverityNumber", ListSortDirection.Ascending));
     }
 
     private void SortSevHiFirst_OnClick(object sender, RoutedEventArgs e)
     {
         TicketsViewSource.SortDescriptions.Clear();
+        TicketsViewSource.SortDescriptions.Add(new SortDescription("SeverityNumber", ListSortDirection.Descending));
     }
 
     private void SortLastUpdatedAsc_OnClick(object sender, RoutedEventArgs routedEventArgs)
