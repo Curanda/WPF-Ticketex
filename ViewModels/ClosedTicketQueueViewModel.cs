@@ -1,16 +1,16 @@
 using System.Collections.ObjectModel;
-using System.Windows.Data;
 using CommunityToolkit.Mvvm.Messaging;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
 using TicketeX_.Views;
+using ObservableObject = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 
 namespace TicketeX_.ViewModels;
 
-public class TicketQueueViewModel: ObservableObject
+public class ClosedTicketQueueViewModel: ObservableObject
 {
-    public static ObservableCollection<Ticket> TicketQueueTickets { get; set; }
-   
+    // dodac kolory do wyswietlania ticketow po severity level
+    public static ObservableCollection<Ticket> ClosedTickets { get; set; }
     public RelayCommand_ ShowTicketCommand { get; set; }
     private LoggedUser _loggedUser;
     private Ticket _selectedTicket { get; set; }
@@ -24,11 +24,11 @@ public class TicketQueueViewModel: ObservableObject
         }
     }
     
-    public TicketQueueViewModel(ObservableCollection<Ticket> ticketQueueTickets, LoggedUser loggedUser)
+    public ClosedTicketQueueViewModel(ObservableCollection<Ticket> closedTickets, LoggedUser loggedUser)
     {
-        TicketQueueTickets = ticketQueueTickets;
+        ClosedTickets = closedTickets;
         _loggedUser = loggedUser;
-        SelectedTicket = TicketQueueTickets?.FirstOrDefault();
+        SelectedTicket = ClosedTickets?.FirstOrDefault();
         ShowTicketCommand = new RelayCommand_( o =>
         {
             var ticket = _selectedTicket;
@@ -43,6 +43,9 @@ public class TicketQueueViewModel: ObservableObject
         {
             DataContext = ticketVm
         };
+        ticketView.ClosedTicketDisplayed();
         ticketView.Show();
     }
+    
+    
 }

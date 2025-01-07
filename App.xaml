@@ -36,6 +36,9 @@
             <DataTemplate DataType="{x:Type viewModel:TicketViewModel}">
                 <views:TicketView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:ClosedTicketQueueViewModel}">
+                <views:ClosedTicketQueueView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -13,8 +13,7 @@ namespace TicketeX_.Views;
 public partial class TicketQueueView
 {
     private CollectionViewSource TicketsViewSource { get; } = new CollectionViewSource { Source = TicketQueueViewModel.TicketQueueTickets };
-    private bool SevLo_Checked, SevHi_Checked, SevMed_Checked, SevCrit_Checked;
-    private IMessenger _messenger;
+    private bool SevLo_Checked, SevHi_Checked, SevMed_Checked, SevCrit_Checked, StatPend_Checked, StatOpen_Checked;
 
     public TicketQueueView()
     {
@@ -96,14 +95,30 @@ public partial class TicketQueueView
         SevCrit_Checked = !SevCrit_Checked;
         TicketsViewSource.View.Refresh();
     }
+    
+    public void StatPend(object sender, RoutedEventArgs routedEventArgs)
+    {
+        StatPend_Checked = !StatPend_Checked;
+        TicketsViewSource.View.Refresh();
+    }
+    
+    public void StatOpen(object sender, RoutedEventArgs routedEventArgs)
+    {
+        StatOpen_Checked = !StatOpen_Checked;
+        TicketsViewSource.View.Refresh();
+    }
 
     private void TicketsViewSource_Filter(object sender, FilterEventArgs e)
     {
-        var ticket = e.Item as Ticket;
-        e.Accepted = (SevLo_Checked && ticket?.Severity == "Low") ||
-                     (SevMed_Checked && ticket?.Severity == "Medium") ||
-                     (SevHi_Checked && ticket?.Severity == "High") ||
-                     (SevCrit_Checked && ticket?.Severity == "Critical");
+        if (e.Item is not Ticket ticket) return;
+         
+        var severityFilters = (SevLo_Checked && ticket?.Severity == "Low") ||
+                               (SevMed_Checked && ticket?.Severity == "Medium") ||
+                               (SevHi_Checked && ticket?.Severity == "High") ||
+                               (SevCrit_Checked && ticket?.Severity == "Critical");
+        var statusFilters = (StatPend_Checked && ticket?.Status == "Pending") ||
+                             (StatOpen_Checked && ticket?.Status == "Open");
+        e.Accepted = statusFilters && severityFilters;
     }
 
     private void SetFilter()
@@ -122,14 +137,18 @@ public partial class TicketQueueView
         FilterCheckSevMed.IsChecked = true;
         SevCrit_Checked = true;
         FilterCheckSevCrit.IsChecked = true;
+        StatPend_Checked = true;
+        FilterCheckStatusPending.IsChecked = true;
+        StatOpen_Checked = true;
+        FilterCheckStatusOpen.IsChecked = true;
     }
     
     private void RefreshFiltersButton_OnClick(object sender, RoutedEventArgs e)
     {
-        // Dlaczego wywołuję to dwa razy? Filtr nie aktualizuje view po programatycznej zmianie wartości. View zostaje
-        // odświeżone dopiero przy drugim wywołaniu...
         ResetFilters();
         ResetFilters();
+        TicketsViewSource.SortDescriptions.Clear();
+        DefaultSortQueue();
         TicketsViewSource.View.Refresh();
     }
 }

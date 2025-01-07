@@ -1,13 +1,13 @@
-<UserControl x:Class="TicketeX_.Views.TicketQueueView"
+<UserControl x:Class="TicketeX_.Views.ClosedTicketQueueView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:TicketeX_.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="auto" d:DesignWidth="auto"
-             Background="#22202f">
-    <DockPanel Background="#22202f">
+             d:DesignHeight="300" d:DesignWidth="300">
+ <DockPanel Background="#22202f">
         <Grid DockPanel.Dock="Top" Margin="20,10,20,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -39,8 +39,6 @@
                         <MenuItem Name="FilterCheckSevMed" Header="Severity Medium" IsCheckable="True" Checked="SevMed" Unchecked="SevMed" IsChecked="True"/>
                         <MenuItem Name="FilterCheckSevHi" Header="Severity High" IsCheckable="True" Checked="SevHi" Unchecked="SevHi" IsChecked="True"/>
                         <MenuItem Name="FilterCheckSevCrit" Header="Severity Critical" IsCheckable="True" Checked="SevCrit" Unchecked="SevCrit" IsChecked="True"/>
-                        <MenuItem Name="FilterCheckStatusPending" Header="Status Pending" IsCheckable="True" Checked="StatPend" Unchecked="StatPend" IsChecked="True"/>
-                        <MenuItem Name="FilterCheckStatusOpen" Header="Status Open" IsCheckable="True" Checked="StatOpen" Unchecked="StatOpen" IsChecked="True"/>
                         <Separator/>
                         <MenuItem Name="RefreshFilters" Header="Clear all filters" IsCheckable="False" Click="RefreshFiltersButton_OnClick"/>
                     </ContextMenu>
@@ -68,13 +66,13 @@
                         <Separator />
                         <MenuItem Header="Severity Lo-Hi" Click="SortSevLoFirst_OnClick"/>
                         <MenuItem Header="Severity Hi-Lo" Click="SortSevHiFirst_OnClick"/>
-                        <MenuItem Header="Oldest updated" Click="SortLastUpdatedAsc_OnClick"/>
-                        <MenuItem Header="Recently updated" Click="SortLastUpdatedDesc_OnClick"/>
+                        <MenuItem Header="Oldest closed" Click="SortLastUpdatedAsc_OnClick"/>
+                        <MenuItem Header="Recently closed" Click="SortLastUpdatedDesc_OnClick"/>
 
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
-            <Button Width="20" Margin="15, 0,0 0" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Click="RefreshFiltersButton_OnClick" Command="{Binding DataContext.RefreshQueueCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+            <Button Width="20" Margin="15, 0,0 0" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Click="RefreshFiltersButton_OnClick" Command="{Binding DataContext.RefreshClosedTicketsCommand, RelativeSource={RelativeSource AncestorType=Window}}">
                 <materialDesign:PackIcon Kind="Refresh" Background="Transparent" Foreground="Azure"/>
             </Button>
             </StackPanel>

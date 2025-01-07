@@ -43,4 +43,5 @@ public class Ticket
         if (Severity == "Critical") number = 4;
         return number;
     }
+    
 }

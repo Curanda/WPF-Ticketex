@@ -1,10 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using MaterialDesignThemes.Wpf;
-using Org.BouncyCastle.Crypto.Engines;
-using TicketeX_.Models;
-using TicketeX_.ViewModels;
 
 namespace TicketeX_.Views;
 
@@ -15,8 +11,21 @@ public partial class TicketView : Window
         InitializeComponent();
     }
 
+    public void ClosedTicketDisplayed()
+    {
+        ReopenTicketButton.Visibility = Visibility.Visible;
+        CloseTicketButton.Visibility = Visibility.Collapsed;
+        CloseButton.Visibility = Visibility.Visible;
+        EditButton.Visibility = Visibility.Collapsed;
+        SaveButton.Visibility = Visibility.Collapsed;
+        CancelButton.Visibility = Visibility.Collapsed;
+        EnableFormEditing(false);
+    }
+
     private void EditButton_Click(object sender, RoutedEventArgs e)
     {
+        ReopenTicketButton.Visibility = Visibility.Collapsed;
+        CloseTicketButton.Visibility = Visibility.Visible;
         EditButton.Visibility = Visibility.Collapsed;
         SaveButton.Visibility = Visibility.Visible;
         CancelButton.Visibility = Visibility.Visible;
@@ -25,6 +34,8 @@ public partial class TicketView : Window
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
+        ReopenTicketButton.Visibility = Visibility.Collapsed;
+        CloseTicketButton.Visibility = Visibility.Collapsed;
         CloseButton.Visibility = Visibility.Visible;
         EditButton.Visibility = Visibility.Collapsed;
         SaveButton.Visibility = Visibility.Collapsed;
@@ -34,6 +45,8 @@ public partial class TicketView : Window
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
+        ReopenTicketButton.Visibility = Visibility.Collapsed;
+        CloseTicketButton.Visibility = Visibility.Collapsed;
         EditButton.Visibility = Visibility.Visible;
         SaveButton.Visibility = Visibility.Collapsed;
         CancelButton.Visibility = Visibility.Collapsed;
@@ -66,5 +79,19 @@ public partial class TicketView : Window
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void CloseTicketButton_Click(object sender, RoutedEventArgs e)
+    {
+        var willTicketBeClosed = MessageBox.Show("Are you sure You want to close this ticket?", "closing", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.OK);
+        if (willTicketBeClosed == MessageBoxResult.OK) Close();
+    }
+
+    private void ReopenTicketButton_Click(object sender, RoutedEventArgs e)
+    {
+        EditButton.Visibility = Visibility.Collapsed;
+        SaveButton.Visibility = Visibility.Visible;
+        CancelButton.Visibility = Visibility.Visible;
+        EnableFormEditing(true);
     }
 }

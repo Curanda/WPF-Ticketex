@@ -193,10 +193,11 @@
                 </StackPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,0">
                     <Button x:Name="EditButton" Content="Edit Ticket" Margin="5" Click="EditButton_Click" Command="{Binding EditButton_Click}" Style="{StaticResource NiceButton}"/>
-                    <Button x:Name="SaveButton" Content="Save" Margin="5" Click="SaveButton_Click" Command="{Binding SaveButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
-                    <Button x:Name="CancelButton" Content="Cancel" Margin="5" Click="CancelButton_Click" Command="{Binding CancelButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
-                    <Button x:Name="CloseButton" Content="Close" Margin="5" Click="CloseButton_Click" Command="{Binding CloseButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
-
+                    <Button x:Name="SaveButton" Content="Save/Delegate" Margin="5" Click="SaveButton_Click" Command="{Binding SaveButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
+                    <Button x:Name="CancelButton" Content="Discard Changes" Margin="5" Click="CancelButton_Click" Command="{Binding CancelButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
+                    <Button x:Name="CloseButton" Content="Close Window" Margin="5" Click="CloseButton_Click" Command="{Binding CloseButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
+                    <Button x:Name="CloseTicketButton" Content="Close Ticket" Margin="5" Click="CloseTicketButton_Click" Command="{Binding CloseTicketButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
+                    <Button x:Name="ReopenTicketButton" Content="Reopen Ticket" Margin="5" Click="ReopenTicketButton_Click" Command="{Binding ReopenTicketButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
                 </StackPanel>
             </Grid>
             
