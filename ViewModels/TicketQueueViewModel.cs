@@ -39,7 +39,7 @@ public class TicketQueueViewModel: ObservableObject
     private void ShowTicketView(Ticket ticket)
     {
         var ticketVm = new TicketViewModel(ticket, _loggedUser);
-        var ticketView = new TicketView
+        var ticketView = new TicketView(SelectedTicket.Status)
         {
             DataContext = ticketVm
         };

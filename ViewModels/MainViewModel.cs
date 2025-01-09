@@ -1,8 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using CommunityToolkit.Mvvm.Messaging;
 using Dapper;
 using MySql.Data.MySqlClient;
@@ -112,9 +110,7 @@ public class MainViewModel: ObservableObject
             {
                 TicketQueueTickets.Add(ticket);
             }
-            Console.WriteLine($"{LoggedUser.Department} ticket queue loaded");
             StrongReferenceMessenger.Default.Send(new StatusMessage("queue_refreshed"));
-            Console.WriteLine($"Queue refreshed in viewmodel");
         }
         catch (MySqlException ex)
         {
@@ -124,7 +120,7 @@ public class MainViewModel: ObservableObject
 
     private async Task LoadClosedTicketQueue()
     {
-        string query = $"SELECT * FROM closed_tickets";
+        string query = "SELECT * FROM closed_tickets";
         
         try
         {
@@ -135,9 +131,7 @@ public class MainViewModel: ObservableObject
             {
                 ClosedTickets.Add(ticket);
             }
-            Console.WriteLine($"Closed ticket queue loaded");
             StrongReferenceMessenger.Default.Send(new StatusMessage("closed_queue_refreshed"));
-            Console.WriteLine($"Closed tickets refreshed in viewmodel");
         }
         catch (MySqlException ex)
         {
@@ -148,7 +142,6 @@ public class MainViewModel: ObservableObject
     private void ClearTicketQueue()
     {
         TicketQueueTickets.Clear();
-        Console.WriteLine("Clearing queue");
     }
 
 }

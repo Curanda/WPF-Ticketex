@@ -151,7 +151,7 @@ public class CreateTicketViewModel : ObservableObject
     private void ShowCreatedTicket(Ticket ticket)
     {
         var createdTicketVm = new TicketViewModel(ticket, _loggedUser);
-        var createdTicketView = new TicketView
+        var createdTicketView = new TicketView(ticket.Status)
         {
             DataContext = createdTicketVm
         };

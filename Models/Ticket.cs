@@ -44,4 +44,9 @@ public class Ticket
         return number;
     }
     
+    public Ticket ShallowCopy()
+    {
+        return (Ticket)MemberwiseClone();
+    }
+    
 }
