@@ -1,3 +1,5 @@
+using System.Collections;
+using System.ComponentModel;
 using System.Configuration;
 using System.Windows.Controls;
 using System.Windows;
@@ -9,10 +11,14 @@ using TicketeX_.Views;
 
 namespace TicketeX_.ViewModels;
 
-public class LoginViewModel: ObservableObject
+public class LoginViewModel: ObservableObject, INotifyDataErrorInfo
 {
     private string _username;
     public RelayCommand_ LoginCommand { get; set; }
+
+    private readonly Dictionary<string, List<string>> _validationMessages = new Dictionary<string, List<string>>();
+    public bool HasErrors => _validationMessages.Any();
+    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
     public string Username
     {
@@ -20,6 +26,8 @@ public class LoginViewModel: ObservableObject
         set
         {
             _username = value;
+            ClearErrors(Username);
+            if (string.IsNullOrWhiteSpace(value)) AddError(nameof(Username), "Username cannot be empty");
             OnPropertyChanged();
         }
     }
@@ -37,10 +45,35 @@ public class LoginViewModel: ObservableObject
         });
         
     }
+    
+    public IEnumerable GetErrors(string propertyName)
+    {
+        return _validationMessages.ContainsKey(propertyName) ? _validationMessages[propertyName] : null;
+    }
+
+    private void AddError(string propertyName, string validationMessage )
+    {
+        if (!_validationMessages.ContainsKey(propertyName)) _validationMessages[propertyName] = new List<string>();
+        if (!_validationMessages.ContainsKey(validationMessage)) _validationMessages[propertyName].Add(validationMessage);
+        OnErrorsChanged(propertyName);
+    }
+
+    private void OnErrorsChanged(string propertyName)
+    {
+        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+    }
+
+    private void ClearErrors(string propertyName)
+    {
+        if (_validationMessages.ContainsKey(propertyName))
+        {
+            _validationMessages.Remove(propertyName);
+            OnErrorsChanged(propertyName);
+        }
+    }
 
     private async Task LoginUser(string _username, object parameter)
     {
-        // Console.WriteLine(_username);
         await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
         await connection.OpenAsync();
         var passwordBox = parameter as PasswordBox;
@@ -48,7 +81,6 @@ public class LoginViewModel: ObservableObject
     
         try
         {
-            // Console.WriteLine("trying connection to db");
             var res = connection.Query<LoggedUser>(query, new 
             { 
                 UserId = _username, 
@@ -83,34 +115,14 @@ public class LoginViewModel: ObservableObject
                     }
                 }
             }
-            
             passwordBox?.Clear();
-            
         }
         catch (MySqlException ex)
         {
             Console.WriteLine(ex.Message);
         }
     }
-}
 
-/*
- * TODO
- * zapelnic baze userami
- * zrobic autentykacje z baza w vw
- * pokazywac kolejke zgodnie z dzialem usera
- * podpisywac tickety zgodnie z dzialem i loginem usera
- * zrobic logout i powrot do screena login
- *
- *
- * wystylizowac datagrid
- * p-klik na ticket i otworz ticketa oraz kopiuj ticket.
- * edycja, delegowanie i zamykanie ticketa.
- *
- *
- * migracja na postgres i listen/notify dla odswiezania kolejki.
- *
- * kolejka alertow: llm i generacja losowych alertow.
- * p-klik myszy kopiowanie alertow i zamykanie alertow.
- * 
- */
+
+
+}

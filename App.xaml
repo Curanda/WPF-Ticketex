@@ -18,6 +18,26 @@
                 <ResourceDictionary x:Name="DataGridRowTheme" Source="Components/DataGridRowTheme.xaml"/>
                 <ResourceDictionary x:Name="DataGridHeaderTheme" Source="Components/DataGridHeaderTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Validation.ErrorTemplate">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="UsernameBox"/>
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red" Margin="-1" FontSize="10"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
             <DataTemplate DataType="{x:Type viewModel:MainViewModel}">
                 <views:MainWindow/>
             </DataTemplate>

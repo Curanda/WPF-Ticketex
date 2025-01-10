@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using CommunityToolkit.Mvvm.Messaging;
 using TicketeX_.ViewModels;
 
 namespace TicketeX_.Views;
@@ -97,9 +98,10 @@ public partial class TicketView : Window
 
     private void CloseTicketButton_Click(object sender, RoutedEventArgs e)
     {
-        var willTicketBeClosed = MessageBox.Show("Are you sure You want to close this ticket?", "closing", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.OK);
+        var willTicketBeClosed = MessageBox.Show("Are you sure You want to close this ticket?", $"Closing ticket no XXXX", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.OK);
         if (willTicketBeClosed == MessageBoxResult.OK) TicketViewModel.CloseTicket.Execute(null);
         Close();
+        StrongReferenceMessenger.Default.Send("closed_ticket_queue_refresh_required");
     }
 
     private void ReopenTicketButton_Click(object sender, RoutedEventArgs e)

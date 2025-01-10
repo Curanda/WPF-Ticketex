@@ -26,6 +26,10 @@ public partial class ClosedTicketQueueView : UserControl
         SevMed_Checked = true;
         SevCrit_Checked = true;
         SetFilter();
+        StrongReferenceMessenger.Default.Register<string>(this, (r, m) =>
+        {
+            if (m == "closed_ticket_queue_refresh_required") ClosedTicketsViewSource.View.Refresh();
+        });
     }
     
     private void DefaultSortQueue()
