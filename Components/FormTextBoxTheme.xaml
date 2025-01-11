@@ -12,8 +12,24 @@
                             Margin="0,5,0,5"
                             HorizontalAlignment="Stretch"
                             MaxWidth="270">
-                        <TextBox x:Name="TicketTextBox" BorderThickness="0" IsEnabled="{TemplateBinding IsEnabled}" Background="Transparent" Foreground="Black" Height="22" MaxWidth="270" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Text="{TemplateBinding Text}"/>
+                        <TextBox x:Name="TicketTextBox" BorderThickness="0" IsEnabled="{TemplateBinding IsEnabled}" Background="Transparent" Foreground="Black" Height="22" MaxWidth="270" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"/>
                     </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <ItemsControl ItemsSource="{Binding}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ErrorContent}" Foreground="Red" FontSize="10"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <AdornedElementPlaceholder/>
+                    </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

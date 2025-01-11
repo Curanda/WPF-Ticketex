@@ -19,12 +19,12 @@
                 <ResourceDictionary x:Name="DataGridHeaderTheme" Source="Components/DataGridHeaderTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
-            <Style TargetType="{x:Type TextBox}">
+            <Style x:Key="InputValidation" TargetType="{x:Type TextBox}">
                 <Setter Property="Validation.ErrorTemplate">
                     <Setter.Value>
                         <ControlTemplate>
                             <StackPanel>
-                                <AdornedElementPlaceholder x:Name="UsernameBox"/>
+                                <AdornedElementPlaceholder/>
                                 <ItemsControl ItemsSource="{Binding}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>

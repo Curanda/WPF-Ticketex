@@ -1,6 +1,9 @@
+using System.Collections;
+using System.ComponentModel;
 using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityToolkit.Mvvm.Messaging;
 using Dapper;
 using MySql.Data.MySqlClient;
 using TicketeX_.Models;
@@ -9,7 +12,7 @@ using TicketeX_.Views;
 
 namespace TicketeX_.ViewModels;
 
-public class CreateTicketViewModel : ObservableObject
+public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
 {
     public RelayCommand_ CreateTicketCommand { get; }
     private readonly LoggedUser _loggedUser;
@@ -18,6 +21,9 @@ public class CreateTicketViewModel : ObservableObject
     private string _reportedBy;
     private string _description;
     private readonly string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+    private readonly Dictionary<string, List<string>> _validationMessages = new Dictionary<string, List<string>>();
+    public bool HasErrors => _validationMessages.Any();
+    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
     public ComboBoxItem SelectedSeverity
     {
@@ -34,7 +40,12 @@ public class CreateTicketViewModel : ObservableObject
         get => _reportedBy;
         set
         {
+            ClearErrors(nameof(ReportedBy));
             _reportedBy = value;
+            if (string.IsNullOrWhiteSpace(value)) 
+                AddError(nameof(ReportedBy), "Reported By cannot be empty");
+            else if (!value.Contains('@'))
+                AddError(nameof(ReportedBy), "Reported By has to be an email address");
             OnPropertyChanged();
         }
     }
@@ -53,7 +64,10 @@ public class CreateTicketViewModel : ObservableObject
         get => _description;
         set
         {
+            ClearErrors(nameof(Description));
             _description = value;
+            if (string.IsNullOrWhiteSpace(value)) 
+                AddError(nameof(Description), "Description cannot be empty. Provide an update");
             OnPropertyChanged();
         }
     }
@@ -62,8 +76,54 @@ public class CreateTicketViewModel : ObservableObject
       _loggedUser = loggedUser;
       CreateTicketCommand = new RelayCommand_( (o)=>
       {
-          CreateTicket();
+          if (FinalValidation())
+          { 
+              Console.WriteLine($"final validation says : {FinalValidation()}");
+              ClearErrors(nameof(ReportedBy));
+              ClearErrors(nameof(Description));
+              Console.WriteLine($"Reported By: {ReportedBy}");
+              Console.WriteLine($"Description: {Description}");
+              foreach (var validationMessage in _validationMessages) Console.WriteLine(validationMessage);
+              CreateTicket();
+          }
+          else
+          {
+              MessageBox.Show("You've got errors in your form");
+          }
       });
+    }
+    
+    public IEnumerable GetErrors(string propertyName)
+    {
+        return _validationMessages.ContainsKey(propertyName) ? _validationMessages[propertyName] : null;
+    }
+    
+    private void AddError(string propertyName, string validationMessage )
+    {
+        if (!_validationMessages.ContainsKey(propertyName)) _validationMessages[propertyName] = new List<string>();
+        if (!_validationMessages[propertyName].Contains(validationMessage)) _validationMessages[propertyName].Add(validationMessage);
+        OnErrorsChanged(propertyName);
+    }
+
+    private void OnErrorsChanged(string propertyName)
+    {
+        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+    }
+
+    private void ClearErrors(string propertyName)
+    {
+        if (_validationMessages.ContainsKey(propertyName))
+        {
+            _validationMessages.Remove(propertyName);
+            OnErrorsChanged(propertyName);
+        }
+    }
+
+    private bool FinalValidation()
+    {
+        return !string.IsNullOrWhiteSpace(_reportedBy) 
+               && _reportedBy.Contains('@')
+               && !string.IsNullOrWhiteSpace(_description);
     }
 
     private async Task<string> GenerateNewTicketNumber()
@@ -140,6 +200,7 @@ public class CreateTicketViewModel : ObservableObject
                 ticket.Attachments
             });
             MessageBox.Show($"A new ticket with Id: {ticket.TicketId}, has been created successfully and sent to {ticket.CurrentLocation}");
+            ClearFormFields();
             ShowCreatedTicket(ticket);
         }
         catch (MySqlException ex)
@@ -166,5 +227,10 @@ public class CreateTicketViewModel : ObservableObject
         createdTicketView.CancelButton.Visibility = Visibility.Collapsed;
         createdTicketView.CloseButton.Visibility = Visibility.Visible;
         createdTicketView.EnableFormEditing(false);
+    }
+
+    private void ClearFormFields()
+    {
+        StrongReferenceMessenger.Default.Send<string>("CreateTicketView_ClearFormFields");
     }
 }
