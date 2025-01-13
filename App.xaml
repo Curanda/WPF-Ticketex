@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModel="clr-namespace:TicketeX_.ViewModels"
              xmlns:views="clr-namespace:TicketeX_.Views"
+             xmlns:local="clr-namespace:TicketeX_.Utilities"
              StartupUri="/Views/LoginView.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -17,6 +18,8 @@
                 <ResourceDictionary x:Name="FormTextBoxTheme" Source="Components/FormTextBoxTheme.xaml"/>
                 <ResourceDictionary x:Name="DataGridRowTheme" Source="Components/DataGridRowTheme.xaml"/>
                 <ResourceDictionary x:Name="DataGridHeaderTheme" Source="Components/DataGridHeaderTheme.xaml"/>
+                <ResourceDictionary x:Name="DescriptionFormInputTheme" Source="Components/DescriptionFormInputTheme.xaml"/>
+                <ResourceDictionary x:Name="FormDropdownTheme" Source="Components/FormDropdownTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
             <Style x:Key="InputValidation" TargetType="{x:Type TextBox}">
@@ -24,11 +27,11 @@
                     <Setter.Value>
                         <ControlTemplate>
                             <StackPanel>
-                                <AdornedElementPlaceholder/>
+                                <AdornedElementPlaceholder x:Name="Placeholder"/>
                                 <ItemsControl ItemsSource="{Binding}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red" Margin="-1" FontSize="10"/>
+                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red" Margin="-1" FontSize="12"/>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>

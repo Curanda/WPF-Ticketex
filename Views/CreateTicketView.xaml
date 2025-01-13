@@ -3,14 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TicketeX_.Views"
-             xmlns:protobuf="clr-namespace:Google.Protobuf;assembly=Google.Protobuf"
-             xmlns:utilities="clr-namespace:TicketeX_.Utilities"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="500"
              Background="Transparent"  >
     <UserControl.Resources>
+        <CollectionViewSource Source="{Binding Severities}" x:Key="SeverityList" />
         <Style TargetType="Label">
             <Setter Property="FontFamily" Value="Arial"/>
             <Setter Property="Foreground" Value="Azure"/>
@@ -33,30 +31,76 @@
         </Grid.RowDefinitions>
         <Label>Severity:</Label>
         
-        
-        <Border Grid.Row="0" Grid.Column="1" CornerRadius="2" 
-                Background="Transparent" 
-                BorderBrush="White" 
-                BorderThickness="1"
-                Height="25"
-                Margin="0,5,60,5"
-                HorizontalAlignment="Stretch"
-                MaxWidth="270">
-            <ComboBox x:Name="SeverityComboBox" 
-                      Margin="0" 
-                      IsEnabled="True"
-                      BorderThickness="0"
-                      Background="White"
-                      Foreground="Black"
-                      SelectedItem="{Binding SelectedSeverity, Mode=OneWayToSource}">
-                <ComboBoxItem>Low</ComboBoxItem>
-                <ComboBoxItem>Medium</ComboBoxItem>
-                <ComboBoxItem>High</ComboBoxItem>
-                <ComboBoxItem>Critical</ComboBoxItem>
-            </ComboBox>
-        </Border>
+        <Grid Grid.Row="0" Grid.Column="1">
+                    <!-- Grid.Row="0" Grid.Column="1" -->
+            <Border x:Name="SeverityRoundedBorder"
+                    CornerRadius="2"
+                    Background="Transparent"
+                    BorderBrush="White"
+                    BorderThickness="1"
+                    Height="25"
+                    Margin="0,5,60,5"
+                    HorizontalAlignment="Stretch"
+                    MaxWidth="270">
+                <!-- 
+                Dodatkowy ficzer: Placeholder do comboboxa. Wbrew pozorom bardzo trudny element do implementacji
+                w wpf bez natywnej property placeholder. Dlaczego? Jakiekolwiek Selectedindex nie łączy się z
+                bindowaniem do listy we viewmodel. Jesli zaś użyjemy compositecollection 
+                to z kolei bindowanie SelectedItem z viewmodelu nie działa! Dom wariatów.
+                Na szczeście można zmienić pole poprzez odwołanie w code behind za pomocą handlera SelectionChanged.
+                Żeby tego było mało to można zupełnie usunąć placeholder od razu po otwarciu dropdowna w
+                osobnym handlerze DropdownOpened.
+                 -->
+                <ComboBox x:Name="SeverityComboBox"
+                          Margin="0"
+                          IsEnabled="True"
+                          BorderThickness="0"
+                          Background="White"
+                          Foreground="Black"
+                          SelectedIndex="0"
+                          SelectionChanged="SeverityComboBox_OnSelectionChanged"
+                          DropDownOpened="SeverityComboBox_OnDropDownOpened"
+                >
+                    <ComboBox.ItemsSource>
+                        <CompositeCollection x:Name="SeverityDropdownCollection">
+                            <ComboBoxItem x:Name="SeverityPlaceholder" Visibility="Collapsed">Please select the issue severity</ComboBoxItem>
+                            <CollectionContainer Collection="{Binding Source={StaticResource ResourceKey=SeverityList}}"/>
+                        </CompositeCollection>
+                    </ComboBox.ItemsSource>
+                </ComboBox>
+            </Border>
+                    
+                    <!-- 
+                    
+                    
+                    
+                     -->
+                    
+            <Popup IsOpen="{Binding ValidatedSeverity, Mode=TwoWay}"
+                           PlacementTarget="{Binding ElementName=SeverityRoundedBorder}"
+                           Placement="Right"
+                           AllowsTransparency="True"
+                           HorizontalOffset="10">
+                        <Border CornerRadius="4"
+                                Background="Azure"
+                                BorderBrush="DarkRed"
+                                BorderThickness="1"
+                                Padding="3">
+                            <TextBlock Text="Please select severity before sending ticket"
+                                       Foreground="DarkRed"
+                                       FontSize="12"
+                                       Padding="5"/>
+                        </Border>
+            </Popup>
+        </Grid>
         <Label Grid.Row="2" Grid.Column="0">Reported by:</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,60,0" x:Name="ReportedByTextBox" Text="{Binding ReportedBy, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Style="{StaticResource FormTextBoxTheme}"/>
+        <TextBox Grid.Row="2" 
+                 Grid.Column="1" 
+                 Margin="0,0,60,0" 
+                 x:Name="ReportedByTextBox" 
+                 Validation.ErrorTemplate="{x:Null}" 
+                 Text="{Binding ReportedBy, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+                 Style="{StaticResource FormTextBoxTheme}"/>
         <Label Grid.Row="3" Grid.Column="0">Destination:</Label>
         <Border Grid.Row="3" Grid.Column="1" CornerRadius="2" 
                 Background="Transparent" 
@@ -85,21 +129,12 @@
         </Border>
         
         <Label Grid.Row="4" Grid.Column="0">Description:</Label>
-        
-        <Border Grid.Row="4" Grid.Column="1" Margin="5" Background="White" CornerRadius="3" BorderThickness="2" BorderBrush="White" Height="auto" MaxHeight="600" Width="auto" MaxWidth="500">
-            <TextBox x:Name="DescriptionTextBox" 
-                     BorderThickness="0"
-                     HorizontalScrollBarVisibility="Auto" 
-                     TextWrapping="Wrap"
-                     AcceptsReturn="True" IsEnabled="True"
-                     Background="Transparent"
-                     Foreground="Black"
-                     VerticalScrollBarVisibility="Auto"
-                     Style="{StaticResource InputValidation}"
-                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
-            />
-        </Border>
-        
+        <TextBox x:Name="DescriptionTextBox" 
+                 Grid.Row="4" 
+                 Grid.Column="1" 
+                 Validation.ErrorTemplate="{x:Null}"
+                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                 Style="{StaticResource DescriptionFormInputTheme}"/>
         <Button Grid.Row="5" 
                 Grid.Column="1" 
                 HorizontalAlignment="Right" 

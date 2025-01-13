@@ -1,0 +1,102 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    
+    <Style x:Key="FormDropdownTheme" TargetType="{x:Type ComboBox}">
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <AdornedElementPlaceholder x:Name="Placeholder"/>
+                        <!-- <ItemsControl ItemsSource="{Binding}"> -->
+                        <!--     <ItemsControl.ItemTemplate> -->
+                        <!--         <DataTemplate> -->
+                        <!--             <TextBlock Text="{Binding ErrorContent}" Foreground="Red" Margin="-1" FontSize="12"/> -->
+                        <!--         </DataTemplate> -->
+                        <!--     </ItemsControl.ItemTemplate> -->
+                        <!-- </ItemsControl> -->
+                        <Popup IsOpen="{Binding Path=(Validation.HasError), RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                               PlacementTarget="{Binding ElementName=Placeholder}"
+                               Placement="Right"
+                               AllowsTransparency="True"
+                               HorizontalOffset="10"
+                               VerticalOffset="-3">
+                            <ItemsControl ItemsSource="{Binding Path=(Validation.Errors), RelativeSource={RelativeSource TemplatedParent}}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="4" 
+                                                HorizontalAlignment="Stretch"
+                                                Background="Azure" 
+                                                BorderBrush="DarkRed" 
+                                                BorderThickness="1"
+                                                Padding="3"
+                                                Margin="5,0,0,0">
+                                            <TextBlock Text="{Binding ErrorContent}"
+                                                       Background="Azure" 
+                                                       Foreground="DarkRed" 
+                                                       FontSize="12"
+                                                       Padding="5"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- -->
+    <!-- <Style x:Key="FormDropdownTheme" TargetType="{x:Type ComboBox}"> -->
+    <!--     <Setter Property="Template"> -->
+    <!--         <Setter.Value> -->
+    <!--             <ControlTemplate TargetType="{x:Type ComboBox}"> -->
+    <!--                 <Grid> -->
+    <!--                     <Border x:Name="RoundedBorder" -->
+    <!--                             CornerRadius="2" -->
+    <!--                             Background="Transparent" -->
+    <!--                             BorderBrush="White" -->
+    <!--                             BorderThickness="1" -->
+    <!--                             Height="25" -->
+    <!--                             Margin="0,5,60,5" -->
+    <!--                             HorizontalAlignment="Stretch" -->
+    <!--                             MaxWidth="270"> -->
+    <!--                         <ComboBox ItemsSource="{TemplateBinding ItemsSource}" -->
+    <!--                                   SelectedItem="{TemplateBinding SelectedItem}" -->
+    <!--                                   IsEnabled="{TemplateBinding IsEnabled}" -->
+    <!--                                   BorderThickness="0" -->
+    <!--                                   Background="White" -->
+    <!--                                   Foreground="Black"/> -->
+    <!--                     </Border> -->
+    <!--                     <Popup IsOpen="{Binding Path=(Validation.HasError), RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" -->
+    <!--                            PlacementTarget="{Binding ElementName=RoundedBorder}" -->
+    <!--                            Placement="Right" -->
+    <!--                            AllowsTransparency="True" -->
+    <!--                            HorizontalOffset="10" -->
+    <!--                            VerticalOffset="-3"> -->
+    <!--                         <ItemsControl ItemsSource="{Binding Path=(Validation.Errors), RelativeSource={RelativeSource TemplatedParent}}"> -->
+    <!--                             <ItemsControl.ItemTemplate> -->
+    <!--                                 <DataTemplate> -->
+    <!--                                     <Border CornerRadius="4"  -->
+    <!--                                             HorizontalAlignment="Stretch" -->
+    <!--                                             Background="Azure"  -->
+    <!--                                             BorderBrush="DarkRed"  -->
+    <!--                                             BorderThickness="1" -->
+    <!--                                             Padding="3" -->
+    <!--                                             Margin="5,0,0,0"> -->
+    <!--                                         <TextBlock Text="{Binding ErrorContent}" -->
+    <!--                                                    Background="Azure"  -->
+    <!--                                                    Foreground="DarkRed"  -->
+    <!--                                                    FontSize="12" -->
+    <!--                                                    Padding="5"/> -->
+    <!--                                     </Border> -->
+    <!--                                 </DataTemplate> -->
+    <!--                             </ItemsControl.ItemTemplate> -->
+    <!--                         </ItemsControl> -->
+    <!--                     </Popup> -->
+    <!--                 </Grid> -->
+    <!--             </ControlTemplate> -->
+    <!--         </Setter.Value> -->
+    <!--     </Setter> -->
+    <!-- </Style> -->
+</ResourceDictionary>

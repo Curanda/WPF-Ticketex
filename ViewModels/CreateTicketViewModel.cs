@@ -1,10 +1,12 @@
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityToolkit.Mvvm.Messaging;
 using Dapper;
+using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
@@ -20,16 +22,32 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
     private string _selectedDestination;
     private string _reportedBy;
     private string _description;
+    private bool _validatedSeverity { get; set; }
+    public List<string> Severities { get; } = ["Low", "Medium", "High", "Critical"];
+    public string SeverityPlaceholder { get; } = "Please select a severity.";
     private readonly string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
     private readonly Dictionary<string, List<string>> _validationMessages = new Dictionary<string, List<string>>();
     public bool HasErrors => _validationMessages.Any();
     public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-    public ComboBoxItem SelectedSeverity
+    
+    public bool ValidatedSeverity
     {
+        get => _validatedSeverity;
         set
         {
-            _selectedSeverity = value.Content.ToString();
+            _validatedSeverity = value;
+            OnPropertyChanged(nameof(ValidatedSeverity));
+        }
+    }
+
+    public string SelectedSeverity
+    {
+        get => _selectedSeverity;
+        set
+        {
+            _selectedSeverity = value;
+            Console.WriteLine("selected severity is : " + SelectedSeverity + " Value is: " +value);
+            _validatedSeverity = false;
             OnPropertyChanged();
         }
     }
@@ -55,6 +73,7 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
         set
         {
             _selectedDestination = value.Content.ToString();
+            
             OnPropertyChanged();
         }
     }
@@ -74,6 +93,7 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
     public CreateTicketViewModel(LoggedUser loggedUser)
     {
       _loggedUser = loggedUser;
+      _validatedSeverity = false;
       CreateTicketCommand = new RelayCommand_( (o)=>
       {
           if (FinalValidation())
@@ -88,7 +108,8 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
           }
           else
           {
-              MessageBox.Show("You've got errors in your form");
+              MessageBox.Show($"You've got errors in your form");
+              foreach (var validationMessage in _validationMessages) Console.WriteLine(validationMessage);
           }
       });
     }
@@ -121,8 +142,15 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
 
     private bool FinalValidation()
     {
+        Console.WriteLine("reportedBy is null of whitespace: "+_reportedBy);
+        Console.WriteLine("selected severity is "+_selectedSeverity);
+        Console.WriteLine("description is "+Description);
+        ValidatedSeverity = SelectedSeverity.IsNullOrEmpty();
+        Console.WriteLine($"validated severity {ValidatedSeverity}");
+        
         return !string.IsNullOrWhiteSpace(_reportedBy) 
                && _reportedBy.Contains('@')
+               && !string.IsNullOrWhiteSpace(_selectedSeverity)
                && !string.IsNullOrWhiteSpace(_description);
     }
 
@@ -218,6 +246,9 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
         };
         if (!string.Equals(_loggedUser.Department, _selectedDestination, StringComparison.CurrentCultureIgnoreCase)) ProhibitCreatedTicketEditing(createdTicketView);
         createdTicketView.Show();
+        ClearErrors(nameof(ReportedBy));
+        ClearErrors(nameof(Description));
+        ClearErrors(nameof(SelectedSeverity));
     }
 
     private void ProhibitCreatedTicketEditing(TicketView createdTicketView)
