@@ -23,8 +23,9 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
     private string _reportedBy;
     private string _description;
     private bool _validatedSeverity { get; set; }
+    private bool _validatedDestination { get; set; }
     public List<string> Severities { get; } = ["Low", "Medium", "High", "Critical"];
-    public string SeverityPlaceholder { get; } = "Please select a severity.";
+    public List<string> Destinations { get; } = ["Helpdesk", "Windowssupport", "Networksupport", "Hr", "Lager", "Dbsupport", "Technician", "Janitor"];
     private readonly string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
     private readonly Dictionary<string, List<string>> _validationMessages = new Dictionary<string, List<string>>();
     public bool HasErrors => _validationMessages.Any();
@@ -40,6 +41,16 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
         }
     }
 
+    public bool ValidatedDestination
+    {
+        get => _validatedDestination;
+        set
+        {
+            _validatedDestination = value;
+            OnPropertyChanged(nameof(ValidatedDestination));
+        }
+    }
+
     public string SelectedSeverity
     {
         get => _selectedSeverity;
@@ -47,7 +58,7 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
         {
             _selectedSeverity = value;
             Console.WriteLine("selected severity is : " + SelectedSeverity + " Value is: " +value);
-            _validatedSeverity = false;
+            ValidatedSeverity = false;
             OnPropertyChanged();
         }
     }
@@ -68,12 +79,14 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
         }
     }
 
-    public ComboBoxItem SelectedDestination
+    public string SelectedDestination
     {
+        get => _selectedDestination;
         set
         {
-            _selectedDestination = value.Content.ToString();
-            
+            _selectedDestination = value;
+            Console.WriteLine("selected destination is : " + SelectedDestination + " Value is: " +value);
+            ValidatedDestination = false;
             OnPropertyChanged();
         }
     }
@@ -94,6 +107,7 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
     {
       _loggedUser = loggedUser;
       _validatedSeverity = false;
+      _validatedDestination = false;
       CreateTicketCommand = new RelayCommand_( (o)=>
       {
           if (FinalValidation())
@@ -146,11 +160,13 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
         Console.WriteLine("selected severity is "+_selectedSeverity);
         Console.WriteLine("description is "+Description);
         ValidatedSeverity = SelectedSeverity.IsNullOrEmpty();
+        ValidatedDestination = SelectedDestination.IsNullOrEmpty();
         Console.WriteLine($"validated severity {ValidatedSeverity}");
         
         return !string.IsNullOrWhiteSpace(_reportedBy) 
                && _reportedBy.Contains('@')
                && !string.IsNullOrWhiteSpace(_selectedSeverity)
+               && !string.IsNullOrWhiteSpace(_selectedDestination)
                && !string.IsNullOrWhiteSpace(_description);
     }
 
@@ -248,7 +264,6 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
         createdTicketView.Show();
         ClearErrors(nameof(ReportedBy));
         ClearErrors(nameof(Description));
-        ClearErrors(nameof(SelectedSeverity));
     }
 
     private void ProhibitCreatedTicketEditing(TicketView createdTicketView)

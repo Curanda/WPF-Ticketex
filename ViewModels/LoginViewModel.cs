@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Windows.Controls;
 using System.Windows;
 using Dapper;
+using MaterialDesignThemes.Wpf;
 using MySql.Data.MySqlClient;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
@@ -14,6 +15,7 @@ namespace TicketeX_.ViewModels;
 public class LoginViewModel: ObservableObject, INotifyDataErrorInfo
 {
     private string _username;
+    public bool isPasswordSet { get; set; }
     public RelayCommand_ LoginCommand { get; set; }
 
     private readonly Dictionary<string, List<string>> _validationMessages = new Dictionary<string, List<string>>();
@@ -27,7 +29,7 @@ public class LoginViewModel: ObservableObject, INotifyDataErrorInfo
         {
             _username = value;
             ClearErrors(Username);
-            if (string.IsNullOrWhiteSpace(value)) AddError(nameof(Username), "Username cannot be empty");
+            if (string.IsNullOrWhiteSpace(value)) AddError(nameof(Username), "User name field cannot be empty");
             OnPropertyChanged();
         }
     }
@@ -37,10 +39,17 @@ public class LoginViewModel: ObservableObject, INotifyDataErrorInfo
         LoginCommand = new RelayCommand_(parameter =>
         {
             
+            var passwordBox = parameter as PasswordBox;
+            if (passwordBox.Password.Length == 0)
+            {
+                isPasswordSet = true;
+                return;
+            }
             LoginUser(_username, parameter);
             if (parameter is IDisposable disposable)
             {
                 disposable.Dispose();
+                passwordBox.Password = string.Empty;
             }
         });
         

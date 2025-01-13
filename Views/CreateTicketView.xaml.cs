@@ -1,11 +1,6 @@
-using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Mysqlx;
 using TicketeX_.ViewModels;
-using Regex = System.Text.RegularExpressions.Regex;
 
 namespace TicketeX_.Views;
 
@@ -22,10 +17,15 @@ public partial class CreateTicketView : UserControl
         });
     }
 
-    private void ClearFormFields() 
+    private void ClearFormFields()
     {
-        SeverityComboBox.SelectedItem = null;
-        DestinationComboBox.SelectedItem = null;
+        if (!SeverityDropdownCollection.Contains(SeverityPlaceholder))
+            SeverityDropdownCollection.Insert(0, SeverityPlaceholder);
+    
+        if (!DestinationDropdownCollection.Contains(DestinationPlaceholder))
+            DestinationDropdownCollection.Insert(0, DestinationPlaceholder);
+        SeverityComboBox.SelectedIndex = 0;
+        DestinationComboBox.SelectedIndex = 0;
         ReportedByTextBox.Text = string.Empty;
         DescriptionTextBox.Text = string.Empty;
     }
@@ -42,5 +42,19 @@ public partial class CreateTicketView : UserControl
         {
             createTicketVm.SelectedSeverity = e.AddedItems[0] as string;
         }
+    }
+
+    private void DestinationComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (DataContext is CreateTicketViewModel createTicketVm)
+        {
+            createTicketVm.SelectedDestination = e.AddedItems[0] as string;
+        }
+    }
+
+    private void DestinationComboBox_OnDropDownOpened(object sender, EventArgs e)
+    {
+        DestinationComboBox.SelectedIndex = 1;
+        DestinationDropdownCollection.Remove(DestinationPlaceholder);
     }
 }

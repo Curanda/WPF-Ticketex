@@ -87,15 +87,16 @@
                                FontFamily="Montserrat"                             
                                Margin="0,15,0,0"/>
                     <PasswordBox x:Name="PasswordBox"
-                             FontSize="13"
-                             FontWeight="Medium"
-                             FontFamily="Montserrat"                            
-                             Foreground="Black"
-                             CaretBrush="LightGray"
-                             Height="28"
-                             VerticalContentAlignment="Center"
-                             Margin="0,5,0,0"
-                             Padding="10,0,0,0">
+                                 FontSize="13"
+                                 FontWeight="Medium"
+                                 FontFamily="Montserrat"                            
+                                 Foreground="Black"
+                                 CaretBrush="LightGray"
+                                 Height="28"
+                                 VerticalContentAlignment="Center"
+                                 Margin="0,5,0,0"
+                                 Padding="10,0,0,0"
+                                 PasswordChanged="PasswordBox_OnPasswordChanged">
                         <PasswordBox.Resources>
                             <Style TargetType="PasswordBox">
                                 <Setter Property="Template">
@@ -110,6 +111,22 @@
                             </Style>
                         </PasswordBox.Resources>
                     </PasswordBox>
+                    <Popup x:Name="PasswordErrorPopup"
+                           PlacementTarget="{Binding ElementName=PasswordBox}"
+                           Placement="Bottom"
+                           AllowsTransparency="True"
+                           HorizontalOffset="10">
+                        <Border CornerRadius="4"
+                                Background="Azure"
+                                BorderBrush="DarkRed"
+                                BorderThickness="1"
+                                Padding="3">
+                            <TextBlock Text="Password cannot be empty"
+                                       Foreground="DarkRed"
+                                       FontSize="12"
+                                       Padding="5"/>
+                        </Border>
+                    </Popup>
                     <Button x:Name="LoginButton"                          
                             BorderThickness="3"
                             Content="LOG IN"
