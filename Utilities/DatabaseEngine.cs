@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.Windows;
 using CommunityToolkit.Mvvm.Messaging;
 using Dapper;
 using MySql.Data.MySqlClient;
@@ -56,13 +57,44 @@ public static class DatabaseEngine
             return tickets;
         }
     }
-
-    public static async Task<bool> CreateTicket(Ticket ticket, string destinationDepartment)
+    
+    private static async Task<string> GenerateNewTicketNumber(string targetDepartment)
     {
+        await using var connection = new MySqlConnection(connectionString);
+        await connection.OpenAsync();
+        string query = @"SELECT TotalTickets FROM ticket_counter WHERE Department = @targetDepartment FOR UPDATE";
+        
+        try
+        {
+            var newTicketNumber = connection.Query<int>(query, new { targetDepartment }).FirstOrDefault()+1;
+            var newTicketId = $"{targetDepartment}-{newTicketNumber}";
+            const string updateQuery = "UPDATE ticket_counter SET TotalTickets = @newTicketNumber WHERE Department = @targetDepartment";
+            var isSuccess = await connection.ExecuteAsync(updateQuery, new { newTicketNumber, targetDepartment });
+            return isSuccess > 0 ? newTicketId : null;
+        }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return "MySQL Error";
+        }
+    }
+
+    public static async Task<bool> CreateTicket(Ticket ticket)
+    {
+        var newTicketId = await GenerateNewTicketNumber(ticket.PrevLocation.ToLower());
+        if (newTicketId != null)
+        {
+            ticket.TicketId = newTicketId;
+        }
+        else
+        {
+            MessageBox.Show("Failed to generate new ticket number");
+            return false;
+        }
         try
         {
             await using var connection = new MySqlConnection(connectionString);
-            var query = $@"INSERT INTO {destinationDepartment.ToLower()}_tickets 
+            var query = $@"INSERT INTO {ticket.CurrentLocation.ToLower()}_tickets 
                           (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, 
                            PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, 
                            NumOfDownVotes, VotesRatio, Attachments) 
@@ -77,6 +109,7 @@ public static class DatabaseEngine
         catch (MySqlException ex)
         {
             Console.WriteLine(ex.Message);
+            MessageBox.Show("Failed to insert new ticket into database");
             return false;
         }
     }

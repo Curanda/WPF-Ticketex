@@ -170,37 +170,37 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
                && !string.IsNullOrWhiteSpace(_description);
     }
 
-    private async Task<string> GenerateNewTicketNumber()
-    {
-        string targetDepartment = _loggedUser.Department;
-        await using var connection = new MySqlConnection(_connectionString);
-        await connection.OpenAsync();
-        string query = @"SELECT TotalTickets FROM ticket_counter WHERE Department = @targetDepartment FOR UPDATE";
-        
-        try
-        {
-            int newTicketNumber = connection.Query<int>(query, new { targetDepartment }).FirstOrDefault()+1;
-            string newTicketId = $"{targetDepartment}-{newTicketNumber}";
-            string updateQuery = "UPDATE ticket_counter SET TotalTickets = @newTicketNumber WHERE Department = @targetDepartment";
-            int isSuccess = await connection.ExecuteAsync(updateQuery, new { newTicketNumber, targetDepartment });
-
-            Console.WriteLine($"isSuccess: {isSuccess}");
-            return newTicketId;
-        }
-        catch (MySqlException ex)
-        {
-            Console.WriteLine(ex.Message);
-            return "MySQL Error";
-        }
-    }
+    // private async Task<string> GenerateNewTicketNumber()
+    // {
+    //     string targetDepartment = _loggedUser.Department;
+    //     await using var connection = new MySqlConnection(_connectionString);
+    //     await connection.OpenAsync();
+    //     string query = @"SELECT TotalTickets FROM ticket_counter WHERE Department = @targetDepartment FOR UPDATE";
+    //     
+    //     try
+    //     {
+    //         int newTicketNumber = connection.Query<int>(query, new { targetDepartment }).FirstOrDefault()+1;
+    //         string newTicketId = $"{targetDepartment}-{newTicketNumber}";
+    //         string updateQuery = "UPDATE ticket_counter SET TotalTickets = @newTicketNumber WHERE Department = @targetDepartment";
+    //         int isSuccess = await connection.ExecuteAsync(updateQuery, new { newTicketNumber, targetDepartment });
+    //
+    //         Console.WriteLine($"isSuccess: {isSuccess}");
+    //         return newTicketId;
+    //     }
+    //     catch (MySqlException ex)
+    //     {
+    //         Console.WriteLine(ex.Message);
+    //         return "MySQL Error";
+    //     }
+    // }
 
     private async Task CreateTicket()
     {
-        string newTicketId = await GenerateNewTicketNumber();
-        Console.WriteLine($"new ticket number: {newTicketId}");
+        // string newTicketId = await GenerateNewTicketNumber();
+        // Console.WriteLine($"new ticket number: {newTicketId}");
         var ticket = new Ticket
             {
-            TicketId = newTicketId,
+            TicketId = null,
             Origin = _loggedUser.Department,
             Status = "Open",
             Severity = _selectedSeverity,
@@ -217,41 +217,45 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
             VotesRatio = 0,
             Attachments = 0
         };
-        await SendTicketToDb(ticket);
+        // await SendTicketToDb(ticket);
+        var isSuccess = await DatabaseEngine.CreateTicket(ticket);
+        if (isSuccess) MessageBox.Show($"A new ticket with Id: {ticket.TicketId}, has been created successfully and sent to {ticket.CurrentLocation}");
+        ClearFormFields();
+        ShowCreatedTicket(ticket);
     }
     
-    private async Task SendTicketToDb(Ticket ticket)
-    {
-        try
-        {
-            await using var connection = new MySqlConnection(_connectionString);
-            var query = $"INSERT INTO {_selectedDestination.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
-            await connection.ExecuteAsync(query, new
-            {
-                ticket.TicketId,
-                ticket.Status,
-                ticket.Severity,
-                ticket.AuthorId,
-                ticket.Origin,
-                ticket.CurrentLocation,
-                ticket.PrevLocation,
-                ticket.ReporterId,
-                ticket.Description,
-                ticket.NumOfUpdates,
-                ticket.NumOfUpVotes,
-                ticket.NumOfDownVotes,
-                ticket.VotesRatio,
-                ticket.Attachments
-            });
-            MessageBox.Show($"A new ticket with Id: {ticket.TicketId}, has been created successfully and sent to {ticket.CurrentLocation}");
-            ClearFormFields();
-            ShowCreatedTicket(ticket);
-        }
-        catch (MySqlException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
+    // private async Task SendTicketToDb(Ticket ticket)
+    // {
+    //     try
+    //     {
+    //         await using var connection = new MySqlConnection(_connectionString);
+    //         var query = $"INSERT INTO {_selectedDestination.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
+    //         await connection.ExecuteAsync(query, new
+    //         {
+    //             ticket.TicketId,
+    //             ticket.Status,
+    //             ticket.Severity,
+    //             ticket.AuthorId,
+    //             ticket.Origin,
+    //             ticket.CurrentLocation,
+    //             ticket.PrevLocation,
+    //             ticket.ReporterId,
+    //             ticket.Description,
+    //             ticket.NumOfUpdates,
+    //             ticket.NumOfUpVotes,
+    //             ticket.NumOfDownVotes,
+    //             ticket.VotesRatio,
+    //             ticket.Attachments
+    //         });
+    //         MessageBox.Show($"A new ticket with Id: {ticket.TicketId}, has been created successfully and sent to {ticket.CurrentLocation}");
+    //         ClearFormFields();
+    //         ShowCreatedTicket(ticket);
+    //     }
+    //     catch (MySqlException ex)
+    //     {
+    //         Console.WriteLine(ex.Message);
+    //     }
+    // }
 
     private void ShowCreatedTicket(Ticket ticket)
     {
