@@ -97,6 +97,16 @@
                                  Margin="0,5,0,0"
                                  Padding="10,0,0,0"
                                  PasswordChanged="PasswordBox_OnPasswordChanged">
+                        <!-- 
+                        
+                        Dodatkowy ficzer: Customowa i wystylizowana walidacja na PasswordBox. Ten element
+                        jak wiadomo nie jest zwykłym textboxem a więc i nie można go zwalidować w prosty
+                        sposób. Zbudowałem więc customową logikę walidacji w code behind pod
+                        właściwość PaswordChanged która dodaje i usuwa popup z errorem i ustawia
+                        odpowiedni stan walidacji we viewModel.
+                        
+                         -->
+                        
                         <PasswordBox.Resources>
                             <Style TargetType="PasswordBox">
                                 <Setter Property="Template">

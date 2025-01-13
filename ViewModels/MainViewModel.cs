@@ -41,21 +41,22 @@ public class MainViewModel: ObservableObject
         LoggedUser = loggedUser;
         CurrentAccount = loggedUser.Department;
         _currentView = HomeVm = new HomeViewModel(loggedUser.FirstName, loggedUser.Department);
-        LoadTicketQueue();
-        LoadClosedTicketQueue();
+        // LoadTicketQueue();
         
         HomeViewCommand = new RelayCommand_(o =>
         {
             CurrentView = HomeVm;
         });
 
-        TicketQueueViewCommand = new RelayCommand_(o =>
+        TicketQueueViewCommand = new RelayCommand_(async (o) =>
         {
-            CurrentView = new TicketQueueViewModel(TicketQueueTickets, LoggedUser);
+            TicketQueueTickets = await DatabaseEngine.LoadOpenQueue(CurrentAccount);
+            CurrentView = TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets, LoggedUser);
         });
 
-        ClosedTicketQueueViewCommand = new RelayCommand_(o =>
+        ClosedTicketQueueViewCommand = new RelayCommand_(async (o) =>
         {
+            ClosedTickets = await DatabaseEngine.LoadClosedQueue();
             CurrentView = ClosedTicketQueueVm = new ClosedTicketQueueViewModel(ClosedTickets, LoggedUser);
         });
 

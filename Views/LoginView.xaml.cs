@@ -16,7 +16,7 @@ public partial class LoginView : Window
         var passwordBox = sender as PasswordBox;
         var password = passwordBox.Password;
         if (DataContext is not LoginViewModel loginVm) return;
-        loginVm.isPasswordSet = password.Length != 0;
-        PasswordErrorPopup.IsOpen = password.Length == 0;
+        loginVm.isPasswordSet = password.Trim().Length != 0;
+        PasswordErrorPopup.IsOpen = password.Trim().Length == 0;
     }
 }
