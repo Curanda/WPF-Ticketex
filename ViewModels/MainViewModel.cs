@@ -48,13 +48,13 @@ public class MainViewModel: ObservableObject
             CurrentView = HomeVm;
         });
 
-        TicketQueueViewCommand = new RelayCommand_(async (o) =>
+        TicketQueueViewCommand = new RelayCommand_(async void (o) =>
         {
             TicketQueueTickets = await DatabaseEngine.LoadOpenQueue(CurrentAccount);
             CurrentView = TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets, LoggedUser);
         });
 
-        ClosedTicketQueueViewCommand = new RelayCommand_(async (o) =>
+        ClosedTicketQueueViewCommand = new RelayCommand_(async void (o) =>
         {
             ClosedTickets = await DatabaseEngine.LoadClosedQueue();
             CurrentView = ClosedTicketQueueVm = new ClosedTicketQueueViewModel(ClosedTickets, LoggedUser);
@@ -65,17 +65,19 @@ public class MainViewModel: ObservableObject
             CurrentView = CreateTicketVm = new CreateTicketViewModel(LoggedUser);
         });
 
-        RefreshQueueCommand = new RelayCommand_( o =>
+        RefreshQueueCommand = new RelayCommand_( async void (o) =>
         {
-            ClearTicketQueue();
-            LoadTicketQueue();
+            // ClearTicketQueue();
+            TicketQueueTickets = await DatabaseEngine.LoadOpenQueue(CurrentAccount);
+            // LoadTicketQueue();
             
         });
 
-        RefreshClosedTicketsCommand = new RelayCommand_(o =>
+        RefreshClosedTicketsCommand = new RelayCommand_(async void (o) =>
         {
-            ClearTicketQueue();
-            LoadClosedTicketQueue();
+            // ClearTicketQueue();
+            ClosedTickets = await DatabaseEngine.LoadClosedQueue();
+            // LoadClosedTicketQueue();
         });
 
         LogoutCommand = new RelayCommand_(o =>

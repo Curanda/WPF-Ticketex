@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Windows.Controls;
 using System.Windows;
+using Azure.Identity;
 using Dapper;
 using MaterialDesignThemes.Wpf;
 using MySql.Data.MySqlClient;
@@ -36,21 +37,21 @@ public class LoginViewModel: ObservableObject, INotifyDataErrorInfo
 
     public LoginViewModel()
     {
-        LoginCommand = new RelayCommand_(parameter =>
+        LoginCommand = new RelayCommand_(async void (parameter) =>
         {
             
             var passwordBox = parameter as PasswordBox;
-            if (passwordBox.Password.Length == 0)
+            if (passwordBox?.Password.Length == 0)
             {
                 isPasswordSet = true;
                 return;
             }
-            LoginUser(_username, parameter);
-            if (parameter is IDisposable disposable)
-            {
-                disposable.Dispose();
-                passwordBox.Password = string.Empty;
-            }
+            
+            await UserLogin(Username, passwordBox);
+            
+            if (parameter is not IDisposable disposable) return;
+            disposable.Dispose();
+            passwordBox.Password = string.Empty;
         });
         
     }
@@ -81,56 +82,90 @@ public class LoginViewModel: ObservableObject, INotifyDataErrorInfo
         }
     }
 
-    private async Task LoginUser(string _username, object parameter)
+    private async Task UserLogin(string Username, PasswordBox passwordBox)
     {
-        await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
-        await connection.OpenAsync();
-        var passwordBox = parameter as PasswordBox;
-        string query = "SELECT UserId, FirstName, LastName, Department FROM all_users WHERE UserId = @UserId AND Password = @Password";
-    
-        try
+        var res = await DatabaseEngine.LoginUser(Username, passwordBox);
+        
+        if (res == null)
+            MessageBox.Show("Invalid username or password");
+        else
         {
-            var res = connection.Query<LoggedUser>(query, new 
-            { 
-                UserId = _username, 
-                Password = passwordBox?.Password
-            }).FirstOrDefault();
-            
-
-            if (res == null)
-                MessageBox.Show("Invalid username or password");
-            else
+            var loggedUser = new LoggedUser
             {
-                LoggedUser loggedUser = new LoggedUser
-                {
-                    FirstName = res.FirstName,
-                    LastName = res.LastName,
-                    Department = res.Department,
-                    UserId = res.UserId
-                };
+                FirstName = res.FirstName,
+                LastName = res.LastName,
+                Department = res.Department,
+                UserId = res.UserId
+            };
 
-                MainViewModel mainViewModel = new MainViewModel(loggedUser);
-                MainWindow mainView = new MainWindow
-                {
-                    DataContext = mainViewModel
-                };
-                mainView.Show();
+            var mainViewModel = new MainViewModel(loggedUser);
+            var mainView = new MainWindow
+            {
+                DataContext = mainViewModel
+            };
+            mainView.Show();
                 
-                foreach (Window window in Application.Current.Windows)
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window is not MainWindow)
                 {
-                    if (window is not MainWindow)
-                    {
-                        window.Close();
-                    }
+                    window.Close();
                 }
             }
-            passwordBox?.Clear();
         }
-        catch (MySqlException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        passwordBox?.Clear();
     }
+
+    // private async Task LoginUser(string _username, object parameter)
+    // {
+    //     await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+    //     await connection.OpenAsync();
+    //     var passwordBox = parameter as PasswordBox;
+    //     string query = "SELECT UserId, FirstName, LastName, Department FROM all_users WHERE UserId = @UserId AND Password = @Password";
+    //
+    //     try
+    //     {
+    //         var res = connection.Query<LoggedUser>(query, new 
+    //         { 
+    //             UserId = _username, 
+    //             Password = passwordBox?.Password
+    //         }).FirstOrDefault();
+    //         
+    //
+    //         if (res == null)
+    //             MessageBox.Show("Invalid username or password");
+    //         else
+    //         {
+    //             LoggedUser loggedUser = new LoggedUser
+    //             {
+    //                 FirstName = res.FirstName,
+    //                 LastName = res.LastName,
+    //                 Department = res.Department,
+    //                 UserId = res.UserId
+    //             };
+    //
+    //             MainViewModel mainViewModel = new MainViewModel(loggedUser);
+    //             MainWindow mainView = new MainWindow
+    //             {
+    //                 DataContext = mainViewModel
+    //             };
+    //             mainView.Show();
+    //             
+    //             foreach (Window window in Application.Current.Windows)
+    //             {
+    //                 if (window is not MainWindow)
+    //                 {
+    //                     window.Close();
+    //                 }
+    //             }
+    //         }
+    //         passwordBox?.Clear();
+    //     }
+    //     catch (MySqlException ex)
+    //     {
+    //         Console.WriteLine(ex.Message);
+    //     }
+    // }
 
 
 
