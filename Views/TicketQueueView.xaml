@@ -88,6 +88,7 @@
                   RowStyle="{StaticResource DataGridRowTheme}"
                   ColumnHeaderStyle="{StaticResource DataGridHeaderTheme}"
                   AutoGenerateColumns="False"
+                  HorizontalScrollBarVisibility="Disabled"
                   CanUserAddRows="False" 
                   CanUserDeleteRows="False"
                   HeadersVisibility="Column"
@@ -96,8 +97,6 @@
                   IsReadOnly="True"
                   Focusable="True"
                   IsManipulationEnabled="False"
-                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
                   SelectedItem="{Binding SelectedTicket, Mode=TwoWay}">
@@ -144,7 +143,6 @@
                     <Setter Property="Focusable" Value="False"/>
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="Background" Value="Transparent"/>
-                    
                     <Setter Property="Margin" Value="15 0" />
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
@@ -155,51 +153,7 @@
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Resources>
-                <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
-                    <Setter Property="OverridesDefaultStyle" Value="True"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type Thumb}">
-                                <Border x:Name="Border" 
-                                        Background="LightGray" 
-                                        CornerRadius="8" 
-                                        Height="{TemplateBinding Height}" 
-                                        Width="{TemplateBinding Width}"/>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" TargetName="Border" Value="Gray"/>
-                                    </Trigger>
-                                    <Trigger Property="IsDragging" Value="True">
-                                        <Setter Property="Background" TargetName="Border" Value="Gray"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-
-                <Style TargetType="{x:Type ScrollBar}">
-                    <Setter Property="Width" Value="8"/>
-                    <Setter Property="Margin" Value="5,1,0,1"></Setter>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type ScrollBar}">
-                                <Track Name="PART_Track" IsDirectionReversed="True">
-                                    <Track.DecreaseRepeatButton>
-                                        <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0"/>
-                                    </Track.DecreaseRepeatButton>
-                                    <Track.Thumb>
-                                        <Thumb Style="{StaticResource ScrollBarThumbVertical}"/>
-                                    </Track.Thumb>
-                                    <Track.IncreaseRepeatButton>
-                                        <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0"/>
-                                    </Track.IncreaseRepeatButton>
-                                </Track>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
+                <Style TargetType="ScrollBar" BasedOn="{StaticResource RoundedScrollBarTheme}"/>
             </DataGrid.Resources>
         </DataGrid>
     </DockPanel>

@@ -107,7 +107,7 @@ public class TicketViewModel: ObservableObject
             Console.WriteLine("Edit button clicked");
         });
         
-        SaveButton_Click = new RelayCommand_(o =>
+        SaveButton_Click = new RelayCommand_(async void (o) =>
         {
             var ticketReopening = ticket.Status == "Closed";
             ticket.Status = "Pending";
@@ -120,121 +120,139 @@ public class TicketViewModel: ObservableObject
             if (_selectedDestination != null) ticket.CurrentLocation = _selectedDestination;
             if ((_selectedDestination != this.loggedUser.Department) && (_selectedDestination != null)) ticket.PrevLocation = this.loggedUser.Department;
             
-            if (ticketReopening) DatabaseEngine.ReopenTicket(ticket);
-            
-            
+            if (ticketReopening)
+            {
+                await DatabaseEngine.ReopenTicket(ticket);
+                MainViewModel.RefreshClosedTicketsCommand.Execute(null);
+            }
+            else
+            {
+                await DatabaseEngine.UpdateTicket(ticket);
+                MainViewModel.RefreshQueueCommand.Execute(null);
+            }
             // DelegateTicket();
-            if (uneditedTicket.Status != "Closed") MainViewModel.RefreshQueueCommand.Execute(null);
-            if (uneditedTicket.Status == "Closed") MainViewModel.RefreshClosedTicketsCommand.Execute(null);
+            // if (uneditedTicket.Status != "Closed") MainViewModel.RefreshQueueCommand.Execute(null);
+            // if (uneditedTicket.Status == "Closed") MainViewModel.RefreshClosedTicketsCommand.Execute(null);
         });
 
         CloseTicket = new RelayCommand_(async void (o) =>
         {
+            // await DelegateTicket();
+            var result = MessageBox.Show($"Are you sure you wanna close ticket number {ticket.TicketId}?", "Ticket closure", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes) return;
             ticket.Status = "Closed";
-            await DelegateTicket();
-            MainViewModel.RefreshClosedTicketsCommand.Execute(null);
-            MainViewModel.RefreshQueueCommand.Execute(null);
+            var isSuccess = await DatabaseEngine.CloseTicket(ticket);
+            if (isSuccess)
+            {
+                MessageBox.Show("Ticket closed successfully");
+                MainViewModel.RefreshClosedTicketsCommand.Execute(null);
+                MainViewModel.RefreshQueueCommand.Execute(null);
+            }
+            else
+            {
+                MessageBox.Show("Ticket closure failed. Try again or contact Dbsupport");
+            }
         });
         
         CancelButton_Click = new RelayCommand_(o =>
         {
-            _severity = uneditedTicket.Severity;
-            _status = uneditedTicket.Status;
+            ticket.Severity = uneditedTicket.Severity;
+            ticket.Status = uneditedTicket.Status;
             Description = uneditedTicket.Description;
             _selectedDestination = null;
         });
     }
 
-    private async Task DelegateTicket()
-    {
-        try
-        {
-            await using var connection = new MySqlConnection(connectionString);
-            string query;
-            
-            if ((_selectedDestination == loggedUser.Department) || (_selectedDestination == null))
-            {
-                query = uneditedTicket.Status != "Closed" 
-                    ? $"UPDATE {loggedUser.Department.ToLower()}_tickets SET Status = @Status, Severity = @Severity, Description = @Description, DateTimeLastUpdated = @DateTimeLastUpdated WHERE TicketId = @TicketId" 
-                    : $"INSERT INTO {loggedUser.Department.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, DateTimeCreated, DateTimeLastUpdated, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @DateTimeCreated, @DateTimeLastUpdated, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
-            }
-            else
-            {
-                query = $"INSERT INTO {_selectedDestination.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, DateTimeCreated, DateTimeLastUpdated, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @DateTimeCreated, @DateTimeLastUpdated, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
-            }
-            
-            if (ticket.Status == "Closed")
-            {
-                query = $"INSERT INTO closed_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, DateTimeCreated, DateTimeLastUpdated, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @DateTimeCreated, @DateTimeLastUpdated, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
-            }
-            
-            await connection.ExecuteAsync(query, new
-            {
-                ticket.TicketId,
-                ticket.Status,
-                ticket.Severity,
-                ticket.AuthorId,
-                ticket.Origin,
-                ticket.CurrentLocation,
-                ticket.PrevLocation,
-                ticket.ReporterId,
-                ticket.Description,
-                ticket.DateTimeCreated,
-                ticket.DateTimeLastUpdated,
-                ticket.NumOfUpdates,
-                ticket.NumOfUpVotes,
-                ticket.NumOfDownVotes,
-                ticket.VotesRatio,
-                ticket.Attachments
-            });
-            
-
-            if (uneditedTicket.Status != "Closed")
-            {
-                if ((_selectedDestination != loggedUser.Department) && (_selectedDestination != null))
-                {
-                    try
-                    {
-                        var deleteQuery = $"DELETE FROM {loggedUser.Department.ToLower()}_tickets WHERE TicketId = @TicketId";
-                        await connection.ExecuteAsync(deleteQuery, new { ticket.TicketId });
-                        if (ticket.Status != "Closed") MessageBox.Show($"Ticket with Id: {ticket.TicketId}, has been successfully delegated to {ticket.CurrentLocation}. It's Someone else's problem now");
-                        if (ticket.Status == "Closed") MessageBox.Show($"Ticket with id of : '{ticket.TicketId}' has been closed. Congratulations!!!");
-                    }
-                    catch (MySqlException ex)
-                    {
-                        Console.WriteLine("Unable to delete ticket");
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-                else
-                {
-                    if (ticket.Status != "Closed") MessageBox.Show($"Ticket with Id: {ticket.TicketId}, has been successfully updated");
-                    if (ticket.Status == "Closed") MessageBox.Show($"Ticket with id of : '{ticket.TicketId}' has been closed. Congratulations!!!");
-                }
-                
-                
-            } else
-            {
-                try
-                {
-                    var deleteQuery = $"DELETE FROM closed_tickets WHERE TicketId = @TicketId";
-                    await connection.ExecuteAsync(deleteQuery, new { ticket.TicketId });
-                    MessageBox.Show($"Ticket with Id: {ticket.TicketId}, has been successfully reopened and sent to {ticket.CurrentLocation}.");
-                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine("Unable to delete ticket");
-                    Console.WriteLine(ex.Message);
-                }
-            }
-
-        }
-        catch (MySqlException ex)
-        {
-            Console.WriteLine("Unable to delegate ticket");
-            Console.WriteLine(ex.Message);
-        }
-    }
+    // private async Task DelegateTicket()
+    // {
+    //     try
+    //     {
+    //         await using var connection = new MySqlConnection(connectionString);
+    //         string query;
+    //         
+    //         if ((_selectedDestination == loggedUser.Department) || (_selectedDestination == null))
+    //         {
+    //             query = uneditedTicket.Status != "Closed" 
+    //                 ? $"UPDATE {loggedUser.Department.ToLower()}_tickets SET Status = @Status, Severity = @Severity, Description = @Description, DateTimeLastUpdated = @DateTimeLastUpdated WHERE TicketId = @TicketId" 
+    //                 : $"INSERT INTO {loggedUser.Department.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, DateTimeCreated, DateTimeLastUpdated, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @DateTimeCreated, @DateTimeLastUpdated, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
+    //         }
+    //         else
+    //         {
+    //             query = $"INSERT INTO {_selectedDestination.ToLower()}_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, DateTimeCreated, DateTimeLastUpdated, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @DateTimeCreated, @DateTimeLastUpdated, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
+    //         }
+    //         
+    //         if (ticket.Status == "Closed")
+    //         {
+    //             query = $"INSERT INTO closed_tickets (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, PrevLocation, ReporterId, Description, DateTimeCreated, DateTimeLastUpdated, NumOfUpdates, NumOfUpVotes, NumOfDownVotes, VotesRatio, Attachments) VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, @CurrentLocation, @PrevLocation, @ReporterId, @Description, @DateTimeCreated, @DateTimeLastUpdated, @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, @Attachments)";
+    //         }
+    //         
+    //         await connection.ExecuteAsync(query, new
+    //         {
+    //             ticket.TicketId,
+    //             ticket.Status,
+    //             ticket.Severity,
+    //             ticket.AuthorId,
+    //             ticket.Origin,
+    //             ticket.CurrentLocation,
+    //             ticket.PrevLocation,
+    //             ticket.ReporterId,
+    //             ticket.Description,
+    //             ticket.DateTimeCreated,
+    //             ticket.DateTimeLastUpdated,
+    //             ticket.NumOfUpdates,
+    //             ticket.NumOfUpVotes,
+    //             ticket.NumOfDownVotes,
+    //             ticket.VotesRatio,
+    //             ticket.Attachments
+    //         });
+    //         
+    //
+    //         if (uneditedTicket.Status != "Closed")
+    //         {
+    //             if ((_selectedDestination != loggedUser.Department) && (_selectedDestination != null))
+    //             {
+    //                 try
+    //                 {
+    //                     var deleteQuery = $"DELETE FROM {loggedUser.Department.ToLower()}_tickets WHERE TicketId = @TicketId";
+    //                     await connection.ExecuteAsync(deleteQuery, new { ticket.TicketId });
+    //                     if (ticket.Status != "Closed") MessageBox.Show($"Ticket with Id: {ticket.TicketId}, has been successfully delegated to {ticket.CurrentLocation}. It's Someone else's problem now");
+    //                     if (ticket.Status == "Closed") MessageBox.Show($"Ticket with id of : '{ticket.TicketId}' has been closed. Congratulations!!!");
+    //                 }
+    //                 catch (MySqlException ex)
+    //                 {
+    //                     Console.WriteLine("Unable to delete ticket");
+    //                     Console.WriteLine(ex.Message);
+    //                 }
+    //             }
+    //             else
+    //             {
+    //                 if (ticket.Status != "Closed") MessageBox.Show($"Ticket with Id: {ticket.TicketId}, has been successfully updated");
+    //                 if (ticket.Status == "Closed") MessageBox.Show($"Ticket with id of : '{ticket.TicketId}' has been closed. Congratulations!!!");
+    //             }
+    //             
+    //             
+    //         } else
+    //         {
+    //             try
+    //             {
+    //                 var deleteQuery = $"DELETE FROM closed_tickets WHERE TicketId = @TicketId";
+    //                 await connection.ExecuteAsync(deleteQuery, new { ticket.TicketId });
+    //                 MessageBox.Show($"Ticket with Id: {ticket.TicketId}, has been successfully reopened and sent to {ticket.CurrentLocation}.");
+    //             }
+    //             catch (MySqlException ex)
+    //             {
+    //                 Console.WriteLine("Unable to delete ticket");
+    //                 Console.WriteLine(ex.Message);
+    //             }
+    //         }
+    //
+    //     }
+    //     catch (MySqlException ex)
+    //     {
+    //         Console.WriteLine("Unable to delegate ticket");
+    //         Console.WriteLine(ex.Message);
+    //     }
+    // }
     
     
 }

@@ -20,6 +20,7 @@
                 <ResourceDictionary x:Name="DataGridHeaderTheme" Source="Components/DataGridHeaderTheme.xaml"/>
                 <ResourceDictionary x:Name="DescriptionFormInputTheme" Source="Components/DescriptionFormInputTheme.xaml"/>
                 <ResourceDictionary x:Name="FormDropdownTheme" Source="Components/FormDropdownTheme.xaml"/>
+                <ResourceDictionary x:Name="RoundedScrollBarTheme" Source="Components/RoundedScrollBarTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
             <Style x:Key="InputValidation" TargetType="{x:Type TextBox}">

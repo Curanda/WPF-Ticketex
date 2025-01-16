@@ -151,5 +151,6 @@ public partial class TicketQueueView
         DefaultSortQueue();
         TicketsViewSource.View.Refresh();
     }
+    
 }
 

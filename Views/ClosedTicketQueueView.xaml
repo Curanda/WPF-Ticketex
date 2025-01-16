@@ -94,8 +94,8 @@
                   IsReadOnly="True"
                   Focusable="True"
                   IsManipulationEnabled="False"
-                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
                   SelectedItem="{Binding SelectedTicket, Mode=TwoWay}">

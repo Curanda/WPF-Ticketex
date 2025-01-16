@@ -33,12 +33,14 @@
                 </LinearGradientBrush>
             </Border.Background>
             
-            <Grid Margin="10">
+            <Grid Margin="10"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+
                 <StackPanel Grid.Row="0">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -50,8 +52,13 @@
                     </Grid>
                     <Separator Grid.Row="0" Style="{StaticResource SeparatorTheme}" Tag="Details"/>
                 </StackPanel>
-                <StackPanel Grid.Row="1">
-                        <Grid Margin="10">
+                <ScrollViewer Grid.Row="1"  VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer.Resources>       
+                        <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource RoundedScrollBarTheme}"/>
+                    </ScrollViewer.Resources>
+                    <StackPanel>
+                        
+                    <Grid Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150"/>
                                 <ColumnDefinition Width="*"/>
@@ -190,7 +197,9 @@
                             <TextBox x:Name="DateTimeLastUpdatedTextBox" Grid.Row="1" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding DateTimeLastUpdated}"
                                      Style="{StaticResource FormTextBoxTheme}"/>
                         </Grid>
-                </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
                 <StackPanel Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0">
                     <Button x:Name="ReopenTicketButton" Content="Reopen Ticket" Margin="5" Click="ReopenTicketButton_Click" Command="{Binding ReopenTicketButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
                     <Button x:Name="EditButton" Content="Edit Ticket" Margin="5" Click="EditButton_Click" Command="{Binding EditButton_Click}" Style="{StaticResource NiceButton}"/>
@@ -199,6 +208,7 @@
                     <Button x:Name="CancelButton" Content="Discard Changes" Margin="5" Click="CancelButton_Click" Command="{Binding CancelButton_Click}" Visibility="Collapsed" Style="{StaticResource NiceButton}"/>
                     <Button x:Name="CloseButton" Content="Close Window" Margin="5" Click="CloseButton_Click" Command="{Binding CloseButton_Click}" Style="{StaticResource NiceButton}"/>
                 </StackPanel>
+
             </Grid>
             
         </Border>

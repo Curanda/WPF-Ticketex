@@ -11,7 +11,7 @@
                                 Padding="0 8" 
                                 CornerRadius="5" 
                                 Background="{TemplateBinding Background}" 
-                                BorderThickness="0" 
+                                BorderThickness="1" 
                                 SnapsToDevicePixels="True">
                             <SelectiveScrollingGrid>
                                 <SelectiveScrollingGrid.ColumnDefinitions>
@@ -35,6 +35,20 @@
                                                    SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical" Visibility="{Binding HeadersVisibility, Converter={x:Static DataGrid.HeadersVisibilityConverter}, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
                             </SelectiveScrollingGrid>
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Severity}" Value="Critical">
+                                <Setter TargetName="DGR_Border" Property="BorderBrush" Value="Red"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Severity}" Value="High">
+                                <Setter TargetName="DGR_Border" Property="BorderBrush" Value="Brown"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Severity}" Value="Medium">
+                                <Setter TargetName="DGR_Border" Property="BorderBrush" Value="Orange"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Severity}" Value="Low">
+                                <Setter TargetName="DGR_Border" Property="BorderBrush" Value="Yellow"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
