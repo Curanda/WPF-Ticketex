@@ -8,12 +8,12 @@ namespace TicketeX_.Views;
 
 public partial class TicketView : Window
 {
-    private bool checkTicketClosed;
+    private bool isTicketClosed;
 
     public TicketView(string selectedTicketStatus)
     {
         InitializeComponent();
-        checkTicketClosed = selectedTicketStatus == "Closed";
+        isTicketClosed = selectedTicketStatus == "Closed";
     }
 
     public void ClosedTicketDisplayed()
@@ -50,7 +50,7 @@ public partial class TicketView : Window
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
-        if (checkTicketClosed)
+        if (isTicketClosed)
         {
             ReopenTicketButton.Visibility = Visibility.Visible;
             EditButton.Visibility = Visibility.Collapsed;
@@ -98,10 +98,9 @@ public partial class TicketView : Window
 
     private void CloseTicketButton_Click(object sender, RoutedEventArgs e)
     {
-        var willTicketBeClosed = MessageBox.Show("Are you sure You want to close this ticket?", $"Closing ticket no XXXX", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.OK);
-        if (willTicketBeClosed == MessageBoxResult.OK) TicketViewModel.CloseTicket.Execute(null);
+        
         Close();
-        StrongReferenceMessenger.Default.Send("closed_ticket_queue_refresh_required");
+        // StrongReferenceMessenger.Default.Send("closed_ticket_queue_refresh_required");
     }
 
     private void ReopenTicketButton_Click(object sender, RoutedEventArgs e)

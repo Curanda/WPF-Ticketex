@@ -74,7 +74,7 @@
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
-            <Button Width="20" Margin="15, 0,0 0" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Click="RefreshFiltersButton_OnClick" Command="{Binding DataContext.RefreshQueueCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+            <Button Width="20" Margin="15, 0,0 0" BorderThickness="0" HorizontalAlignment="Right" Background="Transparent" Click="RefreshFiltersButton_OnClick" Command="{Binding DataContext.RefreshOpenTicketsCommand, RelativeSource={RelativeSource AncestorType=Window}}">
                 <materialDesign:PackIcon Kind="Refresh" Background="Transparent" Foreground="Azure"/>
             </Button>
             </StackPanel>

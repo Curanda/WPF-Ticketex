@@ -17,7 +17,7 @@ public class MainViewModel: ObservableObject
     public RelayCommand_ TicketQueueViewCommand { get; set; }
     public RelayCommand_ CreateTicketViewCommand { get; set; }
     public RelayCommand_ ClosedTicketQueueViewCommand { get; set; }
-    public static RelayCommand_ RefreshQueueCommand { get; set; }
+    public static RelayCommand_ RefreshOpenTicketsCommand { get; set; }
     public static RelayCommand_ RefreshClosedTicketsCommand { get; set; }
     public RelayCommand_ LogoutCommand { get; set; }
     private LoggedUser LoggedUser { get; set; }
@@ -41,7 +41,6 @@ public class MainViewModel: ObservableObject
         LoggedUser = loggedUser;
         CurrentAccount = loggedUser.Department;
         _currentView = HomeVm = new HomeViewModel(loggedUser.FirstName, loggedUser.Department);
-        // LoadTicketQueue();
         
         HomeViewCommand = new RelayCommand_(o =>
         {
@@ -65,19 +64,17 @@ public class MainViewModel: ObservableObject
             CurrentView = CreateTicketVm = new CreateTicketViewModel(LoggedUser);
         });
 
-        RefreshQueueCommand = new RelayCommand_( async void (o) =>
+        RefreshOpenTicketsCommand = new RelayCommand_( async void (o) =>
         {
-            // ClearTicketQueue();
+            TicketQueueTickets.Clear();
             TicketQueueTickets = await DatabaseEngine.LoadOpenQueue(CurrentAccount);
-            // LoadTicketQueue();
             
         });
 
         RefreshClosedTicketsCommand = new RelayCommand_(async void (o) =>
         {
-            // ClearTicketQueue();
+            ClosedTickets.Clear();
             ClosedTickets = await DatabaseEngine.LoadClosedQueue();
-            // LoadClosedTicketQueue();
         });
 
         LogoutCommand = new RelayCommand_(o =>
@@ -96,55 +93,54 @@ public class MainViewModel: ObservableObject
                 }
             }
         });
-
+        
     }
     
-    private async Task LoadTicketQueue()
-    {
-
-        string query = $"SELECT * FROM {CurrentAccount.ToLower()}_tickets";
-        
-        try
-        {
-            await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
-            
-            var tickets = await connection.QueryAsync<Ticket>(query);
-            foreach (var ticket in tickets)
-            {
-                TicketQueueTickets.Add(ticket);
-            }
-            StrongReferenceMessenger.Default.Send(new StatusMessage("queue_refreshed"));
-        }
-        catch (MySqlException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
-
-    private async Task LoadClosedTicketQueue()
-    {
-        string query = "SELECT * FROM closed_tickets";
-        
-        try
-        {
-            await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
-            
-            var tickets = await connection.QueryAsync<Ticket>(query);
-            foreach (var ticket in tickets)
-            {
-                ClosedTickets.Add(ticket);
-            }
-            StrongReferenceMessenger.Default.Send(new StatusMessage("closed_queue_refreshed"));
-        }
-        catch (MySqlException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
-    
-    private void ClearTicketQueue()
+    private void ClearOpenTicketQueue()
     {
         TicketQueueTickets.Clear();
     }
-
+    
+    // private async Task LoadTicketQueue()
+    // {
+    //
+    //     string query = $"SELECT * FROM {CurrentAccount.ToLower()}_tickets";
+    //     
+    //     try
+    //     {
+    //         await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+    //         
+    //         var tickets = await connection.QueryAsync<Ticket>(query);
+    //         foreach (var ticket in tickets)
+    //         {
+    //             TicketQueueTickets.Add(ticket);
+    //         }
+    //         StrongReferenceMessenger.Default.Send(new StatusMessage("queue_refreshed"));
+    //     }
+    //     catch (MySqlException ex)
+    //     {
+    //         Console.WriteLine(ex.Message);
+    //     }
+    // }
+    //
+    // private async Task LoadClosedTicketQueue()
+    // {
+    //     string query = "SELECT * FROM closed_tickets";
+    //     
+    //     try
+    //     {
+    //         await using var connection = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+    //         
+    //         var tickets = await connection.QueryAsync<Ticket>(query);
+    //         foreach (var ticket in tickets)
+    //         {
+    //             ClosedTickets.Add(ticket);
+    //         }
+    //         StrongReferenceMessenger.Default.Send(new StatusMessage("closed_queue_refreshed"));
+    //     }
+    //     catch (MySqlException ex)
+    //     {
+    //         Console.WriteLine(ex.Message);
+    //     }
+    // }
 }

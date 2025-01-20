@@ -66,8 +66,8 @@ public static class DatabaseEngine
         try
         {
             await using var connection = new MySqlConnection(connectionString);
-            var destination = ticket.Status == "Closed" ? "closed" : ticket.CurrentLocation.ToLower();
-            var query = $@"INSERT INTO {destination}_tickets 
+            var department = ticket.Status == "Closed" ? "closed" : ticket.CurrentLocation.ToLower();
+            var query = $@"INSERT INTO {department}_tickets 
                           (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, 
                            PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, 
                            NumOfDownVotes, VotesRatio, Attachments) 
@@ -136,12 +136,14 @@ public static class DatabaseEngine
     }
     
 
-    private static async Task<bool> DeleteTicket(Ticket ticket, string department)
+    private static async Task<bool> DeleteTicket(Ticket ticket, string destination)
     {
         try
         {
             await using var connection = new MySqlConnection(connectionString);
-            var query = $"DELETE FROM {department.ToLower()}_tickets WHERE TicketId = @TicketId";
+            var tableName = destination.ToLower() == "closed" ? "closed_tickets" : $"{destination.ToLower()}_tickets";
+            var query = $"DELETE FROM {tableName} WHERE TicketId = @TicketId";
+            Console.WriteLine($"Executing delete query: {query} with TicketId: {ticket.TicketId}");
             var rowsAffected = await connection.ExecuteAsync(query, new { ticket.TicketId });
             return rowsAffected > 0;
         }
@@ -154,6 +156,7 @@ public static class DatabaseEngine
 
     public static async Task<bool> TransferTicket(Ticket ticket)
     {
+        Console.WriteLine("Transfer called");
         var isInsertSuccess = await InsertTicket(ticket);
         if (!isInsertSuccess) return false;
         var isDeleteSuccess = await DeleteTicket(ticket, ticket.PrevLocation);
@@ -164,11 +167,24 @@ public static class DatabaseEngine
     
     public static async Task<bool> CloseTicket(Ticket ticket)
     {
+        Console.WriteLine("Close called");
         var isInsertSuccess = await InsertTicket(ticket);
         if (!isInsertSuccess) return false;
         var isDeleteSuccess = await DeleteTicket(ticket, ticket.CurrentLocation);
         if (!isDeleteSuccess) 
             MessageBox.Show($"Partial error closing ticket {ticket.TicketId}. Ticket made it to the Archive but deletion from open queue {ticket.CurrentLocation} failed. Please contact Dbsupport");
+        return true;
+    }
+    
+    public static async Task<bool> ReopenTicket(Ticket ticket)
+    {
+        Console.WriteLine("Reopen called");
+        var isInsertSuccess = await InsertTicket(ticket);
+        if (!isInsertSuccess) Console.WriteLine("Reopening: Insert failure");
+        if (!isInsertSuccess) return false;
+        var isDeleteSuccess = await DeleteTicket(ticket, "closed");
+        if (!isDeleteSuccess) 
+            MessageBox.Show($"Partial error reopening ticket {ticket.TicketId}. Ticket made it to an open queue {ticket.CurrentLocation} but deletion from Archive has failed. Please contact Dbsupport");
         return true;
     }
     
@@ -194,25 +210,5 @@ public static class DatabaseEngine
             return null;
         }
     }
-
-    public static async Task<bool> ReopenTicket(Ticket ticket)
-    {
-        var isInsertSuccess = await InsertTicket(ticket);
-        if (!isInsertSuccess) return false;
-        var isDeleteSuccess = await DeleteTicket(ticket, "closed");
-        if (!isDeleteSuccess) 
-            MessageBox.Show($"Partial error reopening ticket {ticket.TicketId}. Ticket made it to an open queue {ticket.CurrentLocation} but deletion from Archive has failed. Please contact Dbsupport");
-        return true;;
-    }
+    
 }
-
-// - ladowanie ticketow do kolejki w mainviewmodel (department) return TicketQueue albo obiekt db;  
-// - wysylanie nowych ticketow w createNewTicketViewModel (ticket) return bool isSuccess;
-// - update ticketow w TicketqueueViewModel (ticket) return bool isSuccess;
-// - kasowanie ticketow w TicketqueueViewModel (ticket) return bool isSuccess
-// - wysylanie nowych ticketow w TicketqueueViewModel (ticket)  return bool isSuccess
-// - wysylanie nowych ticketow w ClosedTicketQueueViewModel (ticket)  return bool isSuccess
-// - kasowanie ticketow w ClosedTicketQueueViewModel (ticket) return bool isSuccess
-
-
-// - logowanie w LoginViewModel(username, password) return bool isSuccess, string department
