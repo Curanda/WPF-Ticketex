@@ -67,14 +67,30 @@ public class MainViewModel: ObservableObject
         RefreshOpenTicketsCommand = new RelayCommand_( async void (o) =>
         {
             TicketQueueTickets.Clear();
-            TicketQueueTickets = await DatabaseEngine.LoadOpenQueue(CurrentAccount);
-            
+            var newTickets = await DatabaseEngine.LoadOpenQueue(CurrentAccount);
+            foreach (var ticket in newTickets)
+            {
+                TicketQueueTickets.Add(ticket);
+            }
+
+            if (CurrentView is not TicketQueueViewModel) return;
+            TicketQueueVm = new TicketQueueViewModel(TicketQueueTickets, LoggedUser);
+            CurrentView = TicketQueueVm;
+
         });
 
         RefreshClosedTicketsCommand = new RelayCommand_(async void (o) =>
         {
             ClosedTickets.Clear();
-            ClosedTickets = await DatabaseEngine.LoadClosedQueue();
+            var newTickets = await DatabaseEngine.LoadClosedQueue();
+            foreach (var ticket in newTickets)
+            {
+                ClosedTickets.Add(ticket);
+            }
+
+            if (CurrentView is not ClosedTicketQueueViewModel) return;
+            ClosedTicketQueueVm = new ClosedTicketQueueViewModel(ClosedTickets, LoggedUser);
+            CurrentView = ClosedTicketQueueVm;
         });
 
         LogoutCommand = new RelayCommand_(o =>

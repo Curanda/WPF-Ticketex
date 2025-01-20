@@ -26,11 +26,7 @@ public partial class TicketQueueView
         SevCrit_Checked = true;
         SetFilter();
         
-        StrongReferenceMessenger.Default.Register<StatusMessage>(this,(r,m)=>
-        {
-            if (m.Status != "queue_refreshed") return;
-            Console.WriteLine(m.Status+" arrived in TicketQueueView.xaml.cs");
-        });
+
     }
 
     private void DefaultSortQueue()

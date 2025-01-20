@@ -109,6 +109,10 @@ public class TicketViewModel: ObservableObject
                 ticket.Description = ticket.Description+$"\n \n {ticket.DateTimeLastUpdated}, Ticket reopened by: {this.loggedUser.UserId}, Department: {this.loggedUser.Department} \n \n Reason for reopening: "+_description;
                 var isSuccess = await DatabaseEngine.ReopenTicket(ticket);
                 if (isSuccess) MessageBox.Show($"Ticket number {ticket.TicketId} reopened successfully and sent to {ticket.CurrentLocation}");
+                if (ClosedTicketQueueViewModel.ClosedTickets.Contains(ticket))
+                {
+                    ClosedTicketQueueViewModel.ClosedTickets.Remove(ticket);
+                }
                 return;
             }
             
@@ -127,9 +131,17 @@ public class TicketViewModel: ObservableObject
                  ticket.CurrentLocation = _selectedDestination;
                  ticket.Description = ticket.Description+$"\n \n {ticket.DateTimeLastUpdated}, Delegated by: {this.loggedUser.UserId}, Department: {this.loggedUser.Department} \n \n Update: "+_description;
                  var isSuccess = await DatabaseEngine.TransferTicket(ticket);
-                 if (isSuccess) MessageBox.Show($"Ticket number {ticket.TicketId} successfully transferred to {ticket.CurrentLocation} queue");
-                 MainViewModel.RefreshOpenTicketsCommand.Execute(null);
+                 if (isSuccess)
+                 {
+                     MessageBox.Show(
+                         $"Ticket number {ticket.TicketId} successfully transferred to {ticket.CurrentLocation} queue");
+                     if (TicketQueueViewModel.TicketQueueTickets.Contains(ticket))
+                     {
+                         TicketQueueViewModel.TicketQueueTickets.Remove(ticket);
+                     }
+                 }
             }
+            // MainViewModel.RefreshOpenTicketsCommand.Execute(null);
             
         });
 
@@ -137,7 +149,8 @@ public class TicketViewModel: ObservableObject
         {
             var willTicketBeClosed = MessageBox.Show("Are you sure You want to close this ticket?",
                 $"Closing ticket no {ticket.TicketId}", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.OK);
-            if (willTicketBeClosed == MessageBoxResult.OK) CloseTicket();
+            if (willTicketBeClosed == MessageBoxResult.OK) await CloseTicket();
+            
         });
         
         CancelButton_Click = new RelayCommand_(o =>
@@ -149,7 +162,7 @@ public class TicketViewModel: ObservableObject
         });
     }
 
-    private async void CloseTicket()
+    private async Task<bool> CloseTicket()
     {
         ticket.Status = "Closed";
         ticket.DateTimeLastUpdated = DateTime.Now;
@@ -158,9 +171,12 @@ public class TicketViewModel: ObservableObject
         if (isSuccess)
         {
             MessageBox.Show($"Ticket number {ticket.TicketId} closed successfully");
-            MainViewModel.RefreshOpenTicketsCommand.Execute(null);
-            MainViewModel.RefreshClosedTicketsCommand.Execute(null);
+            if (TicketQueueViewModel.TicketQueueTickets.Contains(ticket))
+            {
+                TicketQueueViewModel.TicketQueueTickets.Remove(ticket);
+            }
         };
+        return isSuccess;
     }
     
 }

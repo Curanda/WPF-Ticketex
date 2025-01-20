@@ -45,4 +45,5 @@ public class TicketQueueViewModel: ObservableObject
         };
         ticketView.Show();
     }
+    
 }
