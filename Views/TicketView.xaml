@@ -119,16 +119,19 @@
                             </Border>
                             <TextBlock Text="Description:" Grid.Row="3" Foreground="Azure"  Grid.Column="0" VerticalAlignment="Top" Margin="0,5,0,0"/>
                             <Border Grid.Row="3" Grid.Column="1" Margin="5" Background="White" CornerRadius="3" BorderThickness="2" BorderBrush="White" Height="200">
-                                <TextBox x:Name="DescriptionTextBox" 
-                                         BorderThickness="0"
-                                         HorizontalScrollBarVisibility="Auto" 
-                                         TextWrapping="Wrap"
-                                         AcceptsReturn="True" IsEnabled="False"
-                                         Background="Transparent"
-                                         Foreground="Black"
-                                         VerticalScrollBarVisibility="Auto"
-                                         Text="{Binding Description}"
-                                />
+                                <ScrollViewer>
+                                    <ScrollViewer.Resources>
+                                        <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource RoundedScrollBarTheme}"/>
+                                    </ScrollViewer.Resources>
+                                    <TextBox x:Name="DescriptionTextBox" 
+                                             BorderThickness="0"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True" IsEnabled="False"
+                                             Background="Transparent"
+                                             Foreground="Black"
+                                             VerticalScrollBarVisibility="Auto"
+                                             Text="{Binding Description}"/>
+                                </ScrollViewer>
                             </Border>
                         </Grid>
                     <Separator Style="{StaticResource SeparatorTheme}" Tag="History" Foreground="Azure" BorderBrush="White"/>

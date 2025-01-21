@@ -20,7 +20,7 @@ public class MainViewModel: ObservableObject
     public static RelayCommand_ RefreshOpenTicketsCommand { get; set; }
     public static RelayCommand_ RefreshClosedTicketsCommand { get; set; }
     public RelayCommand_ LogoutCommand { get; set; }
-    private LoggedUser LoggedUser { get; set; }
+    public LoggedUser LoggedUser { get; set; }
     private ObservableCollection<Ticket> TicketQueueTickets { get; set; } = [];
     private ObservableCollection<Ticket> ClosedTickets { get; set; } = [];
     private HomeViewModel HomeVm { get; set; }

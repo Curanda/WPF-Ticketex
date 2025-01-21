@@ -95,7 +95,9 @@ public class LoginViewModel: ObservableObject, INotifyDataErrorInfo
                 FirstName = res.FirstName,
                 LastName = res.LastName,
                 Department = res.Department,
-                UserId = res.UserId
+                UserId = res.UserId,
+                Email = res.Email,
+                Phone = res.Phone,
             };
 
             var mainViewModel = new MainViewModel(loggedUser);

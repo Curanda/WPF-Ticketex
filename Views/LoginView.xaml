@@ -73,7 +73,9 @@
                              Margin="0,5,0,0"
                              Padding="10,0,0,0"
                              Style="{StaticResource InputValidation}"
-                             Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}">
+                             Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                             FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Self}}"
+                             KeyDown="AcceptsReturnToLogin">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="3"/>
@@ -96,7 +98,8 @@
                                  VerticalContentAlignment="Center"
                                  Margin="0,5,0,0"
                                  Padding="10,0,0,0"
-                                 PasswordChanged="PasswordBox_OnPasswordChanged">
+                                 PasswordChanged="PasswordBox_OnPasswordChanged"
+                                 KeyDown="AcceptsReturnToLogin">
                         <!-- 
                         
                         Dodatkowy ficzer: Customowa i wystylizowana walidacja na PasswordBox. Ten element

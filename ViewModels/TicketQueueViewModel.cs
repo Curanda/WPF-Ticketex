@@ -33,6 +33,9 @@ public class TicketQueueViewModel: ObservableObject
         {
             var ticket = _selectedTicket;
             ShowTicketView(ticket);
+            
+            Console.WriteLine("Ticket raw DateTimeCreated: "+ticket?.DateTimeLastUpdated);
+            Console.WriteLine("Ticket sqldatetime DateTimecreated: "+ticket?.DateTimeLastUpdatedCsToSql());
         });
     }
 

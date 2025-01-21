@@ -69,10 +69,10 @@ public static class DatabaseEngine
             var department = ticket.Status == "Closed" ? "closed" : ticket.CurrentLocation.ToLower();
             var query = $@"INSERT INTO {department}_tickets 
                           (TicketId, Status, Severity, AuthorId, Origin, CurrentLocation, 
-                           PrevLocation, ReporterId, Description, NumOfUpdates, NumOfUpVotes, 
+                           PrevLocation, ReporterId, DateTimeCreated, DateTimeLastUpdated, Description, NumOfUpdates, NumOfUpVotes, 
                            NumOfDownVotes, VotesRatio, Attachments) 
                           VALUES (@TicketId, @Status, @Severity, @AuthorId, @Origin, 
-                                 @CurrentLocation, @PrevLocation, @ReporterId, @Description, 
+                                 @CurrentLocation, @PrevLocation, @ReporterId, @DateTimeCreated, @DateTimeLastUpdated, @Description, 
                                  @NumOfUpdates, @NumOfUpVotes, @NumOfDownVotes, @VotesRatio, 
                                  @Attachments)";
             
@@ -193,7 +193,7 @@ public static class DatabaseEngine
         var password = passwordBox.Password;
         await using var connection = new MySqlConnection(connectionString);
         await connection.OpenAsync();
-        var query = "SELECT UserId, FirstName, LastName, Department FROM all_users WHERE UserId = @UserId AND Password = @Password";
+        var query = "SELECT UserId, FirstName, LastName, Email, Phone, Department FROM all_users WHERE UserId = @UserId AND Password = @Password";
         
         try
         {

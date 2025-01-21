@@ -23,7 +23,6 @@ public class TicketViewModel: ObservableObject
     public DateTime DateTimeCreated { get; set; }
     public DateTime _dateTimeLastUpdated { get; set; }
     private string _selectedSeverity { get; set; }
-    public RelayCommand_ EditButton_Click { get; }
     public RelayCommand_ SaveButton_Click { get; }
     public static RelayCommand_ CloseTicket_Click { get; set; }
     public RelayCommand_ CancelButton_Click { get; }
@@ -96,11 +95,6 @@ public class TicketViewModel: ObservableObject
         _selectedDestination = null;
         OldDescription = selectedTicket.Description;
         
-        // EditButton_Click = new RelayCommand_(o =>
-        // {
-        //     Console.WriteLine("Edit button clicked");
-        // });
-        
         SaveButton_Click = new RelayCommand_(async void (o) =>
         {
             if (uneditedTicket.Status == "Closed")
@@ -141,7 +135,6 @@ public class TicketViewModel: ObservableObject
                      }
                  }
             }
-            // MainViewModel.RefreshOpenTicketsCommand.Execute(null);
             
         });
 

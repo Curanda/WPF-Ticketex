@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Diagnostics;
+using TicketeX_.ViewModels;
 
 namespace TicketeX_.Views;
 
@@ -26,21 +27,35 @@ public partial class MainWindow : Window
 
     private void ButtonSlack_OnClick(object sender, RoutedEventArgs e)
     {
-        Process.Start("https://slack.com/signin#/signin");
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = "https://slack.com/signin#/signin",
+            UseShellExecute = true
+        });
     }
 
     private void ButtonWorkplace_OnClick(object sender, RoutedEventArgs e)
-    {
-        Process.Start("https://work.workplace.com/login/input/");
+    { ;
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = "https://work.workplace.com/login/input/",
+            UseShellExecute = true
+        });
     }
 
     private void ButtonEmail_OnClick(object sender, RoutedEventArgs e)
     {
-        Process.Start("mailto:info@ticketex.dev");
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = "mailto:info@ticketex.dev",
+            UseShellExecute = true
+        });
     }
 
-    private void Account_OnClick(object sender, RoutedEventArgs e)
+    private void Profile_OnClick(object sender, RoutedEventArgs e)
     {
-        Console.WriteLine("Account");
+        if (DataContext is not MainViewModel mainViewModel) return;
+        var accountInfoView = new AccountInfoView(mainViewModel.LoggedUser);
+        accountInfoView.ShowDialog();
     }
 }

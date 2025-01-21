@@ -4,11 +4,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:TicketeX_.Views"
+        xmlns:utilities="clr-namespace:TicketeX_.Utilities"
         mc:Ignorable="d"
-        Title="AccountInfoView" Height="500" Width="350"
-        
-        >
-    <Grid>
-        
-    </Grid>
+        Title="AccountInfoView" Height="350" Width="300">
+            <utilities:DashedBorder UseDashedBorder="True"
+                                DashedBorderBrush="#1C2630"
+                                StrokeDashArray="5 1 5 1"
+                                Background="#274472"                               
+                                BorderThickness="4"
+                                DockPanel.Dock="Top"
+                                CornerRadius="0,0,0,0">
+                <Border CornerRadius="0"                    
+                    BorderThickness="0"
+                    Opacity="0.95">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                            <GradientStop Color="#1C2630" Offset="0"/>
+                            <GradientStop Color="#274472" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Center">
+                        <TextBlock Text="Your account information" Padding="10" HorizontalAlignment="Center" Foreground="Azure"/>
+                        <Separator Style="{StaticResource SeparatorTheme}" Tag="Details" Foreground="Aqua" BorderBrush="Aqua" Padding="10,0"/>
+                    <Grid Margin="25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="Azure"/>
+                            </Style>
+                            <Style TargetType="Label">
+                                <Setter Property="Foreground" Value="Azure"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Label Content="User name"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Name="Username" Text="Your Username"/>
+                        <Label Grid.Row="1" Grid.Column="0" Content="User department"/>
+                        <TextBlock Grid.Row="1"  Grid.Column="1" Name="Department" Text="Your department"/>
+                        <Label Grid.Row="2"  Grid.Column="0" Content="Name"/>
+                        <StackPanel Grid.Row="2"  Orientation="Horizontal" Grid.Column="1">
+                            <TextBlock Name="Firstname" Text="First Name"/>
+                            <TextBlock Name="Lastname" Text="Last Name"/>
+                        </StackPanel>
+                        <Label Grid.Row="3"  Grid.Column="0" Content="Email"/>
+                        <TextBlock  Grid.Row="3"  Grid.Column="1" Name="Email" Text="Your email"/>
+                        <Label  Grid.Row="4"  Grid.Column="0" Content="Phone"/>
+                        <TextBlock Grid.Row="4"  Grid.Column="1" Name="Phone" Text="382901379804873"/>
+                    </Grid>
+                    </StackPanel>
+                </Border>
+            </utilities:DashedBorder>
 </Window>

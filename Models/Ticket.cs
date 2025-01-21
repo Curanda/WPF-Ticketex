@@ -22,9 +22,15 @@ public class Ticket
     public int Attachments { get; set; }
     public int SeverityNumber => SeverityToNumber();
 
-    public static string DateTimeCsToSql(DateTime dateTime)
+    public string DateTimeCreatedCsToSql()
     {
-        string sqlDateTime = new SqlDateTime(dateTime).ToString();
+        var sqlDateTime = new SqlDateTime(DateTimeCreated).ToString();
+        return sqlDateTime;
+    }
+    
+    public string DateTimeLastUpdatedCsToSql()
+    {
+        var sqlDateTime = new SqlDateTime(DateTimeLastUpdated).ToString();
         return sqlDateTime;
     }
 
@@ -36,11 +42,14 @@ public class Ticket
 
     public int SeverityToNumber()
     {
-        int number = 0;
-        if (Severity == "Low") number = 1;
-        if (Severity == "Medium") number = 2;
-        if (Severity == "High") number = 3;
-        if (Severity == "Critical") number = 4;
+        var number = Severity switch
+        {
+            "Low" => 1,
+            "Medium" => 2,
+            "High" => 3,
+            "Critical" => 4,
+            _ => 0
+        };
         return number;
     }
     

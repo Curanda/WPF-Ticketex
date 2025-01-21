@@ -52,7 +52,7 @@
                                         <Setter Property="Foreground" Value="Black"/>
                                     </Style>
                                 </ContextMenu.Style>
-                                <MenuItem Header="Profile" Click="Account_OnClick" />
+                                <MenuItem Header="Profile" Click="Profile_OnClick" />
                                 <MenuItem Header="Log out" Command="{Binding LogoutCommand, Mode=OneWay}"/>
                             </ContextMenu>
                         </Button.ContextMenu>
