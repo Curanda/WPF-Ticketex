@@ -116,7 +116,7 @@
                         </Style>
                     </ContextMenu.Style>
                     <MenuItem Header="Show ticket" Command="{Binding ShowTicketCommand}" CommandParameter="{Binding SelectedTicket}"/>
-                    <MenuItem Header="Copy ticket" Command="{Binding CopyTicketDataCommand}"/>
+                    <MenuItem Header="Copy ticket" Command="{Binding CopyTicketDataCommand}" CommandParameter="{Binding SelectedTicket}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>

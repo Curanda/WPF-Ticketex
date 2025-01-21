@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Data;
 using CommunityToolkit.Mvvm.Messaging;
 using TicketeX_.Models;
@@ -12,6 +13,7 @@ public class TicketQueueViewModel: ObservableObject
     public static ObservableCollection<Ticket> TicketQueueTickets { get; set; }
    
     public RelayCommand_ ShowTicketCommand { get; set; }
+    public RelayCommand_ CopyTicketDataCommand { get; set; }
     private LoggedUser _loggedUser;
     private Ticket _selectedTicket { get; set; }
 
@@ -33,9 +35,12 @@ public class TicketQueueViewModel: ObservableObject
         {
             var ticket = _selectedTicket;
             ShowTicketView(ticket);
-            
-            Console.WriteLine("Ticket raw DateTimeCreated: "+ticket?.DateTimeLastUpdated);
-            Console.WriteLine("Ticket sqldatetime DateTimecreated: "+ticket?.DateTimeLastUpdatedCsToSql());
+        });
+
+        CopyTicketDataCommand = new RelayCommand_(o =>
+        {
+            var ticket = _selectedTicket;
+            CopyTicketDetailsToClipboard(ticket);
         });
     }
 
@@ -48,5 +53,11 @@ public class TicketQueueViewModel: ObservableObject
         };
         ticketView.Show();
     }
-    
+
+    private void CopyTicketDetailsToClipboard(Ticket ticket)
+    {
+        Clipboard.Clear();
+        Clipboard.SetText($"Ticket: {ticket.TicketId}, status: {ticket.Status}, created: {ticket.DateTimeCreated} by {ticket.AuthorId}.\n Description: {ticket.Description}");
+    }
 }
+

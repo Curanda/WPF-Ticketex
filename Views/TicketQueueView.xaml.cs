@@ -147,6 +147,10 @@ public partial class TicketQueueView
         DefaultSortQueue();
         TicketsViewSource.View.Refresh();
     }
-    
+
+    private void QueueGrid_OnCopyingRowClipboardContent(object sender, DataGridRowClipboardEventArgs e)
+    {
+        Console.WriteLine(e);
+    }
 }
 

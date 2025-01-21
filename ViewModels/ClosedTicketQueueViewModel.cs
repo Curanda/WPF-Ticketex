@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.Messaging;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
@@ -11,6 +12,7 @@ public class ClosedTicketQueueViewModel: ObservableObject
 {
     // dodac kolory do wyswietlania ticketow po severity level
     public static ObservableCollection<Ticket> ClosedTickets { get; set; }
+    public RelayCommand_ CopyTicketDataCommand { get; set; }
     public RelayCommand_ ShowTicketCommand { get; set; }
     private LoggedUser _loggedUser;
     private Ticket _selectedTicket { get; set; }
@@ -34,6 +36,12 @@ public class ClosedTicketQueueViewModel: ObservableObject
             var ticket = _selectedTicket;
             ShowTicketView(ticket);
         });
+        
+        CopyTicketDataCommand = new RelayCommand_(o =>
+        {
+            var ticket = _selectedTicket;
+            CopyTicketDetailsToClipboard(ticket);
+        });
     }
 
     private void ShowTicketView(Ticket ticket)
@@ -47,5 +55,10 @@ public class ClosedTicketQueueViewModel: ObservableObject
         ticketView.Show();
     }
     
+    private void CopyTicketDetailsToClipboard(Ticket ticket)
+    {
+        Clipboard.Clear();
+        Clipboard.SetText($"Ticket: {ticket.TicketId}, status: {ticket.Status}, created: {ticket.DateTimeCreated} by {ticket.AuthorId}.\n Description: {ticket.Description}");
+    }
     
 }
