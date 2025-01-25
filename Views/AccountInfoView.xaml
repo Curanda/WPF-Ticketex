@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TicketeX_.Views"
         xmlns:utilities="clr-namespace:TicketeX_.Utilities"
         mc:Ignorable="d"
-        Title="AccountInfoView" Height="350" Width="300">
+        Title="Your account information" Height="350" Width="Auto" MaxWidth="300">
             <utilities:DashedBorder UseDashedBorder="True"
                                 DashedBorderBrush="#1C2630"
                                 StrokeDashArray="5 1 5 1"
@@ -24,9 +24,8 @@
                         </LinearGradientBrush>
                     </Border.Background>
                     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Center">
-                        <TextBlock Text="Your account information" Padding="10" HorizontalAlignment="Center" Foreground="Azure"/>
-                        <Separator Style="{StaticResource SeparatorTheme}" Tag="Details" Foreground="Aqua" BorderBrush="Aqua" Padding="10,0"/>
-                    <Grid Margin="25">
+                        <Separator Style="{StaticResource SeparatorTheme}" Tag="Details" Foreground="Aqua" BorderBrush="Aqua" Padding="10,10, 10, 0"/>
+                    <Grid Margin="15">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
@@ -40,25 +39,28 @@
                         </Grid.RowDefinitions>
                         <Grid.Resources>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Foreground" Value="Azure"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="Margin" Value="0,0,5,0"/>
+                                <Setter Property="Background" Value="Azure"/>
                             </Style>
                             <Style TargetType="Label">
                                 <Setter Property="Foreground" Value="Azure"/>
+                                <Setter Property="Margin" Value="0,0,5,0"/>
                             </Style>
                         </Grid.Resources>
-                        <Label Content="User name"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Name="Username" Text="Your Username"/>
-                        <Label Grid.Row="1" Grid.Column="0" Content="User department"/>
-                        <TextBlock Grid.Row="1"  Grid.Column="1" Name="Department" Text="Your department"/>
-                        <Label Grid.Row="2"  Grid.Column="0" Content="Name"/>
+                        <Label Content="User ID: "/>
+                        <Label Grid.Row="0" Grid.Column="1" Name="Username"/>
+                        <Label Grid.Row="1" Grid.Column="0" Content="Your department: "/>
+                        <Label Grid.Row="1"  Grid.Column="1" Name="Department"/>
+                        <Label Grid.Row="2"  Grid.Column="0" Content="Name: "/>
                         <StackPanel Grid.Row="2"  Orientation="Horizontal" Grid.Column="1">
-                            <TextBlock Name="Firstname" Text="First Name"/>
-                            <TextBlock Name="Lastname" Text="Last Name"/>
+                            <Label Name="Firstname"/>
+                            <Label Name="Lastname"/>
                         </StackPanel>
-                        <Label Grid.Row="3"  Grid.Column="0" Content="Email"/>
-                        <TextBlock  Grid.Row="3"  Grid.Column="1" Name="Email" Text="Your email"/>
-                        <Label  Grid.Row="4"  Grid.Column="0" Content="Phone"/>
-                        <TextBlock Grid.Row="4"  Grid.Column="1" Name="Phone" Text="382901379804873"/>
+                        <Label Grid.Row="3"  Grid.Column="0" Content="Email: "/>
+                        <Label  Grid.Row="3"  Grid.Column="1" Name="Email"/>
+                        <Label  Grid.Row="4"  Grid.Column="0" Content="Phone: "/>
+                        <Label Grid.Row="4"  Grid.Column="1" Name="Phone"/>
                     </Grid>
                     </StackPanel>
                 </Border>

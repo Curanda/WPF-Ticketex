@@ -1,6 +1,7 @@
 using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.IdentityModel.Tokens;
 using TicketeX_.Models;
 using TicketeX_.Utilities;
 
@@ -28,6 +29,8 @@ public class TicketViewModel: ObservableObject
     public RelayCommand_ CancelButton_Click { get; }
     private string _selectedDestination { get; set; }
     private string _description { get; set; }
+    private bool _validatedDestination { get; set; }
+    private bool _validatedDescription { get; set; }
     private string OldDescription { get; set; }
     public List<string> Severities { get; } = ["Low", "Medium", "High", "Critical"];
     public List<string> Destinations { get; } = ["Helpdesk", "Windowssupport", "Networksupport", "Hr", "Lager", "Dbsupport", "Technician", "Janitor"];
@@ -56,13 +59,33 @@ public class TicketViewModel: ObservableObject
             OnPropertyChanged();
         }
     }
-    
 
-    public ComboBoxItem SelectedDestination
+    public bool ValidatedDestination
     {
+        get => _validatedDestination;
         set
         {
-            _selectedDestination = value.Content.ToString();
+            _validatedDestination = value;
+            OnPropertyChanged(nameof(ValidatedDestination));
+        }
+    }
+    public string SelectedDestination
+    {
+        get => _selectedDestination;
+        set
+        {
+            _selectedDestination = value;
+            ValidatedDestination = false;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool ValidatedDescription
+    {
+        get => _validatedDescription;
+        set
+        {
+            _validatedDescription = value;
             OnPropertyChanged();
         }
     }
@@ -73,6 +96,7 @@ public class TicketViewModel: ObservableObject
         set
         {
             _description = value;
+            ValidatedDescription = false;
             OnPropertyChanged();
         }
     }
@@ -97,6 +121,8 @@ public class TicketViewModel: ObservableObject
         
         SaveButton_Click = new RelayCommand_(async void (o) =>
         {
+            if (!FinalValidation()) return; 
+            
             if (uneditedTicket.Status == "Closed")
             {
                 ticket.Status = "Open";
@@ -117,8 +143,9 @@ public class TicketViewModel: ObservableObject
             {
                 ticket.Description = ticket.Description+$"\n \n {ticket.DateTimeLastUpdated}, Updated by: {this.loggedUser.UserId}, Department: {this.loggedUser.Department} \n \n Update: "+_description;
                 var isSuccess = await DatabaseEngine.UpdateTicket(ticket);
-                if (isSuccess) MessageBox.Show($"Ticket number {ticket.TicketId} updated successfully in {ticket.CurrentLocation} queue");
-                if (!isSuccess) MessageBox.Show($"Ticket number {ticket.TicketId} update failure");
+                MessageBox.Show(isSuccess
+                    ? $"Ticket number {ticket.TicketId} updated successfully in {ticket.CurrentLocation} queue"
+                    : $"Ticket number {ticket.TicketId} update failure");
             }
             else
             {
@@ -170,6 +197,12 @@ public class TicketViewModel: ObservableObject
             }
         };
         return isSuccess;
+    }
+
+    private bool FinalValidation()
+    {
+        ValidatedDestination = SelectedDestination.IsNullOrEmpty();
+        return !string.IsNullOrWhiteSpace(_selectedDestination) && !string.IsNullOrWhiteSpace(_description);
     }
     
 }

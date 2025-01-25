@@ -65,6 +65,7 @@ public partial class TicketView : Window
         SaveButton.Visibility = Visibility.Collapsed;
         CancelButton.Visibility = Visibility.Collapsed;
         CloseButton.Visibility = Visibility.Visible;
+        DestinationComboBox.SelectedIndex = 0;
         EnableFormEditing(false);
     }
     
@@ -75,7 +76,7 @@ public partial class TicketView : Window
         DestinationComboBox.IsEnabled = enable;
         if (enable)
         {
-            Binding editBinding = new Binding("Description")
+            var editBinding = new Binding("Description")
             {
                 Mode = BindingMode.OneWayToSource
             };
@@ -83,7 +84,7 @@ public partial class TicketView : Window
         }
         else
         {
-            Binding displayBinging = new Binding("Description")
+            var displayBinging = new Binding("Description")
             {
                 Mode = BindingMode.OneWay
             };
@@ -98,9 +99,7 @@ public partial class TicketView : Window
 
     private void CloseTicketButton_Click(object sender, RoutedEventArgs e)
     {
-        
         Close();
-        // StrongReferenceMessenger.Default.Send("closed_ticket_queue_refresh_required");
     }
 
     private void ReopenTicketButton_Click(object sender, RoutedEventArgs e)
@@ -111,5 +110,19 @@ public partial class TicketView : Window
         CancelButton.Visibility = Visibility.Visible;
         CloseButton.Visibility = Visibility.Collapsed;
         EnableFormEditing(true);
+    }
+
+    private void DestinationComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (DataContext is TicketViewModel ticketVm)
+        {
+            ticketVm.SelectedDestination = e.AddedItems[0] as string;
+        }
+    }
+
+    private void DestinationComboBox_OnDropDownOpened(object sender, EventArgs e)
+    {
+        DestinationComboBox.SelectedIndex = 1;
+        DestinationDropdownCollection.Remove(DestinationPlaceholder);
     }
 }

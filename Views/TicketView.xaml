@@ -9,6 +9,7 @@
         mc:Ignorable="d"
         Title="Ticket details" Height="Auto" Width="500">
     <Window.Resources>
+        <CollectionViewSource Source="{Binding Destinations}" x:Key="DestinationList"/>
         <Style TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontSize" Value="10"></Setter>
@@ -118,21 +119,39 @@
                                 </ComboBox>
                             </Border>
                             <TextBlock Text="Description:" Grid.Row="3" Foreground="Azure"  Grid.Column="0" VerticalAlignment="Top" Margin="0,5,0,0"/>
-                            <Border Grid.Row="3" Grid.Column="1" Margin="5" Background="White" CornerRadius="3" BorderThickness="2" BorderBrush="White" Height="200">
-                                <ScrollViewer>
-                                    <ScrollViewer.Resources>
-                                        <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource RoundedScrollBarTheme}"/>
-                                    </ScrollViewer.Resources>
-                                    <TextBox x:Name="DescriptionTextBox" 
-                                             BorderThickness="0"
-                                             TextWrapping="Wrap"
-                                             AcceptsReturn="True" IsEnabled="False"
-                                             Background="Transparent"
-                                             Foreground="Black"
-                                             VerticalScrollBarVisibility="Auto"
-                                             Text="{Binding Description}"/>
-                                </ScrollViewer>
-                            </Border>
+                            <Grid Grid.Row="3" Grid.Column="1">
+                                <Border x:Name="DescriptionRoundedBorder" Margin="5" Background="White" CornerRadius="3" BorderThickness="2" BorderBrush="White" Height="200">
+                                    <ScrollViewer>
+                                        <ScrollViewer.Resources>
+                                            <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource RoundedScrollBarTheme}"/>
+                                        </ScrollViewer.Resources>
+                                        <TextBox x:Name="DescriptionTextBox" 
+                                                 BorderThickness="0"
+                                                 TextWrapping="Wrap"
+                                                 AcceptsReturn="True" IsEnabled="False"
+                                                 Background="Transparent"
+                                                 Foreground="Black"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 Text="{Binding Description}"/>
+                                    </ScrollViewer>
+                                </Border>
+                                <Popup IsOpen="{Binding ValidatedDescription, Mode=TwoWay}"
+                                       PlacementTarget="{Binding ElementName=DescriptionRoundedBorder}"
+                                       Placement="Right"
+                                       AllowsTransparency="True"
+                                       HorizontalOffset="10">
+                                    <Border CornerRadius="4"
+                                            Background="Azure"
+                                            BorderBrush="DarkRed"
+                                            BorderThickness="1"
+                                            Padding="3">
+                                        <TextBlock Text="Please provide a reason for an update"
+                                                   Foreground="DarkRed"
+                                                   FontSize="12"
+                                                   Padding="5"/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
                         </Grid>
                     <Separator Style="{StaticResource SeparatorTheme}" Tag="History" Foreground="Azure" BorderBrush="White"/>
                         <Grid Margin="10">
@@ -155,32 +174,67 @@
                                      Style="{StaticResource FormTextBoxTheme}"/>
                             
                             <TextBlock Text="Destination:" Grid.Row="2" Grid.Column="0" Foreground="Azure"  VerticalAlignment="Center"/>
-                            <Border Grid.Row="2" Grid.Column="1" CornerRadius="2" 
-                                    Background="Transparent" 
-                                    BorderBrush="White" 
-                                    BorderThickness="1"
-                                    Height="25"
-                                    Margin="0,5,0,5"
-                                    HorizontalAlignment="Stretch"
-                                    MaxWidth="270">
-                                <ComboBox x:Name="DestinationComboBox" 
-                                          Margin="0" 
-                                          IsEnabled="False"
-                                          BorderThickness="0"
-                                          Background="White"
-                                          Foreground="Black"
-                                          SelectedItem="{Binding SelectedDestination, Mode=TwoWay}"
-                                          Text="{Binding SelectedDestination, Mode=TwoWay}">
-                                    <ComboBoxItem>Helpdesk</ComboBoxItem>
-                                    <ComboBoxItem>Windowssupport</ComboBoxItem>
-                                    <ComboBoxItem>Networksupport</ComboBoxItem>
-                                    <ComboBoxItem>Hr</ComboBoxItem>
-                                    <ComboBoxItem>Lager</ComboBoxItem>
-                                    <ComboBoxItem>Dbsupport</ComboBoxItem>
-                                    <ComboBoxItem>Technician</ComboBoxItem>
-                                    <ComboBoxItem>Janitor</ComboBoxItem>
-                                </ComboBox>
-                            </Border>
+                            <Grid Grid.Row="2" Grid.Column="1"  >
+                                <Border x:Name="DestinationRoundedBorder" 
+                                    CornerRadius="2" 
+                                        Background="Transparent" 
+                                        BorderBrush="White" 
+                                        BorderThickness="1"
+                                        Height="25"
+                                        Margin="0,5,0,5"
+                                        HorizontalAlignment="Stretch"
+                                        MaxWidth="270">
+                                    <!-- <ComboBox x:Name="DestinationComboBox"  -->
+                                    <!--           Margin="0"  -->
+                                    <!--           IsEnabled="False" -->
+                                    <!--           BorderThickness="0" -->
+                                    <!--           Background="White" -->
+                                    <!--           Foreground="Black" -->
+                                    <!--           SelectedItem="{Binding SelectedDestination, Mode=TwoWay}" -->
+                                    <!--           Text="{Binding SelectedDestination, Mode=TwoWay}"> -->
+                                    <!--     <ComboBoxItem>Helpdesk</ComboBoxItem> -->
+                                    <!--     <ComboBoxItem>Windowssupport</ComboBoxItem> -->
+                                    <!--     <ComboBoxItem>Networksupport</ComboBoxItem> -->
+                                    <!--     <ComboBoxItem>Hr</ComboBoxItem> -->
+                                    <!--     <ComboBoxItem>Lager</ComboBoxItem> -->
+                                    <!--     <ComboBoxItem>Dbsupport</ComboBoxItem> -->
+                                    <!--     <ComboBoxItem>Technician</ComboBoxItem> -->
+                                    <!--     <ComboBoxItem>Janitor</ComboBoxItem> -->
+                                    <!-- </ComboBox> -->
+                                    <ComboBox x:Name="DestinationComboBox"
+                                              Margin="0"
+                                              IsEnabled="True"
+                                              BorderThickness="0"
+                                              Background="White"
+                                              Foreground="Black"
+                                              SelectedIndex="0"
+                                              SelectionChanged="DestinationComboBox_OnSelectionChanged"
+                                              DropDownOpened="DestinationComboBox_OnDropDownOpened">
+                                        <ComboBox.ItemsSource>
+                                            <CompositeCollection x:Name="DestinationDropdownCollection">
+                                                <ComboBoxItem x:Name="DestinationPlaceholder" Visibility="Collapsed">Please select ticket recipient</ComboBoxItem>
+                                                <CollectionContainer Collection="{Binding Source={StaticResource ResourceKey=DestinationList}}"/>
+                                            </CompositeCollection>
+                                        </ComboBox.ItemsSource>
+                                    </ComboBox>
+                                </Border>
+                                <Popup IsOpen="{Binding ValidatedDestination, Mode=TwoWay}"
+                                       PlacementTarget="{Binding ElementName=DestinationRoundedBorder}"
+                                       Placement="Right"
+                                       AllowsTransparency="True"
+                                       HorizontalOffset="10">
+                                    <Border CornerRadius="4"
+                                            Background="Azure"
+                                            BorderBrush="DarkRed"
+                                            BorderThickness="1"
+                                            Padding="3">
+                                        <TextBlock Text="Please specify ticket recipient"
+                                                   Foreground="DarkRed"
+                                                   FontSize="12"
+                                                   Padding="5"/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
                         </Grid>
                     <Separator Style="{StaticResource SeparatorTheme}" Tag="Timeline" Foreground="Azure" BorderBrush="White"/>
                         <Grid Margin="10">

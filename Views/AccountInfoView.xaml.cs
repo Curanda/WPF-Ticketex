@@ -8,11 +8,11 @@ public partial class AccountInfoView : Window
     public AccountInfoView(LoggedUser user)
     {
         InitializeComponent();
-        Username.Text = user.UserId;
-        Department.Text = user.Department;
-        Firstname.Text = user.FirstName;
-        Lastname.Text = user.LastName;
-        Email.Text = user.Email;
-        Phone.Text = user.Phone;
+        Username.Content = user.UserId;
+        Department.Content = user.Department;
+        Firstname.Content = user.FirstName;
+        Lastname.Content = user.LastName;
+        Email.Content = user.Email;
+        Phone.Content = user.Phone;
     }
 }

@@ -164,12 +164,17 @@
         </Grid>
         
         <Label Grid.Row="4" Grid.Column="0">Description:</Label>
-        <TextBox x:Name="DescriptionTextBox" 
-                 Grid.Row="4" 
-                 Grid.Column="1" 
-                 Validation.ErrorTemplate="{x:Null}"
-                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
-                 Style="{StaticResource DescriptionFormInputTheme}"/>
+        <ScrollViewer Grid.Row="4" 
+                      Grid.Column="1">
+            <ScrollViewer.Resources>
+                <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource RoundedScrollBarTheme}"/>
+            </ScrollViewer.Resources>
+            <TextBox x:Name="DescriptionTextBox" 
+                     VerticalScrollBarVisibility="Auto"
+                     Validation.ErrorTemplate="{x:Null}"
+                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                     Style="{StaticResource DescriptionFormInputTheme}"/>
+        </ScrollViewer>
         <Button Grid.Row="5" 
                 Grid.Column="1" 
                 HorizontalAlignment="Right" 

@@ -108,22 +108,17 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
       _loggedUser = loggedUser;
       _validatedSeverity = false;
       _validatedDestination = false;
-      CreateTicketCommand = new RelayCommand_( (o)=>
+      CreateTicketCommand = new RelayCommand_( async void(o)=>
       {
           if (FinalValidation())
           { 
-              Console.WriteLine($"final validation says : {FinalValidation()}");
               ClearErrors(nameof(ReportedBy));
               ClearErrors(nameof(Description));
-              Console.WriteLine($"Reported By: {ReportedBy}");
-              Console.WriteLine($"Description: {Description}");
-              foreach (var validationMessage in _validationMessages) Console.WriteLine(validationMessage);
-              CreateTicket();
+              await CreateTicket();
           }
           else
           {
               MessageBox.Show($"You've got errors in your form");
-              foreach (var validationMessage in _validationMessages) Console.WriteLine(validationMessage);
           }
       });
     }
@@ -147,21 +142,15 @@ public class CreateTicketViewModel : ObservableObject, INotifyDataErrorInfo
 
     private void ClearErrors(string propertyName)
     {
-        if (_validationMessages.ContainsKey(propertyName))
-        {
-            _validationMessages.Remove(propertyName);
-            OnErrorsChanged(propertyName);
-        }
+        if (!_validationMessages.ContainsKey(propertyName)) return;
+        _validationMessages.Remove(propertyName);
+        OnErrorsChanged(propertyName);
     }
 
     private bool FinalValidation()
     {
-        Console.WriteLine("reportedBy is null of whitespace: "+_reportedBy);
-        Console.WriteLine("selected severity is "+_selectedSeverity);
-        Console.WriteLine("description is "+Description);
         ValidatedSeverity = SelectedSeverity.IsNullOrEmpty();
         ValidatedDestination = SelectedDestination.IsNullOrEmpty();
-        Console.WriteLine($"validated severity {ValidatedSeverity}");
         
         return !string.IsNullOrWhiteSpace(_reportedBy) 
                && _reportedBy.Contains('@')

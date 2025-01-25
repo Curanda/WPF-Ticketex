@@ -69,37 +69,16 @@
 
 <!--
 
-All_tickets:
--TicketId
--Status (Open, Pending, Closed)
--Severity (Low, Medium, High, Critical)
--AuthorId
--OriginId
--CurrentLocId
--LastLocId
--ReporterId
--Description
--NumUpdates
--UpVotes
--DownVotes
--VotesRatio
--Attachments
+Dodatkowe ficzery:
 
-All_Users:
--UserId
--DepartmentId
--NumTicketsOpened
-
-Team_tickets_View:
--TicketId
--Status
--Severity
--From
--Origin
--UpVotes
--DownVotes
--VotesRatio
-
+1. Customowy design wszystkiego!!
+2. Combobox z zaorąglonymi rogami.
+3. Placeholder do comboboxa.
+4. Walidacja na Combobox.
+5. Walidacja na Passwordbox.
+6. Wystylizowane customowe popupy do wyswietlania bledow walidacji.
+7. Customowy AcceptsReturn na Passwordbox.
+8. ConstextMenu są wystylizowane i otwierają się lewym przyciskiem myszy.
 
 
 -->
